@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>서버로 파라미터 제출하기(자바)</title>
+</head>
+<body>
+    <h1>서버로 파라미터 제출하기(자바)</h1>
+    <h3>1. HttpServletRequest.getParameter("key") 이용</h3>
+    <!-- 값 전달 방법 4종류
+    1) HttpServletRequest.getParameter("key") 이용
+    key = name속성값-->
+    <form action="/param/test1" method="POST">
+        <!-- post -> 파라미터가 주소가 아닌, 안보이는 곳을 통해서 전달된다 -->
+        이름 : <input type="text" name="inputName"> <br>
+        나이 : <input type="number" name="inputAge"> <br>
+        주소 : <input type="text" name="inputAddress"> <br>
+
+        <button>제출하기</button>
+    </form>
+    <hr>
+    <h4>2번과 3번은 사용하는 경우가 다름(다 쓸줄 알아야함!)</h4>
+    <!-- 서블릿에서는 getParameter(String으로 받아옴), getParameterValues(배열로 받아옴) -->
+    <hr>
+    <h3>2. @RequestParam 어노테이션을 이용 
+        - 낱개(단수, 독립된) 파라미터를 컨트롤러에서 얻어오는 경우 사용</h3>
+        <form action="/param/test2" method="POST">
+            책 제목 : <input type="text" name="title"> <br>
+            작성자 : <input type="text" name="writer"> <br>
+            가격 : <input type="number" name="price"> <br>
+            출판사 : <input type="text" name="publisher"> <br>
+    
+            <button>제출하기</button>
+    
+        </form>
+    <hr>
+    <h3>3. @RequestParam 어노테이션을 이용
+        - 여러개(복수, 다수) 파라미터를 컨트롤러에서 얻어오는 경우 사용
+    </h3>'
+    <form action="/param/test3" method="POST">
+        색상 : 
+        Red    <input type="checkbox" name="color" value="Red"> 
+        Green <input type="checkbox" name="color" value="Green">
+        Blue  <input type="checkbox" name="color" value="Blue"> 
+        <!-- name속성값이 똑같으면 -->
+        <!-- 서블릿에서 String[] arr = req.getParameterValues("color") -> 체크한 모든 것들이 배열로 다 제출됐었다 -->
+    
+        <br><br>
+    
+        과일 :
+        Apple    <input type="checkbox" name="fruit" value="Apple"> 
+        Banana <input type="checkbox" name="fruit" value="Banana">
+        Orange  <input type="checkbox" name="fruit" value="Orange"> 
+    
+        <br><br>
+    
+        상품명  : <input type="text" name="productName"> <br>
+        유통기한 : <input type="date" name="expirationDate"> <br>
+    
+    
+        <br><br>
+        <button>제출하기</button>
+    </form>
+    <hr>
+    <h3>4. @ModelAttribute를 이용한 파라미터 얻어오기</h3>
+    <form action="/param/test4" method="POST">
+        ID : <input type="text" name="memberId"> <br>
+        PW : <input type="password" name="memberPw"> <br>
+        NAME : <input type="text" name="memberName"> <br>
+        AGE : <input type="number" name="memberAge"> <br>
+
+        <button>제출하기</button>
+
+    </form>
+</body>
+</html>

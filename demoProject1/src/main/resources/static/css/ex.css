@@ -1,0 +1,11 @@
+.container{
+    width: 50vw;
+    /* vh : 보여지는 높이의 50%, vw : 보여지는 너비의 50% */
+    height: 400px;
+    margin:auto;
+    background-color: skyblue;
+}
+.container img{
+    width: 19%;
+    height: auto;
+}

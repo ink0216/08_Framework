@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Project 1</title>
+</head>
+<body>
+    <!-- templates 폴더가 html 파일 모아놓는 폴더!! -->
+    <h1>스프링 부트 수업 입니다</h1>
+    <!-- Servlet : webapp/index.html (메인페이지)
+    SpringBoot : templates/index.html(메인페이지) -->
+    <h3>스프링 부트 프로젝트 실행 방법(==서버 배포 방법)</h3>
+    <pre>
+        src/main/java 폴더 하위 패키지에
+        OOOApplication.java 파일이 프로젝트 생성 시 자동 생성된다
+        (여기서 OOO은 프로젝트 이름)
+
+        해당 클래스에는 main 메서드가 존재
+            ->main메서드를 ctrl+f11 해서 실행시키면 됨
+                ->내장된 Tomcat 서버가 배포를 시작한다
+                    (이건 브라우저가 자동으로 열리지 않기 때문에 각자 브라우저에 주소 입력해야한다!(localhost 이런식으로))
+                    (옆사람 거 보려면 옆사람 ip입력하면 됨)
+
+    </pre>
+    <hr>
+    <h3>프로젝트 구조</h3>
+    <ul>
+        <li>src/main/java : 자바 소스 코드를 모아두는 폴더</li>
+    
+        <li>
+            src/main/resources : 자바에서 사용할 자원, 설정 파일을 모아두는 폴더
+    
+            <ul>
+                <li>templates :  Java 템플릿(응답 화면)을 모아두는 폴더(thymeleaf, html)</li>
+                
+                <li>static : templates에 적용될 정적 자원을 모아두는 폴더(JS, CSS, 이미지 파일)</li>
+                
+                <li>application.properties : Spring Boot 프로젝트 관련 설정을 정의하는 설정 파일 (중요!)</li>
+            </ul>
+        </li>
+    
+    
+        <li>Project and External Dependencies : build.gradle에 명시된 라이브러리 모음</li>
+        <li>
+            build.gradle : gradle(빌드도구 == maven의 pom.xml) <br>
+            프로젝트에 필요한 라이브러리, 배포, 빌드 관련 설정을 작성하는 파일
+            여기에 작성하면 자동으로 라이브러리를 다운받는다
+        </li>
+    
+    </ul>
+    <hr>
+    <!-- ol태그 : 숫자 있음 -->
+    <ol>
+        <li>
+            <a href="/test">요청 + forward 처리</a>
+        </li>
+        <li>
+            <a href="/example">정적 자원(js,css,image)을 연결하는 방법 연습하기</a>
+            <!-- 서블릿에서는 이 요청을 처리하기 위한 서블릿 만들었었음 -->
+        </li>
+        <li>
+            <a href="/param/main">서버로 파라미터 제출하기(자바)</a>
+        </li>
+    </ol>
+</body>
+</html>
