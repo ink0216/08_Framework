@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"> <!-- th 쓸거다 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>타임리프 예제 3</title>
+</head>
+<body>
+
+    <h1>타임리프 예제 3</h1>
+    <h3>링크(URL) 조합에 사용되는 Spring EL ( @{} )</h3>
+    <ul>
+        <li>
+            <a href="/board">게시판(/board)</a> <!-- 이거 누르면 /board라는 요청 보내겠다 -->
+        </li>
+        <li>
+            <a href="/board?key=제목&query=검색어">게시판(/board)</a> 
+            <!-- 이거 누르면 /board라는 요청 보내겠다 -->
+            <!--쿼리스트링 : 주소로 전달되는 값 -->
+        </li>
+        <li> <!-- 위에 작성된 a태그의 href 속성이 동일하도록 작성할거다 -->
+            <!-- 타임리프를 이용한 쿼리스트링 작성법이다!!!! -->
+            <a th:href="@{/board(key=${key}, query=${query})}">@{} 사용(/board)</a> 
+            <!--쿼리스트링 : 주소로 전달되는 값 -->
+            <!-- 우리가 배운 html태그 앞에 th를 다 붙일 수 있다 -->
+            
+        </li>
+        <li>
+            <!-- 요청주소가 앞부분은 동일하고 뒷부분만 달라지면서 보여지는 화면이 달라지는 경우 -->
+            Path Variable : 주소 중 일부분을 변수 값 처럼 사용하는 것 (변수를 이용해서 경로를 만들겠다)
+            <ul>
+                <li>
+                    <a href="/example/ex2/1">/example/ex2/1</a>
+                    <!-- 세 주소가 다 달라서 메서드를 세개 만들어야하는데 메서드 하나만 만들면 된다! -->
+                </li>
+                <li>
+                    <a href="/example/ex2/2">/example/ex2/2</a>
+                </li>
+                <li>
+                    <a href="/example/ex2/3">/example/ex2/3</a>
+                </li>
+                <li>
+                    <a href="/example/ex2/100">/example/ex2/100</a>
+                </li>
+                <li> <!-- th:붙여서 타임리프 적용하기 -->
+    <a th:href="@{/example/ex2/{number}(number=${boardNo})}">@{/example/ex2/{number}(number=${boardNo})}</a> 
+                    <!-- 여기에 number값을 넣겠다 -->
+                    <!-- 컨트롤러에서 boardNo에 10을 넣어서 보내기로 했었고 -->
+                    <!-- 10이 number에 들어가고, number가 요청주소에 들어감 -->
+                </li>
+            </ul>
+        </li>
+    </ul>
+</body>
+</html>

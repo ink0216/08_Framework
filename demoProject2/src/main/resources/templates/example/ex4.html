@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"> <!-- 타임리프 쓸거다 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>타임리프 예제 4</title>
+</head>
+<body>
+    <h1>타임리프 예제 4</h1>
+    <h3>타임리프 조건문 [1] - th:if / th:unless </h3>
+    <pre>
+        th:if = ${조건식}
+        - 조건식이 true인 경우에만 
+            해당 속성이 작성된 요소를 화면에 출력하겠다
+            
+            여기서는 if의 반대가 else가 아닌 unless임
+        th:unless = ${조건식}
+        - 조건식이 false인 경우에만
+            해당 속성이 작성된 요소를 화면에 출력하겠다
+    </pre>
+    <th:block th:if="${std ==null}">
+        <!-- 임시로 썼다가 없어지는 태그다 -->
+        <!-- request scope에 std 속성이 없을 경우에 th:block태그를 보이게 할거다 -->
+        <h4>std 없음</h4>
+    </th:block>
+    <th:block th:unless="${std ==null}">
+        <!-- std !=null 이렇게 쓴거랑 똑같은 거다 -->
+        <!-- 임시로 썼다가 없어지는 태그다 -->
+        <!-- request scope에 std 속성이 있을 경우에 th:block태그를 보이게 할거다 -->
+        <h4>std 있음</h4>
+    </th:block>
+    <hr>
+    <!-- 없거나 null인 경우가 빈번하다! -->
+    <h3>th:if / th:unless 조건식에 변수명/값 하나만 작성한 경우</h3>
+    <pre>
+        th:if / th:unless 조건식에 변수명/값 하나만 작성한 경우
+        if문에 작성된 값이 있으면(null이 아니면) ->true가 나온다! 
+        if문에 작성된 값이 없으면(null이면) ->false가 나온다! 
+
+    </pre>
+    <h4 th:if="${std}">std 있음!!!!!</h4> <!-- 중괄호 안에 조건식을 안 쓴 경우 -->
+    <!-- 자바에서는 if(std) 이렇게만 쓰면 절대 안됨 (boolean이 아니어서) -->
+    <h4 th:if="${temp}">temp 있음!!!!!</h4> <!-- 이건 없으니까 출력안될거임 -->
+    <hr><hr>
+    <h3>타임리프 조건문 [2] - th:switch / th:case </h3>
+    <th:block th:switch="${num}"> <!-- request scope로 num을 전달받음 -->
+    <!-- request 속성 num 값에 따라서 알맞은 case를 실행하게 하기 -->
+        <h4 th:case="100">num == 100</h4>
+        <h4 th:case="200">num == 200</h4>
+        <h4 th:case="300">num == 300</h4>
+        <!-- th:case="*" == default (나머지인 경우) -->
+        <h4 th:case="*">ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ</h4> <!-- num이 안넘어왔으면 이게 실행됨 -->
+    </th:block>
+    <hr>
+    <h3>삼항 연산자</h3>
+    <pre>
+        이건 속성이 아닌 연산자이다
+        - 타임리프 속성(th:-)에 삼항 연산자를 작성할 수 있다
+        삼항 연산자 (조건식 ? 참인경우 : 거짓인경우) 
+    </pre>
+    <h4 th:text="${std.age ==30} ? '서른' :'서른아님'"></h4> <!-- 컨트롤러에서 전달받음 -->
+    <!-- jsp는 중괄호를 맨 뒤에서 닫았는데 타임리프는 조건식 부분에서 닫는다 -->
+    <h4>작성법만 잘 익혀두자(중괄호를 조건식에서 닫기!!!!)</h4>
+    <!-- ${} 기호는 사용되는 부분에만 작성 -->
+    <hr>
+    <h3>Elvis 연산자( ?: )</h3>
+    <pre>
+        [작성법]
+        값 ?: 값이 없을 때
+        - 삼항 연산자에서 
+            조건식 자리에 값(변수명)만 작성
+            (==, != 등의 연산자 사용하지 않음!)
+        - 우변에는 값이 없을 때에 대한 값만 작성
+
+        - 조건식 값이 존재하면 해당 값을 출력
+            없으면 우변을 출력 
+
+    ->해당 값이 있는지 없는지에 따라 동작하는 연산자이다(있으면 어떻게 없으면 저렇게)
+
+    </pre>
+    <!-- 회원 존재 X -> 회원 데이터 없음 -->
+    <p th:text="${member} ?:'회원 데이터 없음'"></p>
+
+    <!-- std 존재 O -> std.toString() 결과 출력 -->
+    <p th:text="${std} ?:'학생 데이터 없음'"></p> <!-- std가 있으면 std가 그대로 나오고 없으면 문구 출력 -->
+
+    <hr>
+    <!-- Elvis 연산자처럼 값이 있는지 없는지 따지는 연산자 또 있다 -->
+    <h3>No-Operation 연산자( 값 ?: _ )</h3> <!-- 동작을 안하겠다(타임리프 해석을 안하겠다) -->
+    <pre>
+        - 조건식의 값이 없을 경우 (==null)
+            타임리프 코드를 해석하지 않는 연산자 
+
+        - 타임리프 코드 해석 X 
+            ->일반 HTML 태그로서 동작함
+            ->HTML 태그 사이의 내용(content)이 화면에 출력된다
+            원래는 타임리프 해석되면 태그 사이의 내용이 있어도 그거 출력 안되고 타임리프 해석 내용으로 덮어씌워졌음!! 
+    </pre>
+    <p th:text="${member} ?: _">회원 데이터 없음</p> <!-- 그냥 일반 p태그가 됨 -->
+    <p th:text="${std} ?: _">학생 데이터 없음</p> <!-- std는 존재하기 때문에 일반 p태그가 아닌 타임리프 적용됨 -->
+</body>
+</html>

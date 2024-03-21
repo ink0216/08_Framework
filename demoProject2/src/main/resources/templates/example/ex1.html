@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <!-- th 속성 추가 네임스페이스 선언 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>타임리프 예제 1</title>
+    <style>
+        .price{
+            color:red;
+        }
+    </style>
+</head>
+<body>
+    <h1>타임리프 예제 1</h1>
+    <!-- jsp의 지시자 처럼 타임리프도 위에 뭐 해야함! -->
+    <!-- xmlns : xml name space
+    이 html에 타임리프용 태그 사용할건데
+    그 때 th 태그가 들어갈거다-->
+    <h4 th:text="${test1}">test1 값</h4>
+    <!-- jsp의 el구문 거의 똑같이 쓸 수 있다 -->
+    <h4 th:text="${test2}">test2 값</h4>
+    <pre>
+        Spring EL (스프링 표현 언어)
+        - ${key} : 변수, Model 등을 이용해서 세팅한 값을 출력할 때 사용 
+        Spring EL은 상황에 따라 사용하는 기호 다름 @ ~ # $ *
+
+        th:text 속성=속성값
+        - 타임리프를 이용해서 속성값을 작성된 태그의 내용(innerText)로 출력하겠다는 속성
+        
+        ** th 속성은 출력된 화면(응답 화면)에서 보여지지 않는다! 
+            ->해석된 후 사라짐! 
+    </pre>
+    <hr>
+    <!-- 타임리프는 아래 것만 제외하고는 다 속성임! -->
+    <pre>
+        th:block 태그 
+        - Thymeleaf에서 제공하는 유일한 태그! 
+            (Thymeleaf는 다 속성임)
+        - 이 태그 포함 th태그는 모두 해석된 후 사라진다
+        - Thymeleaf는 태그 내에 th속성을 작성하여 정의하는게 일반적이지만
+            th속성을 작성할 태그가 존재하지 않을 때 사용
+        - th:text보다는 조건, 반복문과 같이 사용하는 경우가 많음!
+    </pre>
+    <h3>단일 값 출력하기</h3>
+    productName :  <th:block th:text="${productName}">상품명</th:block>
+                /   <span th:text="${productName}">상품명</span>
+                <!-- 이거 두개 비교해보기 -->
+    <!-- 타임리프 값이 출력된 후 없어졌으면 좋겠으면 th:block을 사용 -->
+    <br>
+    price : <span class="price">
+                <th:block th:text="${price}">가격</th:block> 원
+            </span>
+    <hr>
+    <h3>복수 값 출력하기</h3>
+    <pre>
+        th:each="item : ${List 또는 배열} "
+        향상된 for문 = forEach문
+        - 향상된 for문 
+        - List 또는 배열 길이만큼 반복
+        - 매 반복 시 마다 List 또는 배열의 요소를 차례대로 꺼내 
+            item이라는 변수에 저장한다
+            (item 변수명은 자유롭게 작성)
+    </pre>
+    <ul>
+        <li th:text="${fruitList}">과일 목록</li> <!-- 전체가 다 나옴 -->
+        <li th:text="${fruitList[0]}">0번인덱스 과일</li> <!-- 0번 인덱스 과일만 -->
+        <li th:text="${fruitList[1]}">1번인덱스 과일</li> <!-- 0번 인덱스 과일만 -->
+        <li th:text="${fruitList[2]}">2번인덱스 과일</li> <!-- 0번 인덱스 과일만 -->
+        <!-- List여도 요소를 꺼내는 방식은 배열 표기법을 사용한다
+            get이라는 게 있어야 하는데 el은 get을 안쓰니까-->
+    </ul>
+    <hr>
+    <h4>th:each 사용해서 반복문으로 요소 꺼내기</h4>
+    <ul>
+        <th:block th:each=" fruit : ${fruitList}">
+            <li th:text="${fruit}">과일명</li>
+            <!-- 반복문 돌면서 하나씩 추가될거다 -->
+            <!-- 모든 th태그는 출력되고 사라져서 개발자도구에서
+                값만 그 자리에 대입되고 태그는 안보이게됨  -->
+        </th:block>
+        
+    </ul>
+    <hr>
+    <h3>DTO 객체 출력하기(두 가지 방법)</h3>
+    <h4>방법1(기본방법-getter 안써도되고 필드명 호출)</h4>
+    <ul>
+        <li th:text="${std}">std객체</li> 
+        <!-- lombok이 제공해주는 toString오버라이딩 -->
+        <li th:text="${std.studentNo}">학번</li>
+        <li th:text="${std.name}">이름</li>
+        <li th:text="${std.age}">나이</li>
+    </ul>
+    <hr>
+    <pre>
+        th:object 속성 + *{필드명}
+        위에서 std를 앞에 계속 붙여야해서 만듦
+        - th:object 속성 : 해당 태그 내에서
+                            지정된 객체의 필드에 쉽게 접근하게 하는 속성
+        - *{} : th:object로 지정된 객체의 필드에 접근할 때 사용하는 작성법
+        이것도 Spring el이다(기호가 $에서 *로 바뀜)
+    </pre>
+    <h4>방법2(th:object사용해보기)</h4>
+    <ul th:object="${std}"> <!-- ul태그에 전달받은 학생 객체를 지정해놓으면 -->
+        <!-- ul태그 내에서 그 객체를 풀어서 쓸 수 있게 됨 -->
+        <li th:text="*{studentNo}"></li> <!-- 단순화된다 -->
+        <li th:text="*{name}"></li> <!-- 단순화된다 -->
+        <li th:text="*{age}"></li> <!-- 단순화된다 -->
+    </ul>
+    <hr>
+    <h3>DTO가 담긴 List 출력하기</h3>
+    <table border="1"> <!-- 테두리가 살짝 보임 -->
+        <thead>
+            <tr>
+                <th>학번</th>
+                <th>이름</th>
+                <th>나이</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each=" std: ${stdList}" th:object="${std}">
+                <!-- 하나씩 꺼낸 것을 std라고 부름 -->
+                <!-- 두 개의 속성을 한번에 쓸 수 있다 -->
+                <td th:text="*{studentNo}">학번</td>
+                <td th:text="*{name}">이름</td>
+                <td th:text="*{age}">나이</td>
+            </tr> <!-- 내부가 반복되는 게 아닌 tr 전체가 반복이 된다 -->
+            <!-- th:each가 설정된 태그 전체가 반복된다!!!! -->
+<!-- jsp : MVC1패턴을 사용 가능(모든 것을 jsp에 다 쓰는 것)
+    Thymeleaf : 오로지 출력 용도여서 복잡한 연산은 잘 안됨
+        복잡한 연산은 Controller가 하도록 하기!  
+        타임리프는 get만 하고, set은 Controller가 하도록 하기-->
+        </tbody>
+    </table>
+</body>
+</html>

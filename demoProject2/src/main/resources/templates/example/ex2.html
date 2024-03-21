@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>타임리프 예제 2</title>
+</head>
+<body>
+    <h1>타임리프 예제 2</h1>
+    <!-- html에 써서 제출하면 HttpServletRequest 객체에 파라미터 담김 -->
+    <!--forward할 때 req 넘겨주니까 요청 위임된 곳에서 파라미터 사용 가능  -->
+    <h3>요청 위임된 곳에서 request에 존재하는 파라미터 출력하기</h3>
+    <pre>
+        ${param.key}
+        - request에 존재하는 parameter값 얻어와 출력
+    </pre>
+    <ul>
+        <li th:text="${param.inputName}">제출된 이름</li>
+        <li th:text="${param.inputAge}">제출된 나이</li>
+
+        <li th:text="${param.color}">체크된 색상들</li> <!-- 배열처럼 나온다 -->
+        <!-- EL은 null을 빈칸으로 표현 ->체크 아무것도 안하고 제출하면 빈칸나옴-->
+        <!-- 같은 name속성 값을 가진 파라미터는 배열로 전달된다 -->
+
+        <!-- 전달된 파라미터가 없으면(하나도 체크 안된 경우) null == 빈칸으로 처리 -->
+        <!-- 반복할 배열/리스트가 존재하지 않으면 반복을 안한다 ->아래의 구문이 한번도 출력되지 않는다 -->
+        <li th:each="c : ${param.color}" th:text="${c}"></li>
+
+    </ul>
+    <hr>
+    <h3>th:text / th:utext</h3>
+    <pre>
+        th:text ="속성값"
+        - 해당 태그에 "속성값"을 내용(시작태그와 종료태그의 사이)으로 출력
+        - 단, html태그, 특수문자는 해석 X (JS의 innerText와 같은 효과!)
+
+        th:utext ="속성값"
+        - 해당 태그에 "속성값"을 내용(시작태그와 종료태그의 사이)으로 출력
+        - 단, html태그, 특수문자를 해석 O (JS의 innerHTML과 같은 효과!)
+
+        컨트롤러에서 모델에 세팅해서 보낸 값 이용해보기
+    </pre>
+    <div>
+        <h4>th:text(HTML 태그 해석 X)</h4>
+        <th:block th:text="${str}">str</th:block> <!-- 화면에 아무것도 안나오고 출력 -->
+    </div>
+    <hr>
+    <div>
+        <h4>th:utext(HTML 태그 해석 O)</h4> <!-- h1태그랑 특수기호(곱하기 기호) 해석 됐다 -->
+        <th:block th:utext="${str}">str</th:block> <!-- 화면에 아무것도 안나오고 출력 -->
+    </div>
+    <hr>
+    <h3>th:text / th:utext 출력 시, 변수에 저장된 값이 아닌 임의의 내용을 추가해 작성하기</h3>
+    <pre>
+        th:text="|문자열+${}|"
+        - 해당 요소의 내용으로 "문자열"+변수값 출력
+    </pre>
+    <p th:text="|th:text의 str=>${str}|"></p> <!-- 변수값 출력하고 싶은데 같은 p태그 안에 추가적으로 문구 넣고 싶을 때 -->
+    <p th:utext="|th:utext의 str=>${str}|"></p>
+    <!-- h1태그는 block이어서 한 줄 차지->한줄을 다 차지하기 위해서 내려감 -->
+    <hr>
+    <h3>th:text / th:utext 를 대신하는 특수 기호(괄호)</h3>
+    <!-- 
+        th:text == [[...]] 
+        th:utext == [(...)] 
+    -->
+
+    <!-- [[...]] 사용 -->
+    <p>
+        입력 받은 이름 : [[${param.inputName}]]
+    </p>
+
+    <!-- [[...]] 사용 X (원래는 이렇게 했어야 하는데 위에 것처럼 할 수 있다)(근데 이 방법을 더 선호함!!!) -->
+    <p th:text="|입력 받은 이름 : ${param.inputName}|"></p>
+
+    <!-- utext써보기 -->
+    [(${str})] <!--str을 utext로 해석해서 보여줘라 -->
+    <hr>
+    <h1>messages.properties 값 출력하기</h1>
+    <h3 th:text="#{app.name}">앱 이름</h3> <!-- key값 -->
+
+    <!-- th:src 속성 : 타임리프를 이용해서 경로 작성하겠다 
+                    (옆에 작성된 값을 이용해서 src 속성 추가)-->
+    <img th:src="#{user.default.image}">
+    <!-- src : html의 속성 -> 타임리프에서 해석 안함-->
+</body>
+</html>

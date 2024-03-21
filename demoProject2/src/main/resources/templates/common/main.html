@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thymeleaf</title>
+</head>
+<body>
+    <!-- demoProject1에서는 메인페이지가 index였는데 -->
+    <!-- 이거는 메인페이지가 main.html -->
+    <!-- 메인페이지 요청 주소 = "/"  -->
+    <!-- 메인페이지 : 주소창에 localhost만 썼을 때 나오는 페이지!! -->
+    <!-- 메인메서드는 DemoProject2Application에 있다! -->
+    <!-- 스프링 실행 방법 3가지
+1) 메인메서드 있는 DemoProject2Application에서 ctrl+f11
+2) 프로젝트 우클릭 ->Run as -> Java Application ->메인메서드 있는 DemoProject2Application 파일 찾아주기
+                            -> Spring Boot App    
+    -->
+    <h1>Thymeleaf</h1>
+    <h3> 1. 템플릿 엔진이다</h3>
+    <pre>
+        jsp(html코드 안에 java 코드가 들어있는 형태)도 템플릿 엔진이다!!
+            ->중간중간에 값들이 달라져야 할 때 자바코드 값이 거기에 들어오게 만들기
+        템플릿  양식과  특정  데이터  모델에  따른  입력  자료를  합성하여  결과  문서(응답  화면)를  출력하는  것 
+        → 만들어둔  화면(html)에  데이터를  추가하여  하나의 html로  만들어서  응답
+        (JSP도  템플릿  엔진)
+
+    <a href="https://www.thymeleaf.org/">타임리프 홈페이지</a>
+    </pre>
+    <h3>2. Thymeleaf</h3>
+    <pre>
+        * 웹  및  독립  실행형  환경  모두를  위한  최신  서버  측 Java 템플릿  엔진
+            ->웹 실행 == 요청에 대한 포워드 된 화면
+            ->독립 실행 ==jsp와 달리 Thymeleaf(html)는 독립 실행 가능(인터넷 연결X)
+                html파일은 인터넷 연결 안돼도 실행된다
+        * HTML 파일에서 th(Thymeleaf 전용 속성) 속성을  이용해  
+            컨트롤러로  부터  전달  받은데이터를  이용해  동적  페이지를  만들  수  있음. 
+            Spring Boot에서는 JSP가  아닌 Thymeleaf 사용을  권장(강제)하고  있음
+    </pre>
+    <ol>
+        <li>
+            <a href="/example/ex1">타임리프 예제1</a>
+        </li>
+        <li>
+            <form action="/example/ex2" method="post"> <!-- 대소문자 안가림 -->
+                <h4>타임리프 예제2</h4>
+                이름 : <input type="text" name="inputName"> <br>
+                나이 : <input type="number" name="inputAge"> <br>
+                <br>
+                색상 : 
+                Red <input type="checkbox" name="color" value="Red">
+                Green <input type="checkbox" name="color" value="Green">
+                Blue <input type="checkbox" name="color" value="Blue">
+                <!-- name이 같은 것 여러개 선택 시 배열로 제출됨 -->
+
+                <button>제출하기</button>
+            </form>
+        </li>
+        <li>
+            <a href="/example/ex3">타임리프 예제3</a>
+        </li>
+        <li>
+            <a href="/example/ex4">타임리프 예제4(조건문)</a>
+        </li>
+    </ol>
+</body>
+</html>
