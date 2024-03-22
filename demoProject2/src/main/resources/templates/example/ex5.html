@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>타임리프 예제 5</title>
+    <style>
+        /* css */
+        .red{color : red;}
+        .green{color : green;}
+        .deco{text-decoration: underline; /* 밑줄긋기 */}
+    </style>
+</head>
+<body>
+    <!-- html 단독 실행 시 타임리프 속성 적용되지 않는다! -->
+    <h1>타임리프 예제 5</h1>
+    <h3> th:inline="javascript" 속성</h3>
+    <pre>
+        - script 태그에 작성하는 속성이다
+        - 타임리프 문법으로 출력된 내용/값을 
+            JS에 알맞은 타입으로 변환해주는 속성
+    </pre>
+    <h3 id="message"></h3>
+    <h3 id="num1"></h3> <!-- js로 이 두 h3에 message랑 num1값 넣기 -->
+    <hr>
+    <h3> th:classappend 속성 : 요소에 class 속성 값을 동적으로 추가하는 속성</h3>
+    <h4 th:classappend="red">
+        <!-- 화면에서 빨간색으로 보임(h4태그에 red라는 클래스 추가돼서) -->
+        th:classappend 테스트 중 ...
+    </h4>
+    <h4 class="red" th:classappend="deco">
+        <!-- 클래스가 두개가 되면 둘다 추가된다(클래스를 동적으로 추가하는 속성!) -->
+        th:classappend 테스트 중 ...
+    </h4>
+    <h4 th:classappend="${num1 gt 10000 } ? green : red">
+        <!-- num1이 10000보다 클 경우 -->
+        <!-- html에서는 부등호 쓰면 안됨(태그로 해석돼서)
+        lt(little than) == <
+        gt(greater than) == >  -->
+        <!-- 값에 따라서 클래스를 다르게 추가할 수 있다 -->
+        th:classappend 테스트 중 ...
+    </h4>
+    <hr>
+    <h3> 안전 탐색 연산자 ${객체?.필드} </h3>
+    <pre>
+        - 객체가 null인데 그 name속성을 보여줘 하면 말 안됨(null.name)
+        - 객체가 null인지 판단 후 null이 아닌 경우에 수행 == 안전 탐색 연산자
+    </pre>
+    <h4 th:text="${std?.studentNo}">
+        <!-- 근데 이 객체 없음 -->
+        <!-- std가 null인 경우 원래는 오류가 발생한다(객체가 없어서)
+                ==> 안전 탐색 연산자를 쓰면 오류가 발생하지 않는다!
+                ==> 오류도 안나고 화면에도 안보임
+            Controller에서 객체를 안넘겨서 없으면, 아예 없는 것처럼 나온다(빈칸으로)-->
+        학번 출력
+    </h4>
+    <hr>
+    <h3> ${#numbers.sequence(시작,끝,[,step])} : 번호 발생기 </h3>
+    <pre>
+        - 이걸 이용하면 숫자 배열이 생기는 것과 비슷
+        - 시작 부터 끝 까지 번호로만 이루어진 숫자 배열 생성
+
+        ex) ${#numbers.sequnece(1,5)} =>[1,2,3,4,5] 배열 생성된다
+
+        [왜 사용할까??]
+        - 타임리프 반복문 th:each 는 향상된 for문으로,
+            일반 for문(몇 번부터 몇 번까지 몇 씩 증가하며 반복하겠다는 반복) 동작을 못하기 때문에
+            이를 해결하기 위해서 사용한다! 
+        - 단, 증가만 가능하고 감소는 안된다!!!!!!!!! 
+    </pre>
+    <ul>
+        <li th:each="i : ${#numbers.sequence(1,20, 2)}" th:text="|테스트 ${i}|">
+            <!-- 향상된 for문을 일반 for문처럼 하고 싶을 때 숫자 배열을 이용해서 할 수 있다 -->
+            <!-- || 타임리프 말고도 우리가 원하는 문구를 출력할 수 있다 --> 
+            <!-- 숫자 배열에서 하나씩 꺼내 i에 대입해서 10바퀴 돌겠다 -->
+            <!-- 이 리스트 태그를 반복시킬거다 (향상된 for문) -->
+            <!-- th:each=" 변수:배열/리스트" -->
+        </li>
+    </ul>
+    <script th:inline="javascript"> /* 타임리프랑 js 함께 사용 시 꼭 사용되는 속성이다! */
+        /* 문자열이면 js 문법에 맞게 자동으로 따옴표 추가되는 속성 */
+        const message=/*[[${message}]]*/"message값"; //이건 문자열이어서 따옴표나 쌍따옴표 써야한다
+        const num1=/*[[${num1}]]*/ 100; //이건 int여서 따옴표나 쌍따옴표 안해도 된다
+        /* 범위주석 할 때 띄어쓰기 있으면 안된다!! */
+
+        /* 이거 생각하기 복잡하니까 th:inline속성 사용함! */
+        
+        /* 이렇게 속성 이용했더니 html 코드상에서 오류(빨간줄)가 생겨서
+        JS Inline- Natural Template을 제공 */
+        /* 타임리프는 독립 실행이 가능하다(타임리프가 적용된 html을 ) */
+        //주석 기준 오른쪽 값은 독립 실행 시 대입되고, 주석 내부 값은 웹 요청해서 실행 시 대입된다
+        //주석처리를 하니까 오류는 안나고,
+        //html 파일이지만 jsp와 같다 -> 나중에 자바파일로 변하게 된다! 
+        //->타임리프 코드(주석 내부)가 해석 우선권 가짐 
+        /*  JS Inline- Natural Template
+            - HTML 파일 독립 실행 시
+                JS내부 타임리프 코드 오류를 발생하지 않게 함
+                + HTML 문법 오류(컴파일 오류)도 해결해준다*/
+        document.querySelector("#message").innerText=message;
+        document.querySelector("#num1").innerText=num1;
+
+    </script>
+    <!-- th:text속성 == [[]]  -->
+</body>
+</html>

@@ -113,4 +113,15 @@ public class ExampleController {
 		model.addAttribute("num", 100);
 		return "example/ex4"; //forward하는 곳에 보내주기!
 	}
+	@GetMapping("ex5") //GetMapping, PostMapping안가리고 해서 RequestMapping으로 해도 되는데 딱 정해주는 것이 좋다
+	public String ex5(Model model) {
+		//Model : Spring에서 값 전달 역할을 하는 객체
+		//			기본적으로 범위가 request scope로 지정돼있음(->session scope로도 확장 가능하다!)
+		model.addAttribute("message", "타임리프 + JavaScript 사용 연습"); //타임리프는 html파일 안에서 js와 섞어서 쓸 수 있다
+		model.addAttribute("num1", 1234); //숫자 보내기
+		Student std = new Student();
+		std.setStudentNo("22222");
+		model.addAttribute("std", std);
+		return "example/ex5"; //html로 forward
+	}
 }

@@ -7,5 +7,7 @@
 </head>
 <body>
     <h1 th:text="${number}">넘어온 number값</h1>
+    <!-- html 파일 전체를 하나의 조각으로 취급해서 삽입하기 -->
+    <th:block th:replace="~{fragments/footer}"></th:block> <!-- ::를 안쓰면 그 html 전체가 됨! -->
 </body>
 </html>

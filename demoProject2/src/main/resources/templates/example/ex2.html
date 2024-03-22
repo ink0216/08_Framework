@@ -83,5 +83,7 @@
                     (옆에 작성된 값을 이용해서 src 속성 추가)-->
     <img th:src="#{user.default.image}">
     <!-- src : html의 속성 -> 타임리프에서 해석 안함-->
+    <!-- html 파일 전체를 하나의 조각으로 취급해서 삽입하기 -->
+    <th:block th:replace="~{fragments/footer}"></th:block> <!-- ::를 안쓰면 그 html 전체가 됨! -->
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,6 +62,26 @@
         <li>
             <a href="/example/ex4">타임리프 예제4(조건문)</a>
         </li>
+        <li>
+            <a href="/example/ex5">타임리프 예제5</a>
+        </li>
     </ol>
+    
+    <hr>
+    <!-- 여기에 조각 하나 가져와서 출력해볼거다! -->
+    <h3>fragments/temp.html 중 temp1 조각 추가하기</h3>
+    <th:block th:replace="~{fragments/temp ::temp1}"> <!-- 이 파일의 조각들 중 temp1조각을 가져오겠다 --> 
+        <!-- controller에서 forward 시 타임리프가 제공하는 접두사,접미사를
+            제외한 경로를 작성하면 된다(forward하듯이 적으면 된다!)-->
+        <!-- 최종 결과에 block태그가 안보인다 -->
+    <!-- 타임리프에서 제공하는, 속성이 아닌 유일한 태그! -->
+
+    </th:block>
+    <th:block th:replace="~{fragments/temp ::temp2}"></th:block>
+
+    <!-- 조각의 크기가 커서 한 html파일 전체가 다른 html파일의 조각으로 들어가게 할 수도 있다! -->
+    <!-- html 파일 전체를 하나의 조각으로 취급해서 삽입하기 -->
+    <th:block th:replace="~{fragments/footer}"></th:block> <!-- ::를 안쓰면 그 html 전체가 됨! -->
+    <!-- EL 구문 기호 : $ * # ~ @ -->
 </body>
 </html>

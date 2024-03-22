@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"> <!-- 타임리프 표기법을 여기에 적용할거다 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TodoList-Boot</title>
+</head>
+<body>
+    <h1>Todo List</h1>
+<hr>
+
+<form action="/todo/add" method="POST"> <!-- 이거 처리할 컨트롤러 만들면된다 -->
+    <h4>할 일 추가</h4>
+
+    <div>
+        제목 : <input type="text" name="todoTitle">
+    </div>
+
+    <div>
+        <textarea name="todoContent" 
+        cols="50" rows="5" placeholder="상세 내용"></textarea>
+    </div>
+
+    <button>추가 하기</button>
+
+</form>
+
+<hr>
+<hr>
+
+
+<h3 th:text="|전체 Todo 개수 : ${#lists.size(todoList)}개 
+            / 완료된 Todo 개수 : ${completeCount}개|"></h3>
+<!-- 전체 TodoList의 길이를 표현할 수 있는 방법 두가지
+        1) ${#lists.size(todoList)} : todoList의 길이 반환
+        2) ${todoList.size()} ==컬렉션에서 길이 얻어오는 것(되기는 되는데 옛날방법이다)-->
+<table border="1" style="border-collapse: collapse;">
+
+    <thead>
+        <th>번호</th>
+        <th>할 일 제목</th>
+        <th>완료 여부</th>
+        <th>등록 날짜</th>
+    </thead>
+
+
+    <tbody>
+    
+        <tr th:each="todo : ${todoList}" th:object="${todo}"> <!-- tr태그가 반복되면서 DB에서 조회된 Todo를 보여준다 -->
+            <!-- 하나씩 꺼낸 것을 th:object라고 하면 -> 하나씩 뜯어서 쓸 수 있게 된다
+                object 써서 뜯어 쓸 떄에는 *을 붙인다-->
+        <td th:text="*{todoNo}">할 일 번호</td>
+        <td> <!-- 타임리프에서 주소 할 때에는 @ -->
+            <a th:href="@{/todo/detail(todoNo=*{todoNo})}"
+            th:text="*{todoTitle}">할 일 제목</a>
+        </td>
+        <td th:text="*{complete}">완료 여부(Y / N)</td>
+        <td th:text="*{regDate}">등록일</td>
+        </tr>
+
+    </tbody>
+</table>
+<script th:inline="javascript"> /* 타임리프의 값을 JS 자료형에 맞게 변환해주는 구문 */
+    const message=/*[[${message}]]*/"전달 받은 메시지" /* redirect로 전달받은 애가 들어옴 */
+    /* 웹으로 요청 시 주석 부분이 대입되고, 단독 실행되면 전달받은 메시지라는 것이 들어옴 */
+    //전달 받은 mesage가 없으면 null일 것임
+    if(message !=null){
+        alert(message);
+    } /* 이것만 하면 메시지 지우는 코드는 안써도 된다(세션에 안남아있어서) */
+</script>
+</body>
+</html>

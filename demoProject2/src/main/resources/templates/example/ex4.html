@@ -98,5 +98,7 @@
     </pre>
     <p th:text="${member} ?: _">회원 데이터 없음</p> <!-- 그냥 일반 p태그가 됨 -->
     <p th:text="${std} ?: _">학생 데이터 없음</p> <!-- std는 존재하기 때문에 일반 p태그가 아닌 타임리프 적용됨 -->
+    <!-- html 파일 전체를 하나의 조각으로 취급해서 삽입하기 -->
+    <th:block th:replace="~{fragments/footer}"></th:block> <!-- ::를 안쓰면 그 html 전체가 됨! -->
 </body>
 </html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"><!-- 타임리프 쓰겠다 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>코드 조각 모음</title>
+</head>
+<body>
+    <!-- fragment : 조각
+    - html 요소를 다른 html파일에서 재사용 가능하게 함 -->
+    <div th:fragment="temp1"> <!-- thfr -->  <!-- 이걸 main에 넣어보자 -->
+        <ul> 
+            <li><a href="#">공지사항</a></li>
+            <li><a href="#">자유 게시판</a></li>
+            <li><a href="#">질문 게시판</a></li>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">1:1문의</a></li>
+            <li><a href="#">채팅</a></li>
+        </ul>
+    </div>
+
+    <!-- 다른 조각 또 만들기 -->
+    <h1 th:fragment="temp2" style="background-color: yellow; color:red;">
+        Thymeleaf Fragment 확인중(두번째 조각 만들었다)
+    </h1><!-- 노란 배경 빨간 글씨 -->
+
+
+
+
+
+</body>
+</html>

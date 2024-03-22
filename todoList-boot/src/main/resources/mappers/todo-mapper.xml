@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- <mapper namespace="Mapper 인터페이스 경로 작성(필수로 작성!!!)"> -->
+<mapper namespace="edu.kh.todo.model.mapper.TodoMapper"> <!-- TodoMapper 인터페이스와 연결됨 -->
+<!-- namespace = 이 공간의 이름 -->
+<!-- Mapper를 사용하면 DAO를 안쓸 수 있다 -->
+<!-- 바로 밑의 태그 하나는 mapper.xml 파일 만들자 마자 삭제하기!!!!!! -->
+  <!-- <cache-ref namespace=""/> -->
+  
+  <!-- <select> 태그 속성
+  		- id 속성 : 태그를 식별하는 값인데 연결된 Mapper의 메서드명과 동일하게 작성해서 연결하는 역할을 한다
+  		- resultType 속성 : 조회 결과(결과의 자료형)의 한 행을 저장하여 반환할 변수/객체의 자료형을 지정하는 것!!!!
+  			==>조회 결과가 여러 행이면, 행 별로 변수/객체가 자료형대로 저장된 후 모아서 Mybatis에 의해 List로 자동으로 반환된다
+  			(필드명 ==컬럼명 인 경우 조회 결과가 자동으로 필드에 세팅이 되는데) 
+  			(필드명과 컬럼명이 같아지는 속성을 mybatis-config.xml에 작성했었다! ->그걸 이용해서 두 개의 이름을 같게 만들어서)
+  			(알아서 세팅되게 한다)
+  			-->
+  			
+  			
+  			
+ 	<!-- 
+		mapper에서 java data(파라미터)를 SQL에 삽입하는 방법
+		
+		1) #{변수명 | 필드명} : SQL에 삽입 시 양쪽에 '' 붙여서 삽입 (pstmt에서 placeholder에 넣는 방법과 동일)
+		
+		ex) MEMBER_EMAIL = #{memberEmail}
+							-> 'member01@naver.com'
+		
+		=================================================================
+		
+		2) ${변수명 | 필드명} : SQL에 삽입 시 양쪽에 '' 붙이지 않고 삽입 ==statement방식
+		
+		ex) MEMBER_EMAIL = ${memberEmail}
+							-> member01@naver.com  (오류 발생)
+		==================================================================
+		??? ${} 언제 사용할까 ???
+		1) 삽입할 값이 숫자인 경우 (숫자 리터럴은 '' 없음)
+		
+		2) SQL문 자체가 변해야 하는 경우에 사용 ->SQL전체를 가공하는 경우
+		
+		ex) SELECT MEMBER_NICKNAME, ${key} FROM "MEMBER"
+		
+		- ${key} == ENROLL_DATE 인 경우
+		SELECT MEMBER_NICKNAME, ENROLL_DATE FROM "MEMBER"
+		
+		- ${key} == MEMBER_ADDRESS 인 경우
+		SELECT MEMBER_NICKNAME, MEMBER_ADDRESS FROM "MEMBER"
+	 -->
+  		
+    <!--<select id="selectAll" resultType="edu.kh.todo.model.dto.Todo"> 이렇게 써야 하는데  -->
+  <!-- 컬럼 네개의 값을 어디에다가 옮겨담는다 -->
+  <select id="selectAll" resultType="edu.kh.todo.model.dto.Todo">  <!-- 컬럼 네개의 값을 어디에다가 옮겨담는다 -->
+  <!-- 그러면 TodoMapper 인터페이스의 같은 이름을 가지는 selectAll 메서드와 연결된다 
+  		=> selectAll() 메서드 호출 시 연결된 SQL이 실행된다!!!!!!!-->
+  		<!-- 결과를 어디다가 옮겨담는지 지정(resultType) -->
+  		<!-- 대문자로 된 컬럼명이랑 카멜표기법의 변수명을 같게 인식하도록 하기 -->
+  	SELECT TODO_NO, TODO_TITLE, COMPLETE,
+			TO_CHAR(REG_DATE, 'YYYY-MM-DD HH24:MI:SS') REG_DATE
+	FROM TB_TODO
+	ORDER BY TODO_NO
+  <!-- 리스트로 만들어서 서비스로 보내준다! -->
+  </select>
+  
+  <!-- 완료된 할 일 개수 조회 -->
+  <select id="getCompleteCount" resultType="_int"> <!-- 한 행의 결과를 저장하는 게 resultType인데 int야->서비스로 감 -->
+  <!-- Java int타입의 별칭 : _int -->
+  	<!-- 메서드명과 동일하도록!!! -->
+  		SELECT COUNT(*) 
+		FROM TB_TODO
+		WHERE COMPLETE = 'Y'
+		<!-- 결과가 정수로 나온다고 int라고 쓰면 안되고 Integer임 Mybatis는 별칭을 이용한다 -->
+		<!-- 오토(언)박싱 때문에 상관 없긴 한데 정확히 하는게 좋다 -->
+  </select>
+  
+  <!-- 할 일 추가 -->
+  <insert id="addTodo" parameterType="edu.kh.todo.model.dto.Todo"> 
+  <!-- parameterType : 전달 받은 값(전달 인자)의 타입을 명시(어떤 타입을 받아왔는지, Todo타입임) -->
+  <!-- 파라미터맵을 안쓴다 이제 -->
+  <!-- 그러면 전달받은 Todo의 필드값을 이 SQL 내부에서 하나씩 꺼내서 쓸 수 있게 된다
+  		-> DTO, Map을 전달받은 경우, 필드명/key를 입력해서 하나씩 꺼내서 쓸 수 있다 -->
+  		INSERT INTO TB_TODO
+		VALUES(SEQ_TODO_NO.NEXTVAL, #{todoTitle}, #{todoContent}, DEFAULT, DEFAULT)
+		<!-- select는 조회되는 것이 다 다른데 insert는 결과가 항상 정수로 같아서 resultType을 안쓴다 -->
+  		<!-- 여기서는 ?(placeholder) 안씀! -->
+  		
+  </insert>
+  
+</mapper>
