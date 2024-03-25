@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"> <!-- 타임리프 속성 추가 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${todo.todoTitle}">할 일 제목</title>
+    <style>
+        table{
+        border-collapse : collapse;
+        }
+    
+        .todo-content{
+        /* pre태그 처럼 처리 == HTML에 작성된 모양 그대로 화면에 출력*/
+        white-space : pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h3 th:text="${todo.todoTitle}"> 할 일 제목</h3>
+
+    <table border="1">
+    <tr>
+        <th>번호</th>
+        <td th:text="${todo.todoNo}"></td>
+        <!-- thtxt를 대괄호 두 겹으로 해도 된다 -->
+    </tr>
+
+    <tr>
+        <th>등록 날짜</th>
+        <td>[[${todo.regDate}]]</td>
+    </tr>
+
+    <tr>
+        <th>완료 여부</th>
+        <td>
+
+        <!-- data-* 속성
+            - 데이터에 대한 확장성을 고려하여 설계된 속성
+            - js에서 요소.dataset 을 이용해 해당 값을 얻어갈 수 있음
+        -->
+        <button 
+            type = "button" 
+            class = "complete-btn"
+            th:data-todo-no = "${todo.todoNo}"
+            th:text="${todo.complete}"
+            >완료 여부</button>
+        </td>
+    </tr>
+
+    <tr>
+        <th>내용</th>
+        <td class="todo-content" th:text="${todo.todoContent}"></td>
+        <!-- 앞에 todo안붙이고 싶으면 object쓰면 된다 -->
+    </tr>
+    </table>
+
+    <button id="goToList">목록으로</button>
+    <button id="updateBtn" th:data-todo-no="${todo.todoNo}" >수정</button>
+    <button id="deleteBtn" th:data-todo-no="${todo.todoNo}" >삭제</button>
+    <!-- html제공 data 속성->js에서 dataset으로 값을 얻어올 수 있었다 -->
+<!-- 스프링에서 정적자원(css,images,js) 요청(접근) 시 static 폴더를 기준으로 작성하면 된다 -->
+    <script src="/js/detail.js"></script> <!-- 앞에 /resources 안붙여도 된다 -->
+
+
+<!-- footer.html 조각을 해당 위치에 추가하기 -->
+<!-- th:block : 타임리프 코드만 해석하고 없어지는  -->
+<th:block th:replace="~{common/footer}">
+    <!-- 조각의 경로는 forward하듯이 작성하면 된다!(접두사 접미사 생략) -->
+    <!-- templates/common/footer.html  ===> common/footer -->
+</th:block>
+</body>
+</html>

@@ -64,6 +64,7 @@
   <!-- 완료된 할 일 개수 조회 -->
   <select id="getCompleteCount" resultType="_int"> <!-- 한 행의 결과를 저장하는 게 resultType인데 int야->서비스로 감 -->
   <!-- Java int타입의 별칭 : _int -->
+  <!-- 별칭을 이용해야 Mybatis에서 자료형이 인식된다 -->
   	<!-- 메서드명과 동일하도록!!! -->
   		SELECT COUNT(*) 
 		FROM TB_TODO
@@ -75,14 +76,57 @@
   <!-- 할 일 추가 -->
   <insert id="addTodo" parameterType="edu.kh.todo.model.dto.Todo"> 
   <!-- parameterType : 전달 받은 값(전달 인자)의 타입을 명시(어떤 타입을 받아왔는지, Todo타입임) -->
-  <!-- 파라미터맵을 안쓴다 이제 -->
+  <!-- parameterMap은 옛날 거라 이제 안쓰고 이제는 parameterType을 사용! -->
   <!-- 그러면 전달받은 Todo의 필드값을 이 SQL 내부에서 하나씩 꺼내서 쓸 수 있게 된다
   		-> DTO, Map을 전달받은 경우, 필드명/key를 입력해서 하나씩 꺼내서 쓸 수 있다 -->
   		INSERT INTO TB_TODO
 		VALUES(SEQ_TODO_NO.NEXTVAL, #{todoTitle}, #{todoContent}, DEFAULT, DEFAULT)
 		<!-- select는 조회되는 것이 다 다른데 insert는 결과가 항상 정수로 같아서 resultType을 안쓴다 -->
   		<!-- 여기서는 ?(placeholder) 안씀! -->
+  		<!-- #붙으면 자동으로 홑따옴표 붙는다 -->
   		
   </insert>
   
+  <!-- 할 일 상세 조회 -->
+  <!-- Todo=별칭(DBconfig.java에서 등록했었음)
+  		원래 이름 == edu.kh.todo.model.dto.Todo -->
+  <select id="todoDetail" parameterType="_int">
+  	<!-- 받는 매개변수의 타입이 정수이니까 _int라고 써야 한다! -->
+  	SELECT TODO_NO, TODO_TITLE, TODO_CONTENT, COMPLETE, TO_CHAR(REG_DATE, 'YYYY-MM-DD HH24:MI:SS') REG_DATE
+  	FROM TB_TODO WHERE TODO_NO= #{todoNo}
+  	<!-- #붙이면 맞는 자료형으로 바뀌어서 들어간다
+  	DB에 맞도록 int가 NUMBER타입으로 바뀌어 들어간다 -->
+  </select>
+  
+  <!-- 할 일 삭제 -->
+  <delete id="todoDelete" parameterType="_int">
+  DELETE FROM TB_TODO
+  WHERE TODO_NO = #{todoNo}
+  
+  </delete>
+  
+  <!-- 할 일 수정하기 -->
+  <!-- 파라미터가 DTO인 경우 : #{필드명}, ${필드명} -->
+  <!-- 파라미터가 Map인 경우 : #{key}, ${key} -->
+  <!-- Mybatis 동적쿼리 : 이 안에 if문 for문 사용 가능 -->
+  <update id="todoUpdate" parameterType="Todo" >
+  <!--Todo : 별칭  -->
+  	UPDATE TB_TODO
+  	SET	TODO_TITLE=#{todoTitle},
+  		TODO_CONTENT=#{todoContent}
+  	WHERE TODO_NO=#{todoNo}
+  </update>
+  
+  <!-- 완료 여부 수정하기 -->
+  <update id="changeComplete" parameterType="Todo">
+  UPDATE TB_TODO
+  SET COMPLETE= #{complete}
+  WHERE TODO_NO=#{todoNo}
+  </update>
+  
+  <!-- 전체 할 일 개수 조회하기 -->
+<select id="getTotalCount" resultType="_int">
+<!-- 이거 수행 결과 INT나옴 -->
+	SELECT COUNT(*) FROM TB_TODO
+</select>  
 </mapper>

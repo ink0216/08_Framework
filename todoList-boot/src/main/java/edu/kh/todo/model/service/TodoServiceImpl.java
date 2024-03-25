@@ -71,4 +71,45 @@ public class TodoServiceImpl implements TodoService{
 		todo.setTodoContent(todoContent); //todo를 전달한다
 		return mapper.addTodo(todo);
 	}
+	
+	//할 일 상세 조회
+	@Override
+	public Todo todoDetail(int todoNo) {
+		//커넥션 만들 필요 없다 -> DataBase Connection Pool(Connection을 미리 만들어놓고 쓸 때마다 빌려주니까 그떄그때 만들 필요 없다)
+		return mapper.todoDetail(todoNo);
+	}
+	
+	//할 일 삭제하기
+	@Override
+	public int todoDelete(int todoNo) {
+		return mapper.todoDelete(todoNo);
+	}
+	
+	//할 일 수정하기
+	@Override
+	public int todoUpdate(Todo todo) {
+		return mapper.todoUpdate(todo);
+		//Mybatis 호출하는데 Mybatis에는 파라미터를 하나만 전달할 수 있다!!
+		//Mybatis 객체를 이용할 때
+		//SQL에 전달할 수 있는 파라미터는 오직 한개만 전달 가능!!!!!
+		//->여러 데이터를 전달하고 싶으면 Map, DTO ,List 등으로 묶어서 전달해야 한다!!!
+	}
+	
+	//완료 여부 수정하기
+	@Override
+	public int changeComplete(Todo todo) {
+		return mapper.changeComplete(todo);
+	}
+	
+	//전체 할 일 개수 조회하기
+	@Override
+	public int getTotalCount() {
+		return mapper.getTotalCount();
+	}
+	
+	//완료된 할 일 개수 조회하기
+	@Override
+	public int getCompleteCount() {
+		return mapper.getCompleteCount(); //만들어진 것 재활용
+	}
 }

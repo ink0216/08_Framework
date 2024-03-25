@@ -1,0 +1,8 @@
+<script th:inline="javascript"> /* th:inline : 타임리프의 값을 JS 자료형에 맞게 변환해주는 구문 */
+    const message=/*[[${message}]]*/"전달 받은 메시지" /* redirect로 전달받은 애가 들어옴 */
+    /* 웹으로 요청 시 주석 부분이 대입되고, 단독 실행되면 전달받은 메시지라는 것이 들어옴 */
+    //전달 받은 mesage가 없으면 null일 것임
+    if(message !=null){
+        alert(message);
+    } /* 이것만 하면 메시지 지우는 코드는 안써도 된다(세션에 안남아있어서) */
+</script> <!-- 조각 ->main.html, detail.html에 넣을거다 -->

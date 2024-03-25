@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"> <!-- 타임리프 표기법을 여기에 적용할거다 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TodoList-Ajax</title>
+</head>
+<body>
+    <h1>Todo List - Ajax 버전</h1>
+<hr>
+
+<!-- form태그 제출은 무조건 동기식이다!!!! ->비동기로 하려면 form태그 제출을 막던가, form태그를 안쓰면 된다->안쓰기!(div로 바꾸기) -->
+<div > 
+    <h4>할 일 추가</h4>
+
+    <div>
+        제목 : <input type="text" id="todoTitle">
+        <!-- form태그 제출되는 값의 key값이 name속성값으로 된다 -->
+    </div>
+
+    <div>
+        <textarea id="todoContent" 
+        cols="50" rows="5" placeholder="상세 내용"></textarea>
+    </div>
+
+    <button id="addBtn">추가 하기</button>
+
+</div>
+
+<hr>
+<hr>
+
+
+<!-- <h3 th:text="|전체 Todo 개수 : ${#lists.size(todoList)}개 
+            / 완료된 Todo 개수 : ${completeCount}개|"></h3> -->
+            <!-- h3태그의 innerText로 th:text속성의 속성값이 들어감 -->
+<!-- 전체 TodoList의 길이를 표현할 수 있는 방법 두가지
+        1) ${#lists.size(todoList)} : todoList의 길이 반환
+        2) ${todoList.size()} ==컬렉션에서 길이 얻어오는 것(되기는 되는데 옛날방법이다)-->
+        <h3 id="todoHeader">
+            전체 Todo 개수 : <span id="totalCount">0</span> 개
+            /
+            완료된 Todo 개수 : <span id="completeCount">0</span> 개
+            <!-- 타임리프 다 없애기 ->span태그 안의 값을 js 코드로 바꾸기 -->
+            <!-- 바꿀 값을 비동기로 DB에서 가져와서 그 값으로 바꾸기 -->
+            <button id="reloadBtn">새로고침</button>
+            <!-- 아이디(js)는 카멜표기법, 클래스(css)는 - 이용하는 것이 좋다! -->
+        </h3>
+<table border="1" style="border-collapse: collapse;">
+
+    <thead>
+        <th>번호</th>
+        <th>할 일 제목</th>
+        <th>완료 여부</th>
+        <th>등록 날짜</th>
+    </thead>
+
+
+    <tbody>
+    
+        
+    </tbody>
+</table>
+
+<!-- footer.html 조각을 해당 위치에 추가하기 -->
+<!-- th:block : 타임리프 코드만 해석하고 없어지는  -->
+<th:block th:replace="~{common/footer}">
+    <!-- 조각의 경로는 forward하듯이 작성하면 된다!(접두사 접미사 생략) -->
+    <!-- templates/common/footer.html  ===> common/footer -->
+</th:block>
+<script src="/js/ajax-main.js"></script>
+</body>
+</html>

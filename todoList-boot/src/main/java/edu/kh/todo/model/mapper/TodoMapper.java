@@ -15,6 +15,8 @@ import edu.kh.todo.model.dto.Todo;
  * - TodoMapper는 인터페이스여서 인터페이스 자체는 객체가 될 수 없지만
  * - Mybatis에서 제공하는 Mapper 상속 객체가 bean으로 자동으로 등록됨
  * 	-->인터페이스를 만들기만 하면 TodoMapper를 상속받은 것을 이용해서 스프링이 일해줘서 Bean 객체로 만들어준다
+ * 
+ * 우리가 만든 인터페이스를 상속한 클래스를 Mybatis가 만들고 그걸 이용해서 Bean으로 등록한다
  * */
 @Mapper
 public interface TodoMapper {
@@ -31,11 +33,40 @@ public interface TodoMapper {
 	/**완료된 할 일 개수 조회
 	 * @return completeCount
 	 */
-	int getCompleteCount(); //todo-mapper.xml과 붙어있는데 아이디와 메서드명이 같으면 호출된다?
+	int getCompleteCount(); //todo-mapper.xml과 붙어있는데 아이디와 메서드명이 같으면 호출된다
 
 	/**할 일 추가
 	 * @param todo 
 	 * @return result(행의 개수) //같은 아이디 가지는 todo-mapper.xml의 sql이 실행된다
 	 */
 	int addTodo(Todo todo);
+
+	/**할 일 상세 조회
+	 * @param todoNo
+	 * @return todo
+	 */
+	Todo todoDetail(int todoNo);
+
+	/**할 일 삭제하기
+	 * @param todoNo
+	 * @return result
+	 */
+	int todoDelete(int todoNo);
+
+	/**할 일 수정하기
+	 * @param todo
+	 * @return result
+	 */
+	int todoUpdate(Todo todo);
+
+	/**완료 여부 수정하기
+	 * @param todo
+	 * @return result
+	 */
+	int changeComplete(Todo todo);
+
+	/**전체 할 일 개수 조회
+	 * @return totalCount
+	 */
+	int getTotalCount(); 
 }
