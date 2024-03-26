@@ -1,10 +1,13 @@
 package edu.kh.todo.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import edu.kh.todo.model.dto.Todo;
 import edu.kh.todo.model.service.TodoService;
 import lombok.extern.slf4j.Slf4j;
-
+//ctrl + shift o == import자동
 /*@ResponseBody : 자바에서 js로 갈 때 사용
  * - 컨트롤러 메서드의 반환값을 
  * 	HTTP 응답 본문에 직접 바인딩하는 역할임을 명시
@@ -31,6 +34,8 @@ import lombok.extern.slf4j.Slf4j;
  *   - 비동기 요청 시 body에 담긴 JSON(String타입)값을
  *   	알맞은 타입으로 변환해서 매개변수로 저장을 한다
  *   	String타입을 Todo타입으로 HttpMessageConverter가 바꿔준다
+ *   
+ *   --둘의 해석 순서 : 요청 -> @RequestBody 해석(선) -> 연산 수행 후 반환된 결과값 나옴 -> @ResponseBody 해석(후) (값만 보낼거야)
  * */
 
 
@@ -44,6 +49,7 @@ import lombok.extern.slf4j.Slf4j;
  * - 문자열, 숫자 <-> TEXT
  * - Map <-> JSON
  * - DTO <-> JSON
+ * key값과 필드명이 동일하면 자동으로 매핑이된다! 
  * 
  * (참고)
  * HttpMessageConverter가 동작하기 위해서는
@@ -117,4 +123,74 @@ public class AjaxController {
 		return result; //호출한 곳으로 돌려보내주기
 		//0,1로 나올 것이다
 	}
+	
+	@ResponseBody //fetch 문 위치로 값만 보낼거야 포워드 아니야
+	@GetMapping("selectList")
+	public List<Todo> selectList() { //목록을 조회해서 List형태로 반환할거다
+		List<Todo> todoList = service.selectList();
+		//List 자료형은 자바스크립트에서 사용할 수 없다 -> 이걸 JSON으로 변환 ->"{K:V, K:V, ..}" js 객체에 쌍따옴표 찍으면 문자열이 되고
+		//js가 객체 모양인 문자열을 인식해서 객체로 만든다
+		//자바 - 자바스크립트 - String, Boolean : 모든 언어가 가지고 있는 자료형
+		//List타입은 Java 타입으로
+		//Js에서 사용 불가능!!
+		// -> JSON으로 변환(GSON라이브러리 이용!)하기
+		//log.debug(todoList.toString());
+		//js에서 [] : 배열
+		//js 객체 배열 모양이 된다 [ {}, {}, {} ,...] : JSON 모양
+		// List 타입은 Java의 타입으로
+		// JS에서 사용 불가능!!
+		// -> JSON 변환(GSON 라이브러리 이용)
+		//Gson gson = new Gson();
+		//log.debug(gson.toJson(todoList)); 원래는 되는데 안되니까 지우기->Gson 안쓰는 버전으로 하기!
+		
+		return todoList;
+		//List(Java 전용 타입)를 반환->List를 반환하지만 HttpMessageConverter가 String으로 바꿔서 js에 준다
+		//	->이걸 반환 받는 JS가 인식할 수 없다(JS에는 없는 자료형이어서)
+		//	->HttpMessageConverter가 이것을 JSONArray 형태로 변환을 해준다(객체배열==JSON array 모양으로)
+		//		[{}, {}, {},...]==JSONArray(JSON으로 이루어진 배열)
+	}
+	
+	//할 일 상세 조회
+	@ResponseBody //요청한 곳으로 값 그대로 보내줘
+	@GetMapping("detail")
+	public Todo selectTodo(
+			@RequestParam("todoNo") int todoNo
+			//@RequestBody는 post방식으로 body에 담겨있을 때만 사용
+			) {
+			
+			//return 자료형은 Todo타입
+			//	->HttpMessageConverter가 String(JSON형태)으로 변환해서 반환해준다!!! //응답 받는 곳에서는 
+		return service.todoDetail(todoNo);
+	}
+	//Delete 방식 요청 처리(비동기 요청만 Delete방식 가능)
+	//동기식 요청은 Get/Post방식으로밖에 못한다!
+	@ResponseBody
+	@DeleteMapping("delete")
+	public int todoDelete(
+			//body에 담겨서 넘어왔으니까 RequestParam이 아닌 RequestBody로 해야한다!
+			@RequestBody int todoNo
+			) {
+		return service.todoDelete(todoNo); //호출해서 결과 반환 ->fetch문 위치로
+	}
+	
+	//완료 여부 변경 버튼 클릭 시
+	@ResponseBody //비동기할거니까 호출한 곳으로 값을 보내줘라
+	@PutMapping("changeComplete")
+	public int changeComplete(
+			//JSON으로 보내주면 HttpMessageConverter가 
+			//자동으로 자바 객체(DTO)로 만들어줌
+			@RequestBody Todo todo) {
+		return service.changeComplete(todo);
+	}
+	
+	@ResponseBody
+	@PutMapping("update")
+	public int todoUpdate(
+			@RequestBody Todo todo
+			//자동으로 DTO로 변환됨
+			) {
+		return service.todoUpdate(todo);
+	}
+	
+	
 }

@@ -1,5 +1,6 @@
 package edu.kh.todo.model.service;
 
+import java.util.List;
 import java.util.Map;
 
 import edu.kh.todo.model.dto.Todo;
@@ -51,6 +52,11 @@ public interface TodoService {
 	 * @return completeCount
 	 */
 	int getCompleteCount();
+
+	/**비동기로 할 일 목록 조회하기
+	 * @return todoList
+	 */
+	List<Todo> selectList();
 
 
 }

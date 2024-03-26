@@ -1,0 +1,87 @@
+#popupLayer{
+    width: 400px;
+    height: 400px;
+    border: 3px solid cornflowerblue;
+    border-radius: 15px; /* 테두리 곡률 */
+    background-color: white; /* 비쳐서 보이지 않도록 */
+    
+    /* 화면 가운데 == margin auto */
+    margin: auto;
+
+    position: fixed; /* 브라우저 상에서의 위치가 고정된다 */
+
+    /* flex안쓰고 브라우저 정가운데 배치 */
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    /* id선택자로 flex로 했는데 class선택자로 숨기기 하면 id가 이김(우선순위 높다)
+    ->그 클래스에 !important -> class선택자여도 id보다 우선순위 높아진다 */
+}
+/* popup layer 행 */
+.popup-row{
+    /* 위 아래로 일정한 영역 */
+    padding: 10px;
+    margin: 10px; /* 상하좌우 */
+    border-bottom: 3px solid grey; /* 아래쪽에만 테두리추가 */
+
+    position : relative; /* position absolute등을 할 때의 위치의 상대적 기준점 */
+    /* 나중에 x버튼 만들기 할건데 첫 번째 popup-row를 기준으로 해서 위로 몇 px, 오른쪽으로 몇 px에 할 거임 */
+    /* 그 기준이 된다! */
+    width: 90%;
+}
+/* js로 클래스를 넣었다 뺐다 해서 popup layer 보였다 안보였다 하기 */
+.popup-hidden{display: none !important;}
+
+/* x버튼 */
+#popupClose{
+    position: absolute; /* 절대적인 위치로 지정 -> 기준 내에서 아무 곳에나 배치가 가능해진다 ->기준 : popup-row */
+
+    /* 위쪽,오른쪽으로부터 10픽셀 떨어진 위치 */
+    top: 0px; 
+    right: 10px;
+    
+    font-size: 30px;
+    font-weight: bold;
+    user-select: none; /* 드래그 방지 */
+    cursor: pointer; /* 커서 손가락 모양->클릭할 수 있는 것처럼 */
+}
+#popupClose:hover{color:red; /* 마우스 올렸을 때 */}
+#popupClose:active{color : blue; /* 눌러지는 것처럼 폰트 사이즈 더 작게 */}
+
+/* 버튼 영역 */
+.btn-container{
+    flex-grow: 1; /* 중심축 방향으로 늘어나게 하기(팽창) */
+    display: flex;
+
+    /* 아래로 내리고 오른쪽으로 보내기 */
+    justify-content: flex-end; /* 중심축 방향 정렬 */
+    align-items: flex-end; /* 교차축 방향 정렬 */
+
+    margin: 15px;
+}
+.btn-container >button{margin:5px;} /* 버튼끼리 살짝 떨어뜨리기 */
+
+/* 수정 팝업 레이어 */
+#updateLayer{
+    width: 400px;
+    height: 250px;
+    border: 3px solid greenyellow;
+    border-radius: 15px;
+    background-color: white;
+    position: fixed; /* 브라우저에서 위치 고정 */
+
+  /* 브라우저 정가운데 배치 */
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#updateTitle{width: 300px;}

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TodoList-Ajax</title>
+    <link rel="stylesheet" href="/css/ajax-main.css">
 </head>
 <body>
     <h1>Todo List - Ajax 버전</h1>
@@ -56,11 +57,60 @@
     </thead>
 
 
-    <tbody>
-    
-        
+    <tbody id="tbody">
+        <!-- 아이디는 js에서 많이 사용!!!! -->
+    <!-- 할 일 목록 출력 부분 -->
+        <!-- ajax는 js기술!!! -->
     </tbody>
 </table>
+
+<!-- 할 일 상세 조회 시 출력되는 팝업화면 -->
+<div id="popupLayer" class="popup-hidden"> <!-- 처음에는 안보이게 숨겨놓기 --> 
+    <!-- popup layer : 현재 페이지 위에 새로운 레이어를 띄우는 것 -->
+    <!-- modal과 popup layer의 차이!
+    화면 어두워지면서 중간에 창 뜨고 밖에 클릭 안되는 것==modal
+    popupLayer == 팝업창 떠도 밖의 화면 스크롤, 클릭 다 됨(어두워지지도 않음)-->
+    <div class="popup-row">
+        번호 : <span id="popupTodoNo"></span>
+        |
+        제목 : <span id="popupTodoTitle"></span>
+
+        <span id="popupClose">&times;</span>
+        <!-- &times; : x 모양 나타남(곱하기) -->
+    </div>
+    <div class="popup-row">
+        완료 여부 : <span id="popupComplete"></span>
+        |
+        등록일 : <span id="popupRegDate"></span>
+    </div>
+    <div class="popup-row">
+        [내용]
+        <div id="popupTodoContent"></div>
+    </div>
+    <div class="btn-container">
+        <!-- 버튼을 감싸는 요소 -->
+        <button id="changeComplete">완료 여부 변경</button>
+        <button id="updateView">수정</button>
+        <button id="deleteBtn">삭제</button>
+    </div>
+</div>
+
+<!-- 수정하는 화면 팝업 레이어(처음에 숨겨져 있음)-->
+<div id="updateLayer" class="popup-hidden">
+    <div class="popup-row">
+        제목 : <input type="text" id="updateTitle">
+    </div>
+
+    <div class="popup-row">
+        <textarea id="updateContent" cols="50" rows="5"></textarea>
+    </div>
+
+    <div class="btn-container">
+        <button id="updateBtn">수정</button>
+        <button id="updateCancel">취소</button>
+    </div>
+</div>
+
 
 <!-- footer.html 조각을 해당 위치에 추가하기 -->
 <!-- th:block : 타임리프 코드만 해석하고 없어지는  -->

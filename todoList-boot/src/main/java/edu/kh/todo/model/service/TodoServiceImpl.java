@@ -112,4 +112,10 @@ public class TodoServiceImpl implements TodoService{
 	public int getCompleteCount() {
 		return mapper.getCompleteCount(); //만들어진 것 재활용
 	}
+	
+	//비동기로 할 일 목록 조회하기
+	@Override
+	public List<Todo> selectList() {
+		return mapper.selectAll(); //DB에서 할 일 목록 조회해오는 코드 재활용
+	}
 }
