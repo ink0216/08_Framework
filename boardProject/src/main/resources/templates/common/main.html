@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="#{app.name}">message.properties값 출력</title>
+    <th:block th:replace="~{common/common}">
+        <!-- templates/common/common.html을 여기에 조각으로 추가 -->
+        <!-- 이 블럭태그를 조각으로 바꿀거야 -->
+        <!-- # : messages  // ~ : 조각 -->
+        <!-- head부분에 script태그 있어도 되긴 한다! -->
+    </th:block>
+</head>
+<body>
+    <main>
+        <!-- 시맨틱태그  -->
+        <th:block th:replace="~{common/header}">
+            <!-- common/header.html을 여기에 조각으로 추가 -->
+        </th:block>
+
+        <!-- 메인페이지 영역(header 아래쪽 영역) -->
+        <section class="content">
+            <section class="content-1">
+                <!-- 확인, 보충 등등 그때 그때 사용 -->
+                <th:block th:text="${session.loginMember}">
+                    <!-- session scope에 loginMember 있으면 그걸 출력해라 ->없으면 아무것도 안나옴 -->
+                    <!-- 세션에 올렸으니까 새로고침 해도 유지됨 -->
+                </th:block>
+            </section>
+            <section class="content-2">
+                <!-- 로그인 ,회원가입 버튼 영역 -->
+                <!-- 로그인 박스 -->
+                <form action="/member/login" method="POST" id="loginForm"> <!-- name으로 하는 게 좋긴함 -->
+                    <!-- 메서드를 get으로 하면 비밀번호가 주소에 뜨는 문제 ->POST로 -->
+                    <fieldset class="id-pw-area">
+                        <section>
+                            <!-- 이메일/비밀번호 입력 -->
+                            <input type="text" name="memberEmail" placeholder="이메일 입력">
+                            <input type="password" name="memberPw" placeholder="비밀번호 입력">
+                        </section>
+
+                        <section>
+                            <!-- 로그인 버튼 -->
+                            <button>로그인</button>
+                        </section>
+                    </fieldset>
+                    <label>
+                        <!-- label태그 : input태그의 제목을 나타내는 태그
+                            ->이거 이용하면 연결됨-->
+                            <input type="checkbox" name="saveId">
+                            아이디 저장
+                            <!-- 연결되거나 내부에 있는 영역 눌러도 checkbox에 체크되도록 클릭 영역 넓힘 -->
+                    </label>
+                    <article class="signup-find-area">
+                        <!-- div태그와 비슷 -->
+                        <!-- 회원가입,비밀번호 찾기 -->
+                        <a href="#">회원가입</a>
+                        <span> | </span>
+                        <a href="#">ID/PW 찾기</a>
+                    </article>
+                </form>
+            </section>
+        </section>
+    </main>
+    <!-- common/footer.html 조각 추가 -->
+    <th:block th:replace="~{common/footer}"></th:block>
+</body>
+</html>

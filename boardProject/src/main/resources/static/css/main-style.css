@@ -1,0 +1,236 @@
+:root{
+    /* 변수 선언 */
+    --main-color : #455ba8;
+}
+*{
+    /* 전체 */
+    /* border: 1px solid black; */
+    /* 주석처리 해놓으면 브라우저에서 껐다 켰다 할 수 있다 */
+    box-sizing: border-box; /* w,h 설정이 원래는 content 사이즈에만 적용됐는데 border, content,padding을 합친 사이즈가 되도록 */
+    /* content / padding / border / margin */
+    padding: 0;
+    margin: 0;
+}
+body{
+    display: flex; /* 요소 간의 간격을 유연하게 */
+    flex-direction: column; /* 중심축 방향 세로 */
+    align-items: center; /* 교차축 방향으로 가운데 정렬 */
+    min-height: 100vh; /* 최소 높이를 화면 비율의 100퍼센트로 -> 화면을 꽉 채움 */
+}
+main{
+    /* main태그 */
+    width: 1140px; /* 최대 너비 */
+    flex-grow: 1; /* 중심축 방향으로 팽창하겠다 */
+    min-height: 500px; /* 최소 높이 500px */
+}
+/* ********************************* header ************************************** */
+header{
+    height: 200px;
+    display: flex; /* 꽉 차있음 */
+    flex-direction: row; /* 중심축 방향 기본값 == row */
+}
+header>section:first-child{width: 15%; /* 감싸고 있는 부모 header의 너비의 15%만큼 */}
+/* header의 자식 중에서 첫 번째 자식이 section이 맞으면 css 적용하겠다 */
+/* 첫 번째 하고싶으면 of type 써야함 */
+
+header>section:nth-child(2){width: 70%; }
+
+header>section:last-child{width: 15%; }
+
+/*  로고 */
+header>section:first-child{
+    /* 같은 선택자 여러번 쓰면 다 적용됨 */
+    display: flex;
+
+    /* 정가운데 배치 */
+    justify-content: center; 
+    align-items: center;
+}
+#homeLogo{
+    width: 120px;
+    height: auto; /* 지정된 너비에 맞게 높이 자동 지정(이미지는 처음의 가로 세로 비율에 맞춰서!) */
+}
+
+/* 검색 영역 */
+header>section:nth-child(2){
+    /* header의 자식 중 두번째가 section이 맞을 경우 css적용! */
+    /* 정가운데 배치 */
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+}
+.search-area{width: 500px;}
+
+/* 검색창 테두리 == fiedset */
+.search-area fieldset{
+    /* search-area의 후손 중의 fieldset에게 */
+    border: 2px solid var(--main-color);
+    padding: 2px; /* 모든 방향으로 */
+    border-radius: 5px; /* 반지름이 5px인 원 */
+    display: flex;
+}
+
+/* 검색창(input태그) */
+#query{
+    border: none; /* 클릭 안해도 보이는 input태그 테두리를 없앤다 */
+    outline : none; /* 클릭하면 나타나는 테두리 ==outline  ->이것도 없애기*/
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px; 
+    width: 92%; /* 감싸고 있는 fieldset의 전체 너비 중 92퍼센트만 차지 */
+}
+
+/* 검색 버튼이 나머지 8% 차지하도록 */
+#searchBtn{
+    width: 8%;
+    cursor: pointer; 
+    border: none; /* 테두리 없애기 */
+    font-size: 1.2em; /* 부모 폰트 크기의 1.2배 ->부모 폰트 크기 지정 안하면 부모 폰트가 16px이 됨 ->그거의 1.2배 */
+    color : var(--main-color);/* 돋보기도 글자이다 */
+    background-color: white;
+}
+
+/* ************************** nav *********************************** */
+nav{
+    height: 50px;
+    background-color: white;
+    border-bottom: 2px solid black; /* 아래쪽 테두리 */
+
+    position: sticky; /* 평소에는 아무 포지션 없다가 화면 밖으로 벗어났을 때 fixed처럼 지정된 위치에 붙어서 고정된다 */
+    top : 0; /* sticky 될 위치(위에서부터 0 떨어진 위치) */
+    z-index : 1000; /* 숫자가 커질수록 모니터에서 다가와서 떠있음 -> 다른 것들보다 위에 보이도록 */
+}
+nav > ul{ /* nav 자식 ul태그에게 */
+    display: flex; /* 옆으로 배치된다 */
+    list-style: none; /* li태그 앞에 나오는 점 기호 삭제 */
+    height: 100%; /* 부모 만큼 50px로*/
+}
+nav li {
+    flex :    0    1    150px;
+    /*      grow shrink basis */
+    /* 팽창은 안하는데 수축은 한다 중심축 방향 150 px */
+}
+nav a{
+    text-decoration: none; /* a태그에 있는 밑줄 제거 */
+    color:black;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 11px 0; /* 상하 좌우 */
+
+    /* a태그가 원래는 inline인데 한 줄 다 차지하게 block하고 글자 가운데 정렬하겠다 */
+    display: block;
+    text-align: center; /* 글자(inline) 가운데 정렬 */
+
+    border-radius: 5px;
+    transition-duration: 0.1s; /* css가 0.1초 동안의 시간을 가지고 변함 */
+    height: 100%;
+}
+nav a:hover{
+    /* nav의 후손 a태그에 마우스 올라갔을 때 */
+    color: white;
+    background-color: var(--main-color);
+}
+
+/* *************************** 메인페이지 content **************************************** */
+.content{
+    min-height: 800px; /* 내용이 아무것도 없어도 이만큼 공간 차지해라 */
+    display: flex;
+    align-items: stretch; /* 기본값이라서 안해도 되기는 하는데 */
+    /* align-items: stretch; : 자식요소들이 교차축 방향으로 부모의 높이만큼 똑같이 늘어남->자식에게 너비만 지정하면 된다 */
+}
+.content-1{
+    width: 70%;
+    padding: 20px;
+}
+.content-2{
+    width: 30%;
+}
+/* 로그인 영역 */
+#loginForm{
+    height: 150px;
+    padding: 10px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 중심축(세로) 방향 가운데 정렬 */
+}
+/*id/pw 입력 영역*/
+.id-pw-area{
+    border: 1px solid #ccc;
+    display: flex;
+    flex-basis: 60%; /* 중심축 방향으로 너비 60% */
+    /* 이걸 감싸는 loginForm 세로방향 150px 중 60% == height 60% == 90px */
+}
+.id-pw-area > section:first-of-type{
+    /* .id-pw-area > section:first-of-type == 이게 진짜 위치 기반(자식 section 중에서 첫번째) */
+    width: 75%; /* 나머지 버튼이 25% 차지 */
+    display: flex;
+    flex-direction: column;
+}
+/* id/pw 입력하는 input태그들 */
+.id-pw-area > section:first-of-type > input{
+    border: none; /* 인풋 태그의 테두리 지우기 */
+    outline: none; /* 클릭 시의 테두리 지우기 */
+    height: 50%; /* 상하 2분할 */
+    padding: 5px;
+    border-right: 1px solid #ccc;/* 오른쪽 테두리 */
+}
+/* input태그중에서 name이 memberEmail인 것 선택 */
+input[name="memberEmail"]{
+    /* id/pw사이 밑줄 */
+    border-bottom: 1px solid #ccc !important;/* 뭐랑 겹쳐서 안되니까 우선순위 높여주기 */
+}
+
+.id-pw-area > section:first-of-type > input:focus{
+/* id/pw input태그에 초점이 맞춰졌을 때(마우스로 클릭 시) */
+    border : 2px solid var(--main-color) !important; /* 입력 중인 것을 테두리로 알려주기 */
+}
+
+
+/* 로그인 버튼 영역 */
+.id-pw-area > section:last-of-type{
+    width: 25%;
+    display: flex;
+    justify-content: center;
+}
+.id-pw-area > section:last-of-type>button{
+    /* 로그인 버튼 */
+    width: 100%; /* 가로로 꽉 차기 */
+    background-color: white;
+    cursor: pointer;
+    border: none; /* 테두리 없애기 */
+    font-weight: bold;
+}
+.id-pw-area > section:last-of-type>button:hover{
+    /* 마우스 올라갔을 때 */
+    color : white;
+    background-color: var(--main-color);
+}
+/********************** footer ************************************/
+footer {
+    width: 100%;
+    height: 200px;
+    background-color: #a3add342;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+footer>p {
+    font-weight: bold;
+    margin: 16px 0;
+}
+
+footer>article>* {
+    font-size: 14px;
+}
+
+footer a {
+    color: black;
+    text-decoration: none;
+}
+
+footer span {
+    padding: 0 10px;
+}

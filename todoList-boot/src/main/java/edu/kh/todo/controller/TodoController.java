@@ -152,7 +152,8 @@ public class TodoController {
 	public String todoUpdate(
 			//위의 메서드랑 이름 똑같아도 가능하다
 			//매개변수가 다르면 오버로딩 가능
-			@ModelAttribute Todo todo, //Todo에는 todoNo, todoTitle, todoContent, regDate, complete 로 5개 필드 있음
+			@ModelAttribute Todo todo, 
+			//Todo에는 todoNo, todoTitle, todoContent, regDate, complete 로 5개 필드 있음
 			//전달받아온 것이 필드명과 같으면
 			//Todo라는 객체가 만들어지면서 전달받은 값이 세팅 됨
 			//	->RequestParam을 하나씩 안 해도 된다

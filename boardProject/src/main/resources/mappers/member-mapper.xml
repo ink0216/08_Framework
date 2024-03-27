@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.kh.project.member.model.mapper.MemberMapper">
+<!-- namespace에 연결할 Mapper 인터페이스를 작성 
+		-> 매퍼 인터페이스 메서드 호출 시 xml파일에 메서드명과 같은 id를 가진 SQL이 수행된다 -->
+<!-- namespace = mapper태그를 부르는 이름 -->
+<!-- 멤버랑 관련된 SQL 모아놓기 -->
+  <!-- <cache-ref namespace=""/> 이건 지우기!!! -->
+  
+  <!-- 로그인하는 SQL -->
+  <select id="login" resultType="Member">
+  <!-- 원래는 resultType 앞에 패키지명 써야하는데 패키지 안의 내용은 클래스명만으로 별칭 등록한다고 DBconfig에서 설정했다 -->
+  <!-- 언더스코어 표기법으로 조회한 컬럼들이 Member의 필드에 자동 세팅돼서 반환된다(result의 type = Member 반환) -->
+  	SELECT MEMBER_NO , MEMBER_EMAIL , MEMBER_NICKNAME , MEMBER_PW , MEMBER_TEL , MEMBER_ADDRESS ,
+	PROFILE_IMG , AUTHORITY , 
+	TO_CHAR(ENROLL_DATE,'YYYY"년" MM"월" DD"일" HH24"시" MI"분" SS"초"' ) ENROLL_DATE
+
+	FROM "MEMBER"
+	WHERE MEMBER_EMAIL = #{memberEmail} 
+	<!-- 전달받은 파라미터 들어옴->위에 parameterType이 String이라고 써야 하는데 
+	parameterType 속성은 필수가 아니다!!!!!
+	왜?? TypeHandler를 이용해서 자료형이 자동으로 판별되기 때문!
+	(https://mybatis.org/mybatis-3/sqlmap-xml.html) : 설명 페이지
+	
+	근데 resultType은 select문에서 필수!!!!!!
+	-->
+	AND MEMBER_DEL_FL ='N'
+  
+  </select>
+</mapper>

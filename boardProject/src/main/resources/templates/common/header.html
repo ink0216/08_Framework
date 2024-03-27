@@ -1,0 +1,55 @@
+<header>
+    <section>
+        <!-- 클릭 시 메인페이지로 이동하는 로고 -->
+        <a href="/">
+            <img src="/images/logo.jpg" alt="메인 로고" id="homeLogo">
+        </a>
+    </section>
+
+    <section>
+        <!-- 검색어 입력할 수 있는 요소 배치 영역 -->
+        <article class="search-area">
+            <!-- 섹션 쪼개는 article 태그 -->
+            <form action="#" method="GET">
+                <!-- 검색하는 것은 form태그! -->
+                <fieldset>
+                    <!-- fieldset태그 : form태그 영역 구분시 사용하는 테두리 만들어주는것 -->
+                    <input type="search" id="query" name="query" placeholder="검색어를 입력해 주세요." autocomplete="off">
+                    <!-- input의 search타입 : 글자 입력 시 오른쪽에 x버튼 생김! -->
+                    <!-- autocomplete="off" : 자동완성 기록 나오는 창 나오지 않도록 한다-->
+
+                    <input type="hidden" name="key" value="t">
+                    <!-- 게시글 제목 검색(나중에 할거다) 시 사용 -->
+
+                    <button id="searchBtn" class="fa-solid fa-magnifying-glass">
+                        <!-- 폰트어썸의 아이콘의 클래스만 복사해와도 되고 i태그 그대로 가져와도 된다 -->
+                    </button>
+                    <!-- 검색 버튼 -->
+                </fieldset>
+            </form>
+
+            <ul id="searchResult" class="close">
+                <!-- 검색 결과 리스트 보여주는 곳 -->
+            </ul>
+        </article>
+    </section>
+
+    <section>
+        <!-- 안쓰는 섹션 -->
+    </section>
+</header>
+
+<nav>
+    <!-- navigator -->
+    <ul>
+        <li>
+            <a href="#">공지사항</a>
+        </li>
+        <li>
+            <a href="#">자유 게시판</a>
+        </li>
+        <li>
+            <a href="#">질문 게시판</a>
+        </li>
+    </ul>
+</nav>

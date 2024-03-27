@@ -89,8 +89,8 @@ function getCompleteCount(){
 
     //첫 번째 then의 response : 응답 결과, 요청 주소, 응답 데이터 등이 담겨있다
     fetch("/ajax/completeCount") //여기로 돌아오는데 promise 객체로 돌아와서 벗겨줘야함
-    .then(response=> {return response.text()})
-    //.then(response=>{return response.text()}) 화살표 함수 안에 return구문밖에 없으면 return과 중괄호 생략할 수 있다
+    .then(response=> response.text())
+    // == .then(response=>{return response.text()}) 화살표 함수 안에 return구문밖에 없으면 return과 중괄호 생략할 수 있다
 
     //두 번째 then의 result
     // - 첫 번째 then에서 text로 변환된 응답 데이터(completeCount의 값)가 result에 담겨있다
@@ -166,6 +166,9 @@ addBtn.addEventListener("click", ()=>{
 
 //------------------------------------------------------------------------------------------------------------
 // 클릭하면 비동기(ajax)로 할 일 상세 조회하는 함수
+// function으로 함수 선언 시 
+//: 선언부보다 위에서 호출가능 
+//->단, script를 연결하면 화면 로딩 시에 function 붙은 거 다 찾아서 해석을 다함->화면 로딩시간 느려지는 단점이 있음 
 const selectTodo = (url)=>{
     //매개변수로 url을 전달받음
 
@@ -204,7 +207,10 @@ const selectTodo = (url)=>{
         */
     });
 };
-//위에서 선언한 함수를 밑에서는 호출 가능 
+//변수에 함수를 넣어서 선언 시
+//위에서 선언한 함수를 밑에서는 호출 가능하지만
+//아래에서 선언한 함수를 위에서는 호출 불가능 ->but 화면 로딩시간은 빨라짐 
+
 //------------------------------------------------------------------------------------------------------------
 //비동기(ajax)로 할 일 목록을 조회하는 함수
 //function 으로 선언 요즘은 안하고 변수 식으로 다음과같이 작성(변수에 함수를 대입하는 형식)
