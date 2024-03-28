@@ -3,10 +3,17 @@ package edu.kh.project.member.model.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import edu.kh.project.member.model.dto.Member;
 import edu.kh.project.member.model.mapper.MemberMapper;
-
+@Transactional //선언적 트랜잭션
+//해당 클래스 메서드 종료 시까지 예외가 발생하지 않으면 자동으로 commit, 중간에 예외(RuntimeException) 발생 시 자동으로 rollback
+//서비스에서 매퍼 호출하고 결과에 따라 트랜잭션 제어 처리 해야하는데 이 어노테이션 쓰면 자동으로 된다
+//	(AOP 기반의 기술)(코드 중간중간에 다른 코드를 끼워 넣는 것)
+//Controller   <- Service
+//				|
+//			커밋?롤백?
 @Service //비즈니스 로직 처리 역할 + Bean 등록
 public class MemberServiceImpl implements MemberService{ //샘플 멤버 비밀번호== pass01!
 	@Autowired  //등록된 bean 중에서 같은 타입 또는 상속 관계인 bean을
@@ -59,6 +66,48 @@ public class MemberServiceImpl implements MemberService{ //샘플 멤버 비밀�
 		 * */
 		
 	}
+	//회원가입 서비스
+	@Override
+		public int signup(Member inputMember, String[] memberAddress) {
+		//주소가 아무것도 입력되지 않으면
+		//inputMember.getMemberAddress() -> ",," 모양
+		//memberAddress -> [,,] 모양
+		//주소 입력창은 세칸인데 DB에 주소 저장은 컬럼 하나임
+		//->세개를 하나로 합쳐서 DB에 넣어야함
+		
+		//주소에 , 들어가는 경우 있어서 나중에 DB에서 꺼내서 쓸 때에 문제가 됨
+		
+		
+		if( !inputMember.getMemberAddress().equals(",,")) {
+			//주소가 입력된 경우!
+			
+			//구분자로 "^^^" 쓴 이유 : 주소, 상세 주소에 없는 특수문자 아무거나 작성 
+			//->나중에 DB에서 합쳐서 저장돼있던 주소 꺼내와서 3분할 할 때 그걸 기준으로 쪼개려고!
+			String address = String.join("^^^", memberAddress); //"a^^^b^^^c"
+			
+			//String.join("구분자", 배열)
+			// - 배열의 모든 요소 사이에 "구분자"를 추가하여
+			//	하나의 문자열로 만드는 메서드
+			
+			inputMember.setMemberAddress(address); 
+			//Mybatis는 파라미터를 하나밖에 못받아서 묶어서 한 번에 보내기 위해 inputMember를 통째로 다시 세팅
+		}else {
+			//주소가 입력되지 않았을 때
+//			주소는 not null 제약조건 없어서 null저장 가능
+			inputMember.setMemberAddress(null); //null 저장 
+			
+		}
+		//inputMember에 비밀번호 등 들어있어서 그대로 DB에 추가하면 안된다!(암호화)
+		//비밀번호를 암호화 하여 inputMember에 세팅
+		String encPw = bcrypt.encode(inputMember.getMemberPw()); //암호화한 비밀번호
+		//입력받은 비밀번호를 암호화 한 것을 받아와서
+		inputMember.setMemberPw(encPw); //암호화한 비밀번호로 다시 세팅해라
+		
+		//회원가입 매퍼 메서드 호출
+		//	->Mybatis에 의해서 자동으로 INSERT하는 SQL이 수행된다!
+		//		(매퍼 메서드 호출 시 SQL에 사용할 파라미터는 1개만 전달 가능하다!!!!)
+			return mapper.signup(inputMember);
+		}
 }
 /*BCrypt 암호화(비크립트)
  *  - 입력된 문자열(비밀번호)에 salt를 추가(항상 같은 위치에,같은 양 넣는 것 불가능)한 후 암호화함

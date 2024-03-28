@@ -27,4 +27,22 @@
 	AND MEMBER_DEL_FL ='N'
   
   </select>
+  
+  <!-- 회원 가입 -->
+  <!-- parameterType="Member" 생략 가능!(타입핸들러가 자동으로 해준다) -->
+  <!-- insert/update/delete문은 결과가 모두 행의 개수(int)이므로 resultType 작성 안해도 된다! -->
+  <insert id="signup"> <!-- 전달받은 필드의 #을 붙이면 양쪽에 홑따옴표를 붙인다! -->
+  	INSERT INTO "MEMBER"
+	VALUES(SEQ_MEMBER_NO.NEXTVAL, 
+					#{memberEmail},
+					#{memberPw},
+					#{memberNickname},
+					#{memberTel},
+					#{memberAddress},
+					NULL,
+					DEFAULT,
+					DEFAULT,
+					DEFAULT
+)
+  </insert>
 </mapper>

@@ -37,6 +37,35 @@
     <section>
         <!-- 안쓰는 섹션 -->
     </section>
+
+    <div class="header-top-menu">
+        <!-- 우측 상단 드롭다운 메뉴 -->
+        <!-- 로그인 여부에 따라 모양이 다름 -->
+        <th:block th:if="${session.loginMember ==null}">
+            <!-- 로그인 안 되어있을 경우 -->
+            <a href="/">메인페이지</a>
+            |
+            <a href="/member/login">로그인</a> <!-- 이건 get방식 요청!(저번엔 post방식이었음) -->
+        </th:block>
+
+        <th:block th:unless="${session.loginMember ==null}">
+            <!-- 로그인 되어있을 경우(null이 아닌 경우) -->
+            <label for="headerMenuToggle">
+        <!--  headerMenuToggle : 이 라벨 태그랑 headerMenuToggle이라는 아이디를 가지는 input태그랑 연결하겠다-->
+                <!-- th:text를 대괄호 두개로 쓰기 -->
+                [[${session.loginMember.memberNickname}]] <!-- 여기엔 닉네임 나올거다 -->
+                <i class="fa-solid fa-caret-down"></i> <!-- 폰트어썸 caret down 아이콘 -->
+            </label>
+            <input type="checkbox" id="headerMenuToggle"><!-- toggle : 온오프 스위치 -->
+            <!-- 라벨을 클릭해도 체크박스가 체크됐다 해제된다 -->
+            <div class="header-menu">
+                <a href="#">내정보</a>
+                <a href="/member/logout">로그아웃</a>
+            </div>
+        </th:block>
+
+    </div>
+    
 </header>
 
 <nav>

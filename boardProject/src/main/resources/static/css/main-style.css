@@ -23,6 +23,12 @@ main{
     flex-grow: 1; /* 중심축 방향으로 팽창하겠다 */
     min-height: 500px; /* 최소 높이 500px */
 }
+
+a{
+    /* a태그는 기본적으로 파란 글씨에 밑줄 그어져 있어서 그거 없애기 */
+    text-decoration: none;
+    color : black;
+}
 /* ********************************* header ************************************** */
 header{
     height: 200px;
@@ -206,6 +212,28 @@ input[name="memberEmail"]{
     color : white;
     background-color: var(--main-color);
 }
+/* 회원 가입 / 찾기 영역 */
+.signup-find-area{
+    margin-top: 10px;
+    padding-left: 5px;
+}
+.signup-find-area >a{
+    font-size: 14px;
+}
+.signup-find-area >span{
+    padding: 0 10px;
+}
+/* 아이디 저장 */
+#loginForm > label{
+    margin-top: 5px;
+    font-size: 14px;
+    display: flex;
+    padding: 5px 0;
+}
+input[name="saveId"]{
+    /* name속성값이 saveId인 input태그 */
+    margin-right: 5px;
+}
 /********************** footer ************************************/
 footer {
     width: 100%;
@@ -234,3 +262,139 @@ footer a {
 footer span {
     padding: 0 10px;
 }
+/********************************************** 로그인 되었을 때 ************************************************************/
+.login-area{
+    height: 120px;
+    padding: 30px 10px;
+    margin: 10px 0; /* 상하 좌우 */
+    border: 1px solid black;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+}
+/* 프로필 이미지 */
+#memberProfile{
+    width: 64px;
+    height: 64px;
+    border-radius: 50%; /* 원래 이미지는 사각형 모양인데 원으로 만들기 */
+}
+/* 프로필이미지를 감싸고 있는 a태그 */
+.login-area >a{
+    /* .login-area의 자식 a태그 */
+    /*a태그는 inline이어서 크기 지정 안돼서 블럭으로 만들기 */
+    display: block;
+    width: 70px;
+    height: 70px;
+    border: 3px solid #ddd;
+    border-radius: 50%;
+}
+/* 닉네임, 이메일, 로그아웃 버튼 영역 */
+.my-info{
+    width: 100%;
+    height: 100%; /* 부모에 꽉 차게 */
+    margin-left: 20px; /* 왼쪽 요소와 떨어져 있기 */
+}
+.my-info >div{
+    /* 자식 div태그 */
+    display: flex;
+    justify-content: space-between; /* 양쪽의 요소는 끝에다 붙여놓고 나머지는 일정하게 떨어져있겠다 */
+    /* 요소 지금은 두개이니까 두 개를 양끝으로 붙이겠다는 용도! */
+}
+/* 닉네임  */
+#nickname{
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: -3px; /* 글자 간격(자간) 줄이기! */
+    /* +로 하면 멀어지고, -로 하면 가까워져서 -를 크게 하면 글자끼리 겹치게 할 수도 있다!!! */
+}
+/* 로그아웃 버튼 */
+#logoutBtn{
+    color: grey;
+    font-size: 14px; /* 기본 폰트보다 작음 */
+    font-weight: bold;
+    border: 2px solid grey;
+    padding: 3px 5px; /* 글자가 가운데로옴 */
+    border-radius: 10px;
+}
+#logoutBtn:hover{
+    color: white; /* 글자색 */
+    background-color: grey;
+}
+#logoutBtn:active{ /* 클릭 시 */
+    transform: scale(0.8); /* 요소의 크기(scale)를 0.8배로 변경(transform)한다 */
+}
+/* 이메일 */
+.my-info > p{
+    margin: 0;
+    color: grey;
+}
+/* ********************** 헤더 오른쪽 상단 메뉴 ************************************* */
+header{
+    position: relative; /* 기준점이 되겠다! */
+}
+.header-top-menu{
+    /* 헤더 메뉴를 감싸는 요소 */
+    position : absolute; 
+    right:10px;
+    top : 10px; 
+}
+.header-top-menu *{
+    /* 모든 후손들에게 */
+    font-size: 15px;
+    font-weight: bold; 
+}
+/* 헤더 메뉴 체크 박스 */
+#headerMenuToggle{display: none; /* 안보이게 숨겨두겠다 */}
+
+/* 닉네임 부분 */
+label[for="#headerMenuToggle"]{
+    /* for속성값이 #headerMenuToggle인 라벨태그 */
+    cursor: pointer;
+    user-select: none;
+}
+label[for="#headerMenuToggle"]:hover{
+    /* :hover : 상태선택자 */
+    text-decoration: underline; /* 밑줄 긋기 */
+}
+/* 선택이 됐을 때 다음 요소, 안됐을 때 다음 요소 */
+/* 체크 박스 다음 형제 요소 -동위선택자 이용 */
+#headerMenuToggle + div{
+    display: none;
+}
+#headerMenuToggle:checked + div{
+    /* 체크된 #headerMenuToggle 체크박스 다음 형제 요소 */
+    display: block;/* 눈에 보이게 하기 */
+}
+
+/* 닉네임 클릭 시 보이는 메뉴 */
+.header-menu{
+    position: absolute; 
+    width: 100px;
+    height: 80px;
+    right: 0; /* absolute로 오른쪽에 붙이기 */
+    margin-top: 5px;
+    border: 1px solid black;
+}
+.header-menu >a{
+    display: flex;
+    height: 50%;
+    justify-content: center;
+    align-items: center; 
+}
+.header-menu >a:first-of-type{
+    /* 첫번째 a태그 */
+    border-bottom: 1px solid #ccc;
+}
+.header-menu >a:hover{
+    /* 첫번째 a태그 */
+    color: white;
+    background-color: var(--main-color);/* 색 반전 */
+}
+
+
+
+
+
+
+
+

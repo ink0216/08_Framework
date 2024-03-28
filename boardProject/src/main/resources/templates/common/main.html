@@ -29,40 +29,74 @@
             </section>
             <section class="content-2">
                 <!-- 로그인 ,회원가입 버튼 영역 -->
-                <!-- 로그인 박스 -->
-                <form action="/member/login" method="POST" id="loginForm"> <!-- name으로 하는 게 좋긴함 -->
-                    <!-- 메서드를 get으로 하면 비밀번호가 주소에 뜨는 문제 ->POST로 -->
-                    <fieldset class="id-pw-area">
-                        <section>
-                            <!-- 이메일/비밀번호 입력 -->
-                            <input type="text" name="memberEmail" placeholder="이메일 입력">
-                            <input type="password" name="memberPw" placeholder="비밀번호 입력">
-                        </section>
+                <!-- 로그인 박스 : 로그인 안돼있을 때에만 보이도록 조건문 만들기 -->
+                <th:block th:if="${session.loginMember ==null}"> <!-- 로그인이 되어있지 않은 경우 --> 
+                    <form action="/member/login" method="POST" id="loginForm"> <!-- name으로 하는 게 좋긴함 -->
+                        <!-- 메서드를 get으로 하면 비밀번호가 주소에 뜨는 문제 ->POST로 -->
+                        <fieldset class="id-pw-area">
+                            <section>
+                                <!-- 이메일/비밀번호 입력 -->
+                                <input type="text" name="memberEmail" placeholder="이메일 입력">
+                                <input type="password" name="memberPw" placeholder="비밀번호 입력">
+                            </section>
+    
+                            <section>
+                                <!-- 로그인 버튼 -->
+                                <button>로그인</button>
+                            </section>
+                        </fieldset>
+                        <label>
+                            <!-- label태그 : input태그의 제목을 나타내는 태그
+                                ->이거 이용하면 연결됨-->
+                                <input type="checkbox" name="saveId">
+                                아이디 저장
+                                <!-- 아이디 저장 : 로그인 성공 시 쿠키 이용 -->
+                                <!-- 로그인 폼 안에 있어서 saveId가 넘어간다 -->
+                                <!-- 체크박스에 체크 했을 때 가 넘어감 -->
+                                <!-- 체크박스에 체크 안했을 때 가 넘어감 -->
+                                <!-- 연결되거나 내부에 있는 영역 눌러도 checkbox에 체크되도록 클릭 영역 넓힘 -->
+                        </label>
+                        <article class="signup-find-area">
+                            <!-- div태그와 비슷 -->
+                            <!-- 회원가입,비밀번호 찾기 -->
+                            <a href="/member/signup">회원가입</a>
+                            <span> | </span>
+                            <a href="#">ID/PW 찾기</a>
+                        </article>
+                    </form>
+                </th:block>
+                <!-- th:unless == if문의 조건 그대로 쓰는데 그 반대로 하는 것 -->
+                <th:block th:if="${session.loginMember !=null}">
+                    <!-- 로그인 된 경우 -->
+                    <article class="login-area">
+                        <!-- 시맨틱 태그 중 하나로, 내용이 조금 다른 내용을 쓸 때 사용하는 태그 -->
+                        <a href="#">
+                            <!-- 여기에 프로필이미지 들어감 -->
+                            <!-- th:src : 타임리프로 만들어보겠다
+                                ${} :scope에 있는 거 꺼내오기 // #{} : messages.properties에 있는 것 가져오겠다-->
+                                <!-- messages.properties에 작성된 기본 사용자 이미지 -->
+                            <img th:src="#{user.default.image}" id="memberProfile" alt="프로필 이미지 없어서 기본 이미지 가져옴">
+                        </a>
+                        <div class="my-info" th:object="${session.loginMember}" >
+                            <!-- 세션 스코프의 로그인 멤버를 여기 가져가서 이 태그 내에서 필드를 쉽게 사용하겠다 -->
+                            <!-- 내 정보 -->
+                            <!-- 닉네임,이메일,로그아웃 버튼 출력하는 영역 -->
+                            <div><!-- * : object를 뜯어낸 필드를 쓸 수 있다 -->
+                                <a href="#" id="nickname" th:text="*{memberNickname}">닉네임</a>
+                                <a href="/member/logout" id="logoutBtn">로그아웃</a> <!-- a태그로 버튼 만듦 -->
+                                <!-- a태그는 get방식으로 요청 보낸다! -->
+                            </div>
+                            <p th:text="*{memberEmail}">이메일</p>
+                        </div>
 
-                        <section>
-                            <!-- 로그인 버튼 -->
-                            <button>로그인</button>
-                        </section>
-                    </fieldset>
-                    <label>
-                        <!-- label태그 : input태그의 제목을 나타내는 태그
-                            ->이거 이용하면 연결됨-->
-                            <input type="checkbox" name="saveId">
-                            아이디 저장
-                            <!-- 연결되거나 내부에 있는 영역 눌러도 checkbox에 체크되도록 클릭 영역 넓힘 -->
-                    </label>
-                    <article class="signup-find-area">
-                        <!-- div태그와 비슷 -->
-                        <!-- 회원가입,비밀번호 찾기 -->
-                        <a href="#">회원가입</a>
-                        <span> | </span>
-                        <a href="#">ID/PW 찾기</a>
                     </article>
-                </form>
+                </th:block>
+            
             </section>
         </section>
     </main>
     <!-- common/footer.html 조각 추가 -->
     <th:block th:replace="~{common/footer}"></th:block>
+    <script src="/js/main.js"></script>
 </body>
 </html>
