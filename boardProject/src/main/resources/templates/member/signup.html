@@ -29,6 +29,7 @@
                     placeholder="아이디(이메일)" maxlength="30" autocomplete="off">
                     
                     <button id="sendAuthKeyBtn" type="button">인증번호 받기</button>
+                    <!-- Auth : 인증, 권한, 보안 -->
                 </div>
                 <span class="signUp-message" id="emailMessage">메일을 받을 수 있는 이메일을 입력해주세요.</span>
                 <!-- 메시지 출력 -->
@@ -56,6 +57,7 @@
                 <div class="signUp-input-area">
                     <input type="password" name="memberPw" id="memberPw" 
                     placeholder="비밀번호" maxlength="20" >
+                    <!-- 20글자만 최대로 작성 가능 -->
                 </div>
                 <div class="signUp-input-area">
                     <input type="password" name="memberPwConfirm" id="memberPwConfirm" 
@@ -95,18 +97,21 @@
                 <label for="memberAddress">주소</label>
 
                 <div class="signUp-input-area">
-                    <input type="text" name="memberAddress" placeholder="우편번호" maxlength="6" id="sample6_postcode">                 
+                    <input type="text" name="memberAddress" placeholder="우편번호" maxlength="6" id="postcode">                 
                     
-                    <button type="button" onclick="sample6_execDaumPostcode()">검색</button>
+                    <button type="button" id="searchAddress" >검색</button>
+                    <!-- onclick : 고전 이벤트 모델(어떤 이벤트 나올 지 쓰는 것)
+                        ex) onclick="execDaumPostcode()"
+                            이렇게 하기 싫으면 버튼에 id를 줘서-->
                     <!-- API가 제공해주는 것 -->
                 </div>
 
                 <div class="signUp-input-area">
-                    <input type="text" name="memberAddress" placeholder="도로명/지번 주소" id="sample6_address">
+                    <input type="text" name="memberAddress" placeholder="도로명/지번 주소" id="address">
                 </div>
 
                 <div class="signUp-input-area">
-                    <input type="text" name="memberAddress" placeholder="상세 주소" id="sample6_detailAddress">
+                    <input type="text" name="memberAddress" placeholder="상세 주소" id="detailAddress">
                 </div>
 
                 <button id="signUpBtn">가입하기</button>
@@ -116,5 +121,16 @@
     <th:block th:replace="~{common/footer}">
         <!-- footer.html을 조각으로 추가 -->
     </th:block>
+
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script> <!-- 주소 검색하는 "다음 주소 api" 추가 -->
+    
+    <!-- 회원가입 JS  추가 -->
+    <script src="/js/member/signup.js"></script>
+    <!-- 두 스크립트태그가 따로 있다 -> 서로가 서로를 호출할 수 있을까?->할 수 있다!!! -->
+    <!-- script 태그가 여러 개로 나뉘어 있어도 HTML 랜더링(읽어들일 때) 시 큰 한 장의
+        JS 파일로 변환된다고 생각하기!!!
+        단!!!코드가 위에서 아래로 해석되기 때문에 
+        위쪽 script에서 아래쪽의 script내용은 호출 불가하다(아직 아래쪽은 해석 전이므로!)
+        아래쪽 script에서 위쪽 script 내용을 호출하는 것은 가능하다!-->
 </body>
 </html>

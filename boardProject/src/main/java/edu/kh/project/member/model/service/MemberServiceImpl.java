@@ -108,6 +108,22 @@ public class MemberServiceImpl implements MemberService{ //샘플 멤버 비밀�
 		//		(매퍼 메서드 호출 시 SQL에 사용할 파라미터는 1개만 전달 가능하다!!!!)
 			return mapper.signup(inputMember);
 		}
+	
+	//이메일 중복 검사
+	@Override
+		public int checkEmail(String memberEmail) {
+			return mapper.checkEmail(memberEmail);
+		}
+	//닉네임 중복 검사
+	@Override
+		public int checkNickname(String memberNickname) {
+			return mapper.checkNickname(memberNickname);
+		}
+	//전화번호 중복 검사
+	@Override
+		public int checkTel(String memberTel) {
+			return mapper.checkTel(memberTel);
+		}
 }
 /*BCrypt 암호화(비크립트)
  *  - 입력된 문자열(비밀번호)에 salt를 추가(항상 같은 위치에,같은 양 넣는 것 불가능)한 후 암호화함

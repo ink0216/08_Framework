@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <!-- 헤드태그는 보여지는 페이지를 정의하는 것인데 이메일은 이메일 페이지에 대한 설정이 돼있어서 head태그 해석 안됨->지우기 -->
+    <!-- 메일은 header 불필요!(내용만 보낸다고 생각하기) -->
+    <!-- css/js 파일은 이메일 첨부 불가 -> 그래서 html 형식으로 css작성함 -->
+    <div style="display: flex; flex-direction: column; align-items: center;">
+    <img src="cid:logo" width="200px"><!-- Content-ID로 등록된 이미지 중 logo를 출력하겠다 -->
+
+    <h3>
+        아래 발급된 인증 번호를 제한 시간 내에 
+        <br>
+        회원 가입 화면에 입력 후 인증 버튼을 눌러주세요.
+    </h3>
+    <h3 style="text-align: center; border: 3px solid black; color:blue; width: 400px; padding:10px;" >
+        <!-- 가운데 정렬된 인증코드 -->
+        <th:block th:text="${authKey}">
+            <!-- 세팅한 값 꺼내서 쓰기 -->
+        </th:block>
+    </h3>
+    </div>
+</body>
+</html>

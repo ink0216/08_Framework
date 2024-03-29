@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -204,6 +205,36 @@ public class MemberController {
 		}
 		ra.addFlashAttribute("message", message); //footer.html에 이 메시지 처리하는 스크립트가 있다
 		return "redirect:"+path; //path로 리다이렉트
+	}
+	 /**이메일 중복 검사
+	 * @param memberEmail
+	 * @return 중복이면 1, 중복 아니면 0 반환
+	 */
+	@ResponseBody //응답 본문(요청한 fetch())로 결과를 그대로 돌려보냄
+	@GetMapping("checkEmail")
+	public int checkEmail(
+			//입력한 이메일 매개변수로 받아온다
+			@RequestParam("memberEmail") String memberEmail //memberEmail 변수에 저장
+			) { //COUNT(*)
+		//포워드가 아닌, 비동기로 요청한 곳으로 결과를 보내주겠다 -> @ResponseBody 이용!
+		return service.checkEmail(memberEmail);
+	}
+	/**닉네임 중복 검사
+	 * @return 중복 1, 아님 0
+	 */
+	@ResponseBody
+	@GetMapping("checkNickname")
+	public int checkNickname(
+			@RequestParam("memberNickname") String memberNickname
+			) {
+		return service.checkNickname(memberNickname);
+	}
+	@ResponseBody
+	@GetMapping("checkTel")
+	public int checkTel(
+			@RequestParam("memberTel") String memberTel
+			) {
+		return service.checkTel(memberTel);
 	}
 }
 /*Cookie란?

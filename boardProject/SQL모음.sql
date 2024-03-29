@@ -81,6 +81,11 @@ AND MEMBER_DEL_FL ='N';
 
 SELECT * FROM "MEMBER";
 
+--이메일 중복 검사(탈퇴 안 한 회원 중 같은 이메일이 있는 지 조회)
+--같은 게 있는지 조회
+SELECT COUNT(*) FROM "MEMBER" WHERE MEMBER_DEL_FL  = 'N'
+AND MEMBER_EMAIL =
+
 
 
 
