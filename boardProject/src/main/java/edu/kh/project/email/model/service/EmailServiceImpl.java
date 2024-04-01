@@ -10,7 +10,7 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 
-@Service //Bean 등록
+@Service //Bean 등록 + Service 역할 명시
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService{
 	//EmailConfig 설정이 적용된 객체 -> 얘를 이용하면 메일을 보낼 수 있다
