@@ -109,7 +109,46 @@ if(loginForm !=null){
         // if(memberEmail.length == 0 || memberPw.length==0) e.preventDefault();
     });
 }
+/* 빠른 로그인 */
+const quickLoginBtns = document.querySelectorAll(".quick-login"); // NodeList(배열, forEach를 제공)로 얻어와짐
+quickLoginBtns.forEach((item, index)=>{ //향상된 for문
+    //item : 현재 반복에서 꺼내온 객체가 들어있음
+    //index : 현재 반복 중인 인덱스
+    item.addEventListener("click", e=>{
+        //배열에 이벤트 추가 못한다!
+        //요소 하나하나에만 이벤트 추가할 수 있다
+        const email = item.innerText; //버튼에 작성된 이메일 얻어오기
+        location.href = "/member/quickLogin?memberEmail="+email; //get방식 요청 email값 쿼리스트링으로 전달
+    });
+});
+//--------------------------------------------------------------------------------------------
+/* 비동기로 회원 목록 조회하기 */
+//조회 버튼
+const selectMemberList = document.querySelector("#selectMemberList");
 
+//tbody
+const memberList = document.querySelector("#selectMemberList");
+
+//조회 버튼 클릭 시
+selectMemberList.addEventListener("click", ()=>{
+    // 1) 비동기로 회원 목록 조회
+    //      (포함될 회원 정보 : 회원 번호, 이메일, 닉네임, 탈퇴 여부)
+    //      가져오면 [{}, {}, {}, ...] 형태인 JSON Array로 반환되는데 JS객체 배열로 변환된다
+    //      fetch하면 첫 번째 then에서 response =>response.json()으로 변환
+    //      그게 JS 객체로 변환해준다
+    //  2) 두 번째 then
+    //      tbody에 이미 작성되어 있던 내용(이전에 조회한 목록) 다 삭제하기
+    //  3) 두 번째 then
+    //      조회된 JS 객체 배열을 이용해 
+    //      tbody에 들어갈 요소를 만들고 값 세팅 후 추가
+    fetch("/member/selectMemberList") //조회니까 get방식
+    //그러면 결과가 int나 String이면 response.text()로 하는데
+    //지금은 비동기 요청 결과가 객체이므로 json으로 변환
+    .then(resp => resp.json())
+    .then(member => {
+        console.log(member);
+    });
+});
 
 
 

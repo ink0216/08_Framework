@@ -50,6 +50,8 @@
     <!--<select id="selectAll" resultType="edu.kh.todo.model.dto.Todo"> 이렇게 써야 하는데  -->
   <!-- 컬럼 네개의 값을 어디에다가 옮겨담는다 -->
   <select id="selectAll" resultType="edu.kh.todo.model.dto.Todo">  <!-- 컬럼 네개의 값을 어디에다가 옮겨담는다 -->
+  <!-- select문 수행 하면 여러 행이 나오고, Todo에는 한 행만 저장할 수 있다!
+  resultType은 여러 행이 아닌, 한 행만 조회해서 네 컬럼의 값을 저장할 타입으로 쓰면 되고, 그러면 Mapper파일에서 자동으로 여러 행이면 리스트에 담긴다 -->
   <!-- 그러면 TodoMapper 인터페이스의 같은 이름을 가지는 selectAll 메서드와 연결된다 
   		=> selectAll() 메서드 호출 시 연결된 SQL이 실행된다!!!!!!!-->
   		<!-- 결과를 어디다가 옮겨담는지 지정(resultType) -->

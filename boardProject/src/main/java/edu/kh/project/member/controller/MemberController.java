@@ -1,5 +1,7 @@
 package edu.kh.project.member.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -235,6 +237,35 @@ public class MemberController {
 			@RequestParam("memberTel") String memberTel
 			) {
 		return service.checkTel(memberTel);
+	}
+	/**빠른 로그인
+	 * @param memberEmail
+	 * @param model
+	 * @param ra
+	 * @return
+	 */
+	@GetMapping("quickLogin")
+	public String quickLogin(
+			@RequestParam("memberEmail") String memberEmail,
+			Model model,
+			RedirectAttributes ra
+			) {
+		Member loginMember = service.quickLogin(memberEmail);
+		//DB에서 일치하는 정보 세션에 올려 로그인 하기
+		
+		if(loginMember == null) {
+			ra.addFlashAttribute("message", "해당 이메일을 가지는 회원이 존재하지 않습니다.");
+		}else {
+			//존재하는 경우
+			model.addAttribute("loginMember", loginMember); //@SessionAttributes가 세션으로 올려준다
+		}
+		return "redirect:/"; 
+	}
+	@ResponseBody
+	@GetMapping("selectMemberList")
+	public List<Member> selectMemberList(){
+		//모든 회원 조회
+		return service.selectMemberList();
 	}
 }
 /*Cookie란?

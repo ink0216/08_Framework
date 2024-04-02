@@ -62,4 +62,12 @@
   SELECT COUNT(*) FROM "MEMBER" WHERE MEMBER_DEL_FL  = 'N'
 	AND MEMBER_TEL =#{memberTel}
   </select>
+  
+  <!-- 회원 전체 조회 -->
+  <select id="selectMemberList" resultType="edu.kh.project.member.model.dto.Member">
+  	SELECT MEMBER_NO, MEMBER_EMAIL
+  			, MEMBER_NICKNAME,MEMBER_DEL_FL
+  	FROM "MEMBER" 
+  	ORDER BY MEMBER_NO
+  </select>
 </mapper>

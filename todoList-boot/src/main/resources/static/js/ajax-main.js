@@ -179,7 +179,7 @@ const selectTodo = (url)=>{
     fetch(url) //비동기로 요청 ->이 주소 처리할 컨트롤러 만들기
 
     .then(response =>response.json()) //JSON으로 바꿨다 ->이게 두 번째 then으로 넘어감
-    .then(todo =>{
+    .then(todo =>{ //JSON이 JS 객체 형태로 변환돼서 들어옴->꺼내서 쓸 수 있게 된다
         //매개변수 todo : 서버 응답(JSON)이 Object로 변환된 값(첫 번째 then 반환 결과)->todo 객체에 넣었다
         console.log(todo);
 
@@ -291,9 +291,6 @@ const selectTodoList = ()=>{//js는 변수에 함수도 저장할 수 있다
                     //a.href="주소"하면 속성 추가된다
                     a.href="/ajax/detail?todoNo="+todo.todoNo; //쿼리스트링으로 todoNo전달
                     //주소에는 띄어쓰기 없어야함!
-
-                    
-
 
                     //a태그를 td에 넣기
                     td.append(a);

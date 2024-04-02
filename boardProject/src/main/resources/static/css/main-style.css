@@ -23,6 +23,12 @@ main{
     flex-grow: 1; /* 중심축 방향으로 팽창하겠다 */
     min-height: 500px; /* 최소 높이 500px */
 }
+@media (max-width : 1140px){
+    /* 미디어(매체) 쿼리 */
+    /* 내가 보고있는 화면 너비가 1140 px 이하일 때 적용할 css */
+    /* 이걸 넘어가면 바로 위의 css가 적용될거다 */
+    main{width:100%;  /* ==100vh */} /* 이렇게 하면 안잘릴 수 있다 */
+}
 
 a{
     /* a태그는 기본적으로 파란 글씨에 밑줄 그어져 있어서 그거 없애기 */
@@ -390,6 +396,9 @@ label[for="#headerMenuToggle"]:hover{
     color: white;
     background-color: var(--main-color);/* 색 반전 */
 }
+/* css 미디어 쿼리? */
+
+
 
 
 

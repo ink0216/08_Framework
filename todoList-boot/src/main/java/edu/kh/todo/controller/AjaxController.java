@@ -77,7 +77,7 @@ public class AjaxController {
 	//부분부분 바꾸려면 바꿀 값이 필요함
 	//forward가 아닌, 값만 돌아가는거다
 	@GetMapping("totalCount")
-	public int getTotalCount() {
+	public int getTotalCount() { //response.text()
 		log.info("getTotalCount() 메서드 호출됨!!!!!"); //값을 보려는 게 아니어서 info 사용
 		//화면에서 비동기 요청해보기
 		
@@ -99,7 +99,7 @@ public class AjaxController {
 	
 	@ResponseBody
 	@GetMapping("completeCount")
-	public int getCompleteCount() {
+	public int getCompleteCount() { //response.text()
 		//이 메서드 호출 결과가 forward나 redirect가 아닌
 		//completeCount 값만 DB에서 조회해서 그대로 반환하길 원함 ->@ResponseBody(호출한 곳으로 값 반환하기만 할거야) 사용
 		return service.getCompleteCount();
@@ -108,7 +108,7 @@ public class AjaxController {
 	
 	@ResponseBody//응답할 때 값만 필요하다 ->비동기 요청 결과로 값만 반환(화면 X)
 	@PostMapping("add")
-	public int addTodo(
+	public int addTodo( //response.text()
 			//JSON으로 받아오는 것 하나씩 뜯어보기 ->안됨
 			//JSON이 파라미터로 전달된 경우 아래 방법으로 얻어오기 불가능하다
 			//@RequestParam("todoTitle") String todoTitle,
@@ -125,7 +125,7 @@ public class AjaxController {
 	}
 	
 	@ResponseBody //fetch 문 위치로 값만 보낼거야 포워드 아니야
-	@GetMapping("selectList")
+	@GetMapping("selectList")  //response.text()
 	public List<Todo> selectList() { //목록을 조회해서 List형태로 반환할거다
 		List<Todo> todoList = service.selectList();
 		//List 자료형은 자바스크립트에서 사용할 수 없다 -> 이걸 JSON으로 변환 ->"{K:V, K:V, ..}" js 객체에 쌍따옴표 찍으면 문자열이 되고
@@ -166,7 +166,7 @@ public class AjaxController {
 	//동기식 요청은 Get/Post방식으로밖에 못한다!
 	@ResponseBody
 	@DeleteMapping("delete")
-	public int todoDelete(
+	public int todoDelete( //response.text()
 			//body에 담겨서 넘어왔으니까 RequestParam이 아닌 RequestBody로 해야한다!
 			@RequestBody int todoNo
 			) {
@@ -175,7 +175,7 @@ public class AjaxController {
 	
 	//완료 여부 변경 버튼 클릭 시
 	@ResponseBody //비동기할거니까 호출한 곳으로 값을 보내줘라
-	@PutMapping("changeComplete")
+	@PutMapping("changeComplete") //response.text()
 	public int changeComplete(
 			//JSON으로 보내주면 HttpMessageConverter가 
 			//자동으로 자바 객체(DTO)로 만들어줌
@@ -184,7 +184,7 @@ public class AjaxController {
 	}
 	
 	@ResponseBody
-	@PutMapping("update")
+	@PutMapping("update") //response.text()
 	public int todoUpdate(
 			@RequestBody Todo todo
 			//자동으로 DTO로 변환됨
