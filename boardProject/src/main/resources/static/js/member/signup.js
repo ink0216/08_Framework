@@ -68,6 +68,11 @@ const emailMessage = document.querySelector("#emailMessage");
 // 2) 이메일이 입력(마우스로 입력, 복붙, keyup keydown, keypress, copy paste 등 통틀면 input이벤트!!)
 //될 때 마다 유효성 검사를 수행할 거다!
 memberEmail.addEventListener("input", e=>{
+    //이메일 인증번호 인증 후에 이메일이 변경되는 경우
+    checkObj.authKey = false; //readOnly 상태로 바꿔도 된다!!(인증 후에는 수정 못하도록 막는 것)
+    document.querySelector("#authKeyMessage").innerText="";
+
+
     const inputEmail = e.target.value; //작성된 이메일 값 얻어오기(이벤트가 발생한 요소의 값)
 
 
@@ -332,6 +337,9 @@ const sendAuthKeyBtn = document.querySelector("#sendAuthKeyBtn");
 const authKey = document.querySelector("#authKey");
 //인증번호 입력 input태그
 
+const checkAuthKeyBtn = document.querySelector("#checkAuthKeyBtn");
+//인증번호 입력 후 확인하는 버튼
+
 const authKeyMessage = document.querySelector("#authKeyMessage");
 //인증번호 관련 메시지 출력 span태그
 
@@ -348,6 +356,10 @@ let min = initMin; //실제 줄어드는 시간을 저장할 변수
 let sec = initSec; //실제 줄어드는 시간을 저장할 변수
 //타이머가 인증번호 받기 버튼 눌렀을 때부터 타이머 동작하도록!
 sendAuthKeyBtn.addEventListener("click", ()=>{
+    //클릭 되자마자
+    checkObj.authKey=false;
+    document.querySelector("#authKeyMessage").innerText="";
+
     //중복되지 않은, 유효한 이메일을 입력한 경우가 아니면
     if(!checkObj.memberEmail){
         //이메일이 유효하지 않은 경우
@@ -371,7 +383,7 @@ sendAuthKeyBtn.addEventListener("click", ()=>{
     //심부름 보낼 때부터 타이머 시작됨
     //get방식으로 하면 주소에 쓰면 돼서 get방식으로 하면 안된다!->다른 사람이 막 이메일 많이 보낼 수 있음
     //->Post방식으로 해보기
-    fetch("/email/signup", {
+    fetch("/email/signup", { ///비동기는 이 패치 코드 수행되는 동안 아래 코드들 수행됨
         method : "POST",
         headers : {"Content-Type" : "application/json"}, //객체 타입
         body : memberEmail.value //인풋태그에 작성된 value값을 넘기겠다
@@ -401,8 +413,10 @@ sendAuthKeyBtn.addEventListener("click", ()=>{
     //clearInterval(Interval이 저장된 변수)
     // - 매개변수로 전달 받은 Interval을 지워버린다
 
+    alert("인증번호가 발송되었습니다.");
+
     //인증 시간 출력(1초마다 동작하며 5분에서 시간 줄여나감)
-    authTimer = setInterval( ()=>{
+    authTimer = setInterval( ()=>{ //지정된 시간만큼 지날 때마다 수행
         authKeyMessage.innerText=`${addZero(min)}:${addZero(sec)}`;
 
         //0분 0초인 경우(화면에 00:00 출력한 후)
@@ -425,7 +439,7 @@ sendAuthKeyBtn.addEventListener("click", ()=>{
             min--; //1분 줄이기
         }
         sec--; //1초 감소시키기
-    } , 50); //ms = 1/1000초
+    } , 1000); //ms = 1/1000초
     //Interval을 저장할 변수
 
 
@@ -468,10 +482,12 @@ signUpForm.addEventListener("submit", e=>{
                 //하나씩 꺼낸 key값에 따라서
                 /* 뭐가 유효하지 않는 지 key값을 찾은것임 */
                 case "memberEmail" :  str="이메일이 유효하지 않습니다."; break;
+                case "authKey" :  str="이메일이 인증되지 않았습니다."; break;
                 case "memberPw" :  str="비밀번호가 유효하지 않습니다."; break;
                 case "memberPwConfirm" :  str="비밀번호가 일치하지 않습니다."; break;
                 case "memberNickname" :  str="닉네임이 유효하지 않습니다."; break;
                 case "memberTel" :  str="전화번호가 유효하지 않습니다."; break;
+                
             }
             alert(str); //경고창 출력
             document.getElementById(key).focus(); //key값을 아이디로 가지는 요소에 작성 가능하도록 초점 이동시키기
@@ -479,6 +495,59 @@ signUpForm.addEventListener("submit", e=>{
             return; //하나 false이면 더 검사할 필요 없다
         }
     }
+});
+//---------------------------------------------------------
+//인증하기 버튼 클릭 시 
+//입력된 인증번호를 비동기로 서버에 제출(전달)
+//서버에서, 입력된 인증번호와 발급된 인증번호가 같은 지 비교
+//->같으면 1, 아니면 0 반환하도록 만들어보기
+//단, 타이머가 00:00초가 아닐 경우에만 수행해야 한다(제한 시간 후에 입력하면 안됨) 
+checkAuthKeyBtn.addEventListener("click", ()=>{
+    //제한시간 이내인지부터 확인하기
+    if(min===0 && sec ===0){
+        //타이머가 0분 0초인 경우(시간 초과)
+        alert("인증번호 입력 제한 시간을 초과하였습니다.");
+        return; //이 함수(이벤트 핸들러 함수)가 종료된다
+    }
+    //타이머가 아직 시간 남은 경우
+    //비동기로 인증하기
+
+    if(authKey.value.length<6){
+        //인증번호가 6자리여서, 인증번호가 제대로 입력되지 않은 경우
+        alert("인증번호를 정확히 입력해 주세요.");
+        return;
+    }
+    const obj={
+        "email" : memberEmail.value, //입력 받은 이메일
+        "authKey" : authKey.value //입력 받은 이메일과 입력 받은 인증번호를 객체로 만들어두기
+}; //객체 만들기
+    fetch("/email/checkAuthKey", {
+        method : "POST",
+        headers : {"Content-Type" : "application/json"},
+        body : JSON.stringify(obj) //JS의 객체(obj)를 Java에서는 인식을 못해서 문자열화 해서 전달
+        //인증번호만 보내면 안되고 
+        //body에는 전달할 데이터 적음(입력한 인증번호를 전달)
+        //method, headers, body 외에도 작성가능한 것 더 있음
+    }) //인증하는 것 get방식으로 하면 안좋다 -> POST방식으로!
+    .then(resp =>resp.text())
+    .then(result =>{
+        //result값에 따라서 코드 수행
+        if(result ==0){ //result 는 문자열 "0"으로 넘어와서 ===쓰면 안됨
+            // == : 값만 비교
+            // === : 값 + 타입 비교
+            //엥근데 두개 쓰면 안되고 세개 써야 됨!
+
+            //실패
+            alert("인증번호가 일치하지 않습니다.");
+            checkObj.authKey=false;
+            return;
+        }
+        clearInterval(authTimer); //이걸 안하면 안됨(타이머 멈추기!!!(타이머 더이상 돌지 않도록))
+        authKeyMessage.innerText="인증 되었습니다.";
+        authKeyMessage.classList.remove("error");
+        authKeyMessage.classList.add("confirm"); //초록글씨
+        checkObj.authKey=true; //인증번호 검사 여부를 true로 바꾼다(인증 완료)
+    })
 });
 
 

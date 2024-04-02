@@ -1,5 +1,8 @@
 package edu.kh.project.email.model.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -7,9 +10,13 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
+import edu.kh.project.email.model.mapper.EmailMapper;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 
+//@Transactional : 이거 안쓰면 기본값은 commit이고, 이걸 쓰면 예외 발생하면 롤백할게 설정하는 것!
+//Mybatis == JDBC(DBCP) -> SQL 실행 후 문제 없으면 connection이 닫히면서 자동으로 Commit된다!!
+//Spring == Java
 @Service //Bean 등록 + Service 역할 명시
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService{
@@ -20,6 +27,11 @@ public class EmailServiceImpl implements EmailService{
 	//타임리프(템플릿 엔진)을 이용해서 html 코드를 java로 변환할 수 있다
 	//보였으면 하는 화면을 html로 만들어놓으면 이 밑에서 얘가 java 코드로 변환할거다
 	private final SpringTemplateEngine templateEngine;
+	
+	//Autowired 썼었는데 @RequiredArgsConstructor 쓰면 생성자를 이용한 Bean 의존성 주입
+	//이거 쓰려면 필드를 private final로 해야 된다!!
+	private final EmailMapper mapper; //Mapper 의존성 주입
+	
 	//이메일 보내기
 	public String sendEmail(String htmlName, String email) { //어떤 html파일을 이용해서 화면을 만들것인지!
 		//6자리 난수(인증코드) 생성하기
@@ -74,6 +86,27 @@ public class EmailServiceImpl implements EmailService{
 			e.printStackTrace();
 			return null;
 		}
+		//이메일 + 6자리 인증번호를 TB_AUTH_KEY 테이블에 저장하기
+		// 둘을 맵으로 묶기
+		Map<String, String> map = new HashMap<>();
+		map.put("authKey", authKey);
+		map.put("email", email);
+		
+		// 1) 해당 이메일이 DB에 존재하는 경우가 있을 수 있기 때문에
+		//		해당 이메일에 대한 authKey 수정, update (같은 이메일로 인증번호를 여러 번 보낸 경우, 나중 것으로 인증번호 바꾸어 저장)
+		//		->1 반환 == update 성공 == 해당 이메일에 부여됐던 인증번호가 이미 존재했었는데 새롭게 바꿨다
+		//		  0 반환 == update 실패 == 해당 이메일이 TB_AUTH_KEY 테이블에 존재 X -> INSERT 시도하면 된다
+		int result = mapper.updateAuthKey(map); //map 전달
+		
+		if(result ==0) {
+			// 2) 1번 update 실패 시 insert 시도
+			result = mapper.insertAuthKey(map);
+		}
+		
+		//수정, 삭제 후에도 result값이 0이면 ==제대로 삽입도 수정도 안됐다
+		if(result==0) return null;
+		
+		//성공
 		return authKey; //오류 없이 전송 되면 authKey를 반환
 	}
 	public String loadHtml(String authKey,//인증번호랑
@@ -86,7 +119,7 @@ public class EmailServiceImpl implements EmailService{
 		// org.thymeleaf.context 선택하기!!!
 		context.setVariable("authKey", authKey);//타임리프가 적용된 HTML 에서 사용할 값 추가해서 보내주기
 		//model.addAttribute("authKey", authKey) 하면 포워드 한 곳에서 th:text="${authKey}"하면 됐었는데 그것과 비슷!
-		return templateEngine.process("email/"+htmlName, context);
+		return templateEngine.process("email/"+htmlName, context); //html코드 전체가 문자열로 만들어져서 반환됨
 		//forward경로처럼 적음
 		//여기로 forward할 거야
 		//근데 context전달
@@ -126,7 +159,12 @@ public class EmailServiceImpl implements EmailService{
         }
         return key;
     }
-	
+    
+    //이메일, 인증번호 확인
+	@Override
+	public int checkAuthKey(Map<String, Object> map) {
+		return mapper.checkAuthKey(map);
+	}
 }
  /* Google SMTP를 이용한 이메일 전송하기
   * - SMTP(Simple Mail Transfer Protocol, 간단한 메일 전송 규약)

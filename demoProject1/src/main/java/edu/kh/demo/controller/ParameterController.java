@@ -177,6 +177,7 @@ public class ParameterController {
 		mem.getMemberAge(); //getter
 		mem.setMemberAge(0); //setter
 		//안만들었는데 호출이 가능하다
+		log.debug(mem.toString());
 		log.debug("inputMember : "+inputMember.toString());
 		return "redirect:/param/main";
 	}

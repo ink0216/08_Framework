@@ -84,11 +84,34 @@ SELECT * FROM "MEMBER";
 --이메일 중복 검사(탈퇴 안 한 회원 중 같은 이메일이 있는 지 조회)
 --같은 게 있는지 조회
 SELECT COUNT(*) FROM "MEMBER" WHERE MEMBER_DEL_FL  = 'N'
-AND MEMBER_EMAIL =
+AND MEMBER_EMAIL =;
 
+DELETE FROM "MEMBER"
+WHERE MEMBER_EMAIL ='ink0216@naver.com';
+COMMIT;
+SELECT * FROM "MEMBER";
 
+--인증번호가 잘 안돼서 DB이용하는 인증 방법 시도!
+/*이메일, 인증키 저장하는 테이블 생성하기*/
+CREATE TABLE "TB_AUTH_KEY"(
+	"KEY_NO" NUMBER PRIMARY KEY,
+	"EMAIL" NVARCHAR2(50) NOT NULL,
+	"AUTH_KEY" CHAR(6) NOT NULL,
+	"CREATE_TIME" DATE DEFAULT SYSDATE NOT NULL  --인증번호가 만들어진 시간(이거 이용하면 JS 말고 DB에서도 컨트롤 가능)
+);
+COMMENT ON COLUMN "TB_AUTH_KEY"."KEY_NO" IS '인증키 구분 번호(시퀀스)';
+COMMENT ON COLUMN "TB_AUTH_KEY"."EMAIL" IS '인증 이메일';
+COMMENT ON COLUMN "TB_AUTH_KEY"."AUTH_KEY" IS '인증 번호';
+COMMENT ON COLUMN "TB_AUTH_KEY"."CREATE_TIME" IS '인증 번호 생성 시간';
 
+CREATE SEQUENCE SEQ_KEY_NO NOCACHE; --인증키 구분 번호 시퀀스
 
+--인증하기 버튼 누르면 인증 이메일과 인증번호를 TB_AUTH_KEY 테이블에 넣어둘거다
+SELECT * FROM "TB_AUTH_KEY";
+
+SELECT COUNT(*) FROM "TB_AUTH_KEY"
+WHERE EMAIL = #{가입하려는 이메일 입력값}
+AND AUTH_KEY = #{위 이메일로 보낸 인증번호}
 
 
 

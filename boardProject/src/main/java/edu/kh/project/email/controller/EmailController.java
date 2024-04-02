@@ -1,16 +1,20 @@
 package edu.kh.project.email.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Map;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import edu.kh.project.email.model.service.EmailService;
-import edu.kh.project.email.model.service.EmailServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -25,21 +29,38 @@ public class EmailController {
 	
 	@PostMapping("signup")
 	@ResponseBody //값 그대로 fetch로 반환
-	public int signup(@RequestBody String email,
+	public int signup(@RequestBody String email
 			//이메일이 넘어오면 그 이메일로 인증번호 보내야된다
-			Model model
 			) {
 		String authKey = service.sendEmail("signup", email); //이메일 보내는 서비스 호출
 		
 		if(authKey !=null) {
 			//인증번호가 반환돼서 돌아옴 == 이메일 보내기가 성공
 			
-			//이메일로 전달한 인증번호를 Session에 올려두기->그러면 브라우저를 끄지 않는 이상 계속 유지된다 ->Model 필요!
-			//사람이 입력한 것과 세션에 있는 것을 비교
-			model.addAttribute("authKey", authKey); //기본적으로는 model은 request scope인데 @SessionAttributes
 			return 1;
 		}
 		return 0; //이메일 보내기 실패
+	}
+	/**Session에 있는 인증번호를 여기로 가져와서 입력된 인증번호와 비교
+	 * @param map : 전달 받은 JSON->Map 변경하여 저장 //자바에서도 k:v 로 쓸 수 있다
+	 * @return
+	 */
+	@ResponseBody //포워드나 리다이렉트 아닌, 요청한 곳으로 
+	@PostMapping("checkAuthKey") //같으면 1, 다르면 0 반환하기로
+	//숫자나 문자로
+	public int checkAuthKey(
+			@RequestBody Map<String, Object> map
+				
+			) { //인증을 JS에서 하면 안되고!!! DB에서 해보기
+		//DB
+		//Redis : 서버 컴퓨터에서 동작하는 초소형 데이터베이스
+		
+		/* @SessionAttribute("key") 
+		 * - session에 세팅된 값 중 "key"가 일치하는 값을 얻어와 매개 변수에 대입*/
+		
+		//입력 받은 이메일, 인증번호가 DB에 있는 지 카운트로 조회
+		int count = service.checkAuthKey(map); //map전달
+		return count; //이메일 있고 인증번호 일치 == 1반환 //아니면 0 반환
 	}
 }
 
