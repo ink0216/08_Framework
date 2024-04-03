@@ -64,7 +64,10 @@
   </select>
   
   <!-- 회원 전체 조회 -->
-  <select id="selectMemberList" resultType="edu.kh.project.member.model.dto.Member">
+  <select id="selectMemberList" resultType="Member">
+  <!-- resultType 작성 시 한 행의 결과를 저장할 자료형(int, double, String,..), Map, DTO를 작성하면 된다 -->
+  <!-- resultType="edu.kh.project.member.model.dto.Member" -->
+  <!-- Member : 별칭만 써도 된다 -->
   	SELECT MEMBER_NO, MEMBER_EMAIL
   			, MEMBER_NICKNAME,MEMBER_DEL_FL
   	FROM "MEMBER" 

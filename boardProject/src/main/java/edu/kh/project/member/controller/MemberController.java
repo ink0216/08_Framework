@@ -263,7 +263,11 @@ public class MemberController {
 	}
 	@ResponseBody
 	@GetMapping("selectMemberList")
-	public List<Member> selectMemberList(){
+	public List<Member> selectMemberList(){ //리스트가 js로 반환되면 인식이 안돼서 리스트인데 JSON Array로 변경된다
+		//java List -> HttpMessageConverter(요청 응답 시 데이터를 알맞은 형식으로 변경해줌)가 
+		//JS에서 이해할 수 있는 JSON (Array)(String형태(모든 언어에 다 존재하는 타입))로 변경해준다
+		//첫 번째 then에서 response.json()을 이용하면 JS 객체 배열 모양으로 변한다 [{},{},{},...]
+		//리스트 -> 문자열 -> JS 객체배열
 		//모든 회원 조회
 		return service.selectMemberList();
 	}

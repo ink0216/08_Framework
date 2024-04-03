@@ -37,6 +37,7 @@
                 </h3>
                 <table border="1" style="border-collapse: collapse;">
                     <thead>
+                        <th>index</th>
                         <th>회원 번호</th>
                         <th>이메일</th>
                         <th>닉네임</th>
@@ -102,7 +103,7 @@
                             <!-- 내 정보 -->
                             <!-- 닉네임,이메일,로그아웃 버튼 출력하는 영역 -->
                             <div><!-- * : object를 뜯어낸 필드를 쓸 수 있다 -->
-                                <a href="#" id="nickname" th:text="*{memberNickname}">닉네임</a>
+                                <a href="/myPage/info" id="nickname" th:text="*{memberNickname}">닉네임</a>
                                 <a href="/member/logout" id="logoutBtn">로그아웃</a> <!-- a태그로 버튼 만듦 -->
                                 <!-- a태그는 get방식으로 요청 보낸다! -->
                             </div>

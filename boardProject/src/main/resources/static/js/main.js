@@ -127,7 +127,16 @@ quickLoginBtns.forEach((item, index)=>{ //향상된 for문
 const selectMemberList = document.querySelector("#selectMemberList");
 
 //tbody
-const memberList = document.querySelector("#selectMemberList");
+const memberList = document.querySelector("#memberList");
+
+//td태그 만드는 함수
+const createTd = (text)=>{
+    const td = document.createElement("td");
+    td.innerText=text;
+    return td;
+    //이 구문이 반복될 것 같아서 함수로 만듦
+    //td 요소를 만들고 text 추가 후 반환하는 함수
+}
 
 //조회 버튼 클릭 시
 selectMemberList.addEventListener("click", ()=>{
@@ -144,9 +153,40 @@ selectMemberList.addEventListener("click", ()=>{
     fetch("/member/selectMemberList") //조회니까 get방식
     //그러면 결과가 int나 String이면 response.text()로 하는데
     //지금은 비동기 요청 결과가 객체이므로 json으로 변환
-    .then(resp => resp.json())
-    .then(member => {
-        console.log(member);
+    .then(resp => resp.json()) //리스트로 받아올 거니가 json으로 인식해서 js 객체로 파싱
+    .then(list => {
+        console.log(list);
+        //부르면 실행되는 함수 == 콜백함수
+
+        //이전 내용 삭제
+        memberList.innerHTML="";
+
+        //tbody에 들어갈 요소를 만들고 값 세팅 후 추가
+        list.forEach( (member,index)=>{ //array, nodeList만 forEach 사용 가능
+            //분홍 소괄호 내부의 함수 ==콜백함수
+            //member : 반복 접근한 요소(순서대로 하나씩 꺼낸 요소)
+            //index : 현재 접근 중인 index(사용 안할 거긴 한데)
+            //tr만들어서 그 안에 td 만들어 append후 tr을 tbody에 append
+            const keyList = ['memberNo', 'memberEmail', 'memberNickname', 'memberDelFl'];
+            const tr = document.createElement("tr");
+
+            tr.append(createTd(index) );
+
+            keyList.forEach(key =>{ 
+                //keyList에서 key값 하나씩 꺼내온 후 해당 key에 맞는 member객체 값을 얻어와
+                //생성되는 td 요소에 innerText로 추가 후 tr요소의 자식으로 추가
+                
+                const td = createTd(member[key]); 
+                //0번 인덱스의 memberNo나오고 그 다음 바퀴에서는 1번 인덱스의 memberNo나오고,...
+                tr.append(td);
+
+                // 여기까지만 줄이면 == keyList.forEach(key => tr.append(createTd(member[key])));
+
+                //tbody 자식으로 tr 추가하기
+                memberList.append(tr);
+            });
+        })
+        //mdn 사이트 : 여기서 여러가지 검색해서 공부 가능
     });
 });
 

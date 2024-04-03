@@ -174,7 +174,7 @@ const selectTodo = (url)=>{
 
     //매개변수 url== "/ajax/detail?todoNo=10" 모양의 문자열
 
-    //.then(response =>response.json()) : 응답 데이터가 JSON인 경우 이를 자동으로 Object 형태로 변환하는 메서드
+    //.then(response =>response.json()) : 응답 데이터가 JSON인 경우 이를 자동으로 JS Object 형태로 변환하는 메서드
     //                              ==JSON.parse(JSON데이터)
     fetch(url) //비동기로 요청 ->이 주소 처리할 컨트롤러 만들기
 

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"> <!-- 타임리프 사용 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이 페이지</title>
+
+    <!-- 공용 css/js 추가 -->
+    <th:blick th:replace="~{common/common}"></th:blick>
+
+    <!-- myPage 전용 CSS 추가 -->
+    <link rel="stylesheet" href="/css/myPage/myPage-style.css">
+</head>
+<body>
+    <!-- 마이페이지 이동해도 header, footer는 그대로 있다 -->
+    <main>
+        <!-- 헤더 추가 -->
+        <th:block th:replace="~{common/header}"></th:block>
+
+        <section class="myPage-content">
+            <!-- 마이페이지 화면 출력 부분 -->
+
+            
+            <th:block th:replace="~{myPage/sideMenu}">
+                <!-- 왼쪽 고정 사이드 메뉴 추가 -->
+                <!-- 조각 경로 : forward하는 것처럼 접두사 접미사 빼고 작성하면 된다 -->
+            </th:block>
+
+            <section class="myPage-main">
+                <!-- 사이드 메뉴 오른쪽 부분(마이페이지 본문) -->
+                <h1 class="myPage-title">내 정보</h1>
+                <span class="myPage-subject">원하는 회원 정보를 수정할 수 있습니다.</span>
+
+                <form action="info" method="POST" name="myPageFrm" id="updateInfo">
+                    <!-- 상대경로로 적음! -->
+                    <div class="myPage-row">
+                        <!-- 한 줄 한 줄 -->
+                        <label>닉네임</label>
+                        <input type="text" name="memberNickname" maxlength="10" id="memberNickname"
+                        th:value="${session.loginMember.memberNickname}">
+                        <!-- DB에서 회원 조회 안해오고 로그인한 정보는 세션에 올라가니까 세션에서 가져오면 된다  -->
+                        <!-- 미리 써져있게 하는 속성은 value 속성인데 -->
+                        <!-- 타임리프 쓸거니까 value앞에 th 붙이기 -->
+                    </div>
+
+                    <div class="myPage-row">
+                        <!-- 한 줄 한 줄 -->
+                        <label>전화번호</label>
+                        <input type="text" name="memberTel" maxlength="11" id="memberTel"
+                        th:value="${session.loginMember.memberTel}">
+                        <!-- ${} :scope에 있는 거 꺼내오기 // #{} : messages.properties에 있는 것 가져오겠다 -->
+                    </div>
+
+                    <div class="myPage-row info-title" >
+                        <!-- 주소는 입력하는 곳은 세개인데 컬럼은 하나여서 하나의 문자열로 합쳐서 DB에 저장해둠 -->
+                        <!-- 타임리프에서 쪼개는 거 이제 지원 안해서 DB에서 쪼개서 가져오든가 JS로 쪼개도 된다 -->
+                        <!-- 백엔드에서 쪼개보자! -->
+                        <!-- 서버 Controller에서 로그인한 회원 주소를 ^^^를 기준으로 쪼갤거다 -->
+                        <!-- info-title 쓰면 밑줄이 안나온다 -->
+                        <span>주소</span>
+                    </div>
+                    <!-- 세션 : 클라이언트 별로 접속한 사람의 정보를 세션에 올려놓음 -> 그 사람의 닉네임을 출력하겠다 -->
+                    <!-- DB에서 조회 안해도 되고 세션에 있는 거 가져오면 된다 -->
+                    <div class="myPage-row info-address"> <!-- 클래스 여러개 -->
+                        <input type="text" name="memberAddress" placeholder="우편번호" id="postcode"
+                        th:value="${postcode}">
+                        <button type="button">
+                            <!-- form태그 안이어서 제출 될 수 있으므로 type button 하기 -->
+                            검색
+                        </button>
+                    </div>
+
+                    <div class="myPage-row info-address">
+                        <input type="text" name="memberAddress" placeholder="도로명/지번 주소" id="address"
+                        th:value="${address}">
+                        <!-- 주소가 null인 회원은 el구문은 null을 빈칸으로 표시해서 빈칸으로 나옴 -->
+                    </div>
+
+                    <div class="myPage-row info-address">
+                        <input type="text" name="memberAddress" placeholder="상세 주소" id="detailAddress"
+                        th:value="${detailAddress}">
+                    </div>
+                    <button class="myPage-submit">수정하기</button>
+                </form>
+            </section>
+        </section>
+    </main>
+    <!-- 푸터 추가 -->
+    <th:block th:replace="~{common/footer}"></th:block>
+    <script src="/js/myPage/myPage.js"></script>
+</body>
+</html>

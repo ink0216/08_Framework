@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"> <!-- 타임리프 사용 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이 페이지</title>
+
+    <!-- 공용 css/js 추가 -->
+    <th:blick th:replace="~{common/common}"></th:blick>
+
+    <!-- myPage 전용 CSS 추가 -->
+    <link rel="stylesheet" href="/css/myPage/myPage-style.css">
+</head>
+<body>
+    <!-- 마이페이지 이동해도 header, footer는 그대로 있다 -->
+    <main>
+        <!-- 헤더 추가 -->
+        <th:block th:replace="~{common/header}"></th:block>
+
+        <section class="myPage-content">
+            <!-- 마이페이지 화면 출력 부분 -->
+
+            
+            <th:block th:replace="~{myPage/sideMenu}">
+                <!-- 왼쪽 고정 사이드 메뉴 추가 -->
+                <!-- 조각 경로 : forward하는 것처럼 접두사 접미사 빼고 작성하면 된다 -->
+            </th:block>
+
+            <section class="myPage-main">
+                <!-- 사이드 메뉴 오른쪽 부분(마이페이지 본문) -->
+                <h1 class="myPage-title">비밀번호 변경</h1>
+                <span class="myPage-subject">현재 비밀번호가 일치하는 경우 새 비밀번호로 변경할 수 있습니다.</span>
+            
+                <form action="changePw" method="POST" name="myPageFrm" id="changePw"> <!-- 비동기로 요청보냄 -->
+                <!-- 제출될 때 새 비밀번호 확인은 새 비밀번호랑 동일한 지 비교할 용도여서
+                현재 비밀번호랑 새 비밀번호만 신경쓰면 된다
+            컨트롤러에 두 개를 파라미터를 전달해서 현재 비밀번호가 일치하는 사람의 비밀번호를 새 비밀번호로 바꿔라
+            누구인지는 세션에서 회원 번호 얻어와서 그 사람이 누구인지 확인하기
+            현재 비밀번호, 새 비밀번호, 회원번호 세 개를 묶어서 서비스로 보내서 호출
+
+            서비스에서 
+            -1. 바로 매퍼 호출하는 게 아니라 비크립트 암호화를 했기 때문에 DB에 비밀번호를 가져가서 비교할 수 없음
+            비크립트 암호화 된 비밀번호를 DB에서 조회해야 함(회원 번호 필요(몇 번 회원의 암호화된 비밀번호 가져와))
+            -2. 현재 비밀번호랑 암호화돼서 저장돼있던 비밀번호 비교
+            (BcryptPasswordEncoder.matches(평문, 암호화된 비밀번호) 메서드 이용) ->둘이 같으면 true, 다르면 false나옴
+                -> 같을 경우 -> 새 비밀번호를 암호화 진행(DB에 암호화해서 저장해야 함)
+                                새 비밀번호로 변경(UPDATE)하는 Mapper 호출
+                                (회원 번호, 새 비밀번호를 하나로 묶기(Member 또는 Map 또는 아무거나))
+                                (매퍼로 전달할 수 있는 파라미터는 항상 1개만 가능)
+                            -> 결과 1 또는 0 반환
+                -> 다를 경우 -> 실패 (0 반환하도록 하기)
+            서비스에서 SQL 두 번 수행하려면 매퍼 두 번 호출하면 된다
+        
+        [컨트롤러로 돌아옴]
+    - 변경 성공 시 alert("비밀번호가 변경 되었습니다.") + /myPage/info 로 리다이렉트
+    - 변경 실패 시(현재 비밀번호 틀린 경우) alert("현재 비밀번호가 일치하지 않습니다.") + /myPage/changePw로 리다이렉트 -->
+                    <div class="myPage-row">
+                        <label>현재 비밀번호</label>
+                        <input type="password" name="currentPw" id="currentPw" maxlength="30" >              
+                    </div>
+        
+                    <div class="myPage-row">
+                        <label>새 비밀번호</label>
+                        <input type="password" name="newPw" id="newPw" maxlength="30">              
+                    </div>
+        
+                    <div class="myPage-row">
+                        <label>새 비밀번호 확인</label>
+                        <input type="password" name="newPwConfirm" id="newPwConfirm" maxlength="30">              
+                    </div>
+        
+                    <button class="myPage-submit">변경하기</button>
+        
+                </form>
+            </section>
+        </section>
+    </main>
+    <!-- 푸터 추가 -->
+    <th:block th:replace="~{common/footer}"></th:block>
+</body>
+</html>
