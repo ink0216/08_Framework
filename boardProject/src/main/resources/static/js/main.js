@@ -189,6 +189,79 @@ selectMemberList.addEventListener("click", ()=>{
         //mdn 사이트 : 여기서 여러가지 검색해서 공부 가능
     });
 });
+//----------------------------------------------------------------------------
+//특정 회원 비밀번호 초기화하기
+const resetPw = document.querySelector("#resetPw");
+const resetMemberNo = document.querySelector("#resetMemberNo");
+resetPw.addEventListener("click", ()=>{
+    /*클릭되었을 때
+    비밀번호 바꾸는 업데이트 -> PUT(많이 수정할 때 사용)이나 FETCH(일부 수정할 때 사용)
+    putmapping으로 요청 보내보기 비동기로
+    */
+
+
+   //입력 받은 회원 번호 얻어오기
+    const inputNo = resetMemberNo.value; 
+    if(inputNo.trim().length==0){
+        //입력 안하면 시행도 안되도록 막기
+        alert("회원 번호를 입력해 주세요");
+        return;
+    }
+    fetch("/resetPw", { //MainController 이용!
+        method : "PUT", //수정 요청 방식
+        headers : {"Content-Type" : "application/json"}, 
+        //이게 무슨 형식이다 정의, 내용 많으면 다 써주면 된다
+        body : inputNo //inputNo만 담아서 요청 보낼거다
+    }) //수정 시 결과 int로 나옴
+    .then(resp => resp.text()) //컨트롤러에서 resp로 응답이 오는데 text로 바꾼 것이 result에 담긴다
+    //첫 번째 then의 resp.text() == 두 번째 then의 result 
+    .then(result =>{
+        //result == 컨트롤러로부터 반환받아 text로 파싱한 값(근데 String형태가 된다)
+        //결과 result값에 따라서 코드 수행할거야
+        if(result>0) alert("비밀번호 초기화 성공!!");
+        else        alert("해당 번호의 회원이 존재하지 않습니다.");
+        
+    });
+});
+/* 특정 회원 탈퇴 복구(비동기, ajax) */
+
+
+const outResetBtn = document.querySelector("#outResetBtn");
+outResetBtn.addEventListener("click", ()=>{
+
+    const outResetMemberNo = document.querySelector("#outResetMemberNo").value;
+
+    if(outResetMemberNo.trim().length==0){
+        alert("회원 번호를 입력해 주세요.");
+        return;
+    }
+    fetch("/outReset", {
+        method : "PUT",
+        headers : {"Content-Type" : "application/json"},
+        body : outResetMemberNo
+    })
+    .then(resp => resp.text())
+    .then(result => {
+        if(result==0)    alert("등록된 회원 번호가 아닙니다.");
+        if(result==1) {
+            alert("탈퇴 복구 성공!!");
+        }
+        else       alert("탈퇴한 회원이 아니어서 탈퇴 복구를 할 수 없습니다. ");
+    
+    });
+});
+/* Filter : 걸러냄 + 추가함 
+Filter : 서블릿에서 제공하던 기술이고, 클라이언트랑 dispatcher servlet 사이에 필터가 걸림
+필터가 요청이 들어올 때에도 걸리고, 응답 나갈 때에도 필터가 걸림(요청 들어오자마자 or 응답 가기 직전에)
+이 지점에 필터를 넣어서 요청 올/나갈 때 요청이 무슨 주소*파라미터를 가지고 있는지 확인 가능
+
+필터가 dispatcher servlet이랑 controller 사이에 들어가면 필터가 아닌 interceptor(가로채기)라고 부름
+요청/응답을 가로챔
+컨트롤러 들어가고 나올 때 응답이 Spring Interceptor
+
+Java를 인터넷에서 쓰고 싶다(web) == Servlet(Filter 제공)
+                                +설정 자동화, 관리, 기능    == Spring(Spring에서도 Filter 제공!)
+*/
 
 
 

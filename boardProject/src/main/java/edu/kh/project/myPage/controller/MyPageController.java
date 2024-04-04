@@ -1,5 +1,6 @@
 package edu.kh.project.myPage.controller;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.kh.project.member.model.dto.Member;
@@ -18,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @Controller //컨트롤러 역할 명시 + bean 등록
 @RequestMapping("myPage") //공통 주소 매핑
 @RequiredArgsConstructor
+@SessionAttributes({"loginMember"})
 public class MyPageController {
 	private final MyPageService service; //알아서 의존성 주입이 될것이다!!(@RequiredArgsConstructor가 해줌)
 	/**내 정보 조회/수정 화면으로 전환
@@ -203,5 +208,91 @@ public class MyPageController {
 		}
 		ra.addFlashAttribute("message", message);
 		return "redirect:"+path;
+	}
+	
+	/*//@SessionAttributes로 올라간 세션만 완료시킨다!!!!
+	 *@SessionAttributes : Model에 세팅된 값 중 key가 일치하는 값만 request -> session으로 변경
+	 *
+	 *SessionStatus : @SessionAttributes를 이용해서 올라간 데이터의 상태를 관리하는 객체
+	 */
+	/**
+	 * @param map : 입력 받은 비밀번호 얻어오는 용
+	 * @param ra : 
+	 * @param loginMember : 로그인한 회원 세션 정보
+	 * @param status : 세션 완료(없애기) 용도의 객체
+	 * 			->세션을 통째로 완료시키는 애가 아닌, 해당 컨트롤러 위에 세션어트리뷰츠({"key1", "key2", ..}) 어노테이션이 작성되어있는 경우
+	 * 				() 내 key들의 상태를 관리하는 객체
+	 * 			
+	 * @return
+	 */
+	@PostMapping("secession")
+	public String secession(
+			@RequestParam Map<String, Object> map,
+			RedirectAttributes ra,
+			@SessionAttribute("loginMember") Member loginMember, //세션에 있는 것 중 loginMember를 키로 가지는 것 가져옴
+			//로그아웃 == Session에 저장된 로그인된 회원 정보를 없애는(만료시키는, 무효화시키는, "완료시키는") 것!!!
+			SessionStatus status //세션 상태
+			) {
+		String inputPw = (String)map.get("memberPw");
+		int memberNo = loginMember.getMemberNo();
+		String message;
+		String path;
+		int result = service.secession(inputPw, memberNo);
+		if(result>0) { //메인페이지로 리다이렉트
+			path="/";
+			message="탈퇴 되었습니다";
+			// invalidate는 세션에 있는 모든 정보를 없애는 것
+			// status.setComplete는 @SessionAttributes로 올라간 세션정보(loginMember)만 완료시킨다!!!!
+			
+//			status.isComplete() :만료되었는지 확인하는 것
+			status.setComplete();  //해당 클래스 위에 세션 어트리뷰츠로 등록돼있던 정보만 만료됨 
+			//세션을 완료 시킴(없앰) ->왼쪽에 나오던, 세션에 저장돼있던 회원 정보도 같이 사라진다!!(세션이 사라져서)
+			//로그인멤버만 없애고싶으면 
+			//HttpSession session으로 해서 session.removeAttribute("loginMember")로 하나씩 없앨 수 있다
+			//세션 만료 시간 SessionConfig 객체 만들어서 시간 지정 가능
+		}else {
+			//실패
+			path="secession"; //상대경로
+			message="비밀번호가 일치하지 않습니다.";
+		}
+		ra.addFlashAttribute("message", message);
+		return "redirect:"+path;
+	}
+	/*파일 업로드 테스트*/
+	@GetMapping("fileTest")
+	public String fileTest() {
+		return "myPage/myPage-fileTest"; //forward하겠다
+	}
+	/*Spring에서 파일 업로드를 처리하는 방법
+	 * - enctype="multipart/form-data"로 클라이언트 요청을 받으면
+	 * 이 요청 자체가 여러 데이터 타입을 각자의 인코딩으로 보낸다는 거여서 문자, 숫자, 파일 등이 섞인 요청이다
+	 * Spring에서는 이를 MultipartResolver를 이용해서 다음과같이 섞여있는 파라미터를 분리시킨다
+	 * 문자열, 숫자 -> String 으로 구분
+	 * 파일		->MultipartFile로 구분
+	 * ->MultipartFile에 파일이 담겨있다!!
+	 * 
+	 * */
+	//파일 업로드 테스트 1
+	/**
+	 * @param uploadFile : 실제로 업로드한 파일 + 설정 내용이 담겨있다!
+	 * @return
+	 * @throws IOException 
+	 * @throws IllegalStateException 
+	 */
+	@PostMapping("file/test1")
+	public String fileUpload1(
+			@RequestParam("uploadFile") MultipartFile uploadFile,
+			RedirectAttributes ra
+			//input태그의 name속성
+			//MultipartFile : 파일을 다루는 객체 ->MultipartFile에 파일이 담겨있다!!
+			) throws IllegalStateException, IOException {
+		//uploadFile에 실제로 업로드한 파일 + 설정 내용이 담겨있다!
+		String path = service.fileUpload1(uploadFile);
+		if(path !=null) {
+			//파일이 저장되어 웹(인터넷)에서 접근할 수 있는 경로가 반환되었을 때 수행되는 if문
+			ra.addFlashAttribute("path", path); //path 값을 그대로 돌려보내겠다 리다이렉트 한 곳으로
+			
+		}
+		return "redirect:/myPage/fileTest";
 	}
 }

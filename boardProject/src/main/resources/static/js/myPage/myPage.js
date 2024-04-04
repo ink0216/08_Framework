@@ -87,6 +87,96 @@ if(updateInfo !=null){ //회원 정보 수정 페이지에만 있다
         
     });
 }
+//--------------------------------------------------------------------------------------------------------
+//changePw form태그가 있을 때에만 
+/* 비밀번호 수정 */
+//비밀번호 변경 form태그
+const changePw = document.querySelector("#changePw");
+if(changePw !=null){
+    changePw.addEventListener("submit", e=>{
+        //제출 되었을 때 검사해보겠다
+        
+        
+        
+        //currentPw, newPw, 
+        //form태그 안의 input태그들 다 얻어와서 배열로도 할 수 있다!
+        const currentPw = document.querySelector("#currentPw");
+        const newPw = document.querySelector("#newPw");
+        const newPwConfirm = document.querySelector("#newPwConfirm");
+
+        //- 값을 모두 입력 했는가
+        let str; //변수 선언했는데 비어있음 -> 이 상태로 출력하면 undefined 상태이다!!!
+        //js의 변수는 처음에 자료형 정해져있지 않고, 값이 대입될 때 자료형이 정의된다!!
+
+        if(currentPw.value.trim().length ==0){
+            str="현재 비밀번호를 입력해 주세요";
+        }else if(newPw.value.trim().length ==0){
+            str="새 비밀번호를 입력해 주세요";
+        }else if(newPwConfirm.value.trim().length ==0){
+            //여기는 else 하면 안되고 else if만 해야한다
+            str="새 비밀번호 확인을 입력해 주세요";
+        }
+        if(str !=undefined){
+            //str에 뭔가 값이 대입된 경우
+            //위의 세 if문 중 하나가 실행됐다는 뜻
+            alert(str);
+            e.preventDefault();
+            return;
+        }
+
+        //- 새 비밀번호 정규식
+        const regExp = /^[a-zA-Z0-9!@#_-]{6,20}$/;
+        if(!regExp.test(newPw.value)){
+            //새 비밀번호가 정규식 통과 못한 경우
+            alert("새 비밀번호가 유효한 형식이 아닙니다.");
+            e.preventDefault();
+            return;
+        }
+
+        //- 새 비밀번호 == 새 비밀번호 확인
+        if(newPw.value != newPwConfirm.value){
+            alert("새 비밀번호가 일치하지 않습니다.");
+            e.preventDefault();
+            return;
+        }
+    });
+}
+//-------------------------------------------------------------------------------
+/* 탈퇴 유효성 검사 */
+//탈퇴 form 태그
+const secession = document.querySelector("#secession");
+if(secession !=null){
+    secession.addEventListener("submit", e=>{
+        const memberPw = document.querySelector("#memberPw");
+        const agree = document.querySelector("#agree");
+         // - 비밀번호 입력 되었는지 확인
+        if(memberPw.value.trim().length==0){
+            alert("비밀번호를 입력해 주세요.");
+            e.preventDefault();
+            return; //더이상 검사할 필요 없어
+        }
+    // - 약관 동의 체크 확인
+    //checkbox, radio의 .checked 속성
+    // - checked -> 체크 시 true, 미체크시 false가 반환된다
+    // 이걸 이용해서 값을 대입할 수도 있다 - checked = true  == 체크하기
+    //                                       checked = false == 체크 해제하기
+    if(!agree.checked){
+        //체크 안 한 경우
+        // == if(agree.checked == false)
+        alert("탈퇴 약관에 동의해 주세요.");
+        e.preventDefault();
+        return;
+    }
+    // - 정말 탈퇴? 물어보기
+    if(!confirm("정말 탈퇴 하시겠습니까?")){
+        //취소 누른 경우
+        alert("취소 되었습니다.");
+        e.preventDefault();
+        return;
+    }
+    });
+}
+
 
 
 

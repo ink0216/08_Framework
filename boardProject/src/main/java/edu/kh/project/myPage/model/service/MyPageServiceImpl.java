@@ -1,5 +1,7 @@
 package edu.kh.project.myPage.model.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import edu.kh.project.member.model.dto.Member;
 import edu.kh.project.myPage.model.mapper.MyPageMapper;
@@ -56,7 +59,7 @@ public class MyPageServiceImpl implements MyPageService{
 		//해당 회원의 ,저장돼있는 암호화된 비밀번호 조회
 		String beforePw = mapper.selectPw(memberNo);
 		
-		if(bcrypt.matches((String)paramMap.get("currenPw"), beforePw)) {
+		if(bcrypt.matches((String)paramMap.get("currentPw"), beforePw)) {
 			//(String)paramMap.get("currenPw")는 Object타입이니까 String 타입으로 강제형변환
 			//matches 는 String타입을 비교
 			//일치하면
@@ -77,5 +80,50 @@ public class MyPageServiceImpl implements MyPageService{
 		}
 		
 		return result;
+	}
+	
+	//회원 탈퇴
+	@Override
+	public int secession(String inputPw, int memberNo) {
+		//기존의 저장돼있던 비밀번호 조회
+		String beforePw = mapper.selectPw(memberNo); //암호화된 비밀번호
+		int result=0;
+		if(bcrypt.matches(inputPw, beforePw)) {
+			//일치하는 경우
+			return mapper.secession(memberNo);
+		}
+		return 0;
+	}
+	//파일 업로드 테스트 1
+	@Override
+	public String fileUpload1(MultipartFile uploadFile) throws IllegalStateException, IOException {
+		//MultipartFile이 제공하는 여러 메서드 중 많이 쓰는 것!
+		// - getSize() : 파일 크기 알 수 있다
+		// - isEmpty() : 업로드한 파일이 없을 경우 true, 있을 경우 false
+		// - getOriginalFileName() : 원본 파일명 얻어올 수 있다
+		// - transferTo(경로) : 메모리 또는 임시 저장 경로에 업로드 된 파일을
+		//						원하는 경로에 전송(서버 어떤 폴더에 저장할 지 지정)
+		//					(원래는 임시 경로에 저장돼있었는데 실제 폴더 어디에다가 저장할 지 지정)
+		
+		//업로드한 파일이 있는지 없는지 검사하기
+		if(uploadFile.isEmpty()) {
+			//업로드한 파일이 없을 경우
+			return null; //파일 없으면 아무 코드도 실행 안함
+		}
+		//업로드 된 파일이 있을 경우
+		//transferTo 이용! 그 파일을 서버 컴퓨터 어디에 저장할 지 
+		uploadFile.transferTo(
+				new File("C:\\uploadFiles\\test\\"+uploadFile.getOriginalFilename())); 
+		//C:\\uploadFiles\\test\\파일명 으로 서버에 저장 
+		//파일명에 확장자도 같이 저장돼있다
+		//예외 던지기
+		//path객체 말고 file 객체 쓰기
+		
+		//웹에서 해당 파일에 접근할 수 있는 경로를 반환
+		//서버 : C:\\uploadFiles\\test\\a.jsp
+		//웹 접근 주소 : /myPage/file/a.jpg 
+		//해당 주소 요청 보내면 저 위치의 파일을 보이게 할거다???
+		//저기다 저장할 건데 거기에 접근할 수 있는 주소를 이렇게 만든다
+		return "/myPage/file/"+uploadFile.getOriginalFilename(); //이 경로를 돌려보내주겠다
 	}
 }

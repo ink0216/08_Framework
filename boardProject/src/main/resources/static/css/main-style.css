@@ -398,6 +398,9 @@ label[for="#headerMenuToggle"]:hover{
 }
 /* css 미디어 쿼리? */
 
+.content-1 hr{
+    margin: 20px 0;
+}
 
 
 

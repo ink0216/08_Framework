@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.kh.project.main.model.mapper.MainMapper">
+
+	<!--비밀번호 초기화  -->
+	<update id="resetPw">
+		UPDATE "MEMBER"
+		SET MEMBER_PW = #{encPw}
+		WHERE MEMBER_NO=#{inputNo}
+	</update>
+	
+	<!-- 탈퇴한 회원인지 확인 -->
+	<select id="checkOut" resultType = "_int">
+		SELECT COUNT(*)
+		FROM "MEMBER"
+		WHERE MEMBER_DEL_FL = 'Y'
+		AND MEMBER_NO= #{outResetMemberNo}
+	</select>
+	<!-- 탈퇴 회원 복구 -->
+	<update id="outReset">
+	UPDATE "MEMBER"
+	SET MEMBER_DEL_FL = 'N'
+	WHERE MEMBER_NO=#{outResetMemberNo}
+	</update>
+	<!-- 해당 번호의 회원 존재하는지 카운트 -->
+	<select id="select" resultType="_int">
+	SELECT COUNT(*)
+	FROM "MEMBER"
+	WHERE MEMBER_NO=#{outResetMemberNo}
+	</select>
+</mapper>

@@ -144,6 +144,8 @@ public class MemberController {
 			//로그아웃 == Session에 저장된 로그인된 회원 정보를 없애는(만료시키는, 무효화시키는, "완료시키는") 것!!!
 			SessionStatus status //세션 상태
 			) {
+		// invalidate는 세션에 있는 모든 정보를 없애는 것
+		// status.setComplete는 @SessionAttributes로 올라간 세션정보(loginMember)만 완료시킨다!!!!
 		
 //		status.isComplete() :만료되었는지 확인하는 것
 		status.setComplete(); //세션을 완료 시킴(없앰) ->왼쪽에 나오던, 세션에 저장돼있던 회원 정보도 같이 사라진다!!(세션이 사라져서)
