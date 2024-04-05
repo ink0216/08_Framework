@@ -112,12 +112,13 @@
                     <!-- 로그인 된 경우 -->
                     <article class="login-area">
                         <!-- 시맨틱 태그 중 하나로, 내용이 조금 다른 내용을 쓸 때 사용하는 태그 -->
-                        <a href="#">
+                        <a href="/myPage/profile">
                             <!-- 여기에 프로필이미지 들어감 -->
                             <!-- th:src : 타임리프로 만들어보겠다
                                 ${} :scope에 있는 거 꺼내오기 // #{} : messages.properties에 있는 것 가져오겠다-->
                                 <!-- messages.properties에 작성된 기본 사용자 이미지 -->
-                            <img th:src="#{user.default.image}" id="memberProfile" alt="프로필 이미지 없어서 기본 이미지 가져옴">
+                            <img th:with="user=#{user.default.image}" th:src="${session.loginMember.profileImg ?: user }" 
+                            id="memberProfile" alt="프로필 이미지">
                         </a>
                         <div class="my-info" th:object="${session.loginMember}" >
                             <!-- 세션 스코프의 로그인 멤버를 여기 가져가서 이 태그 내에서 필드를 쉽게 사용하겠다 -->

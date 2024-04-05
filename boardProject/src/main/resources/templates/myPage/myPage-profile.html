@@ -30,10 +30,74 @@
                 <!-- 사이드 메뉴 오른쪽 부분(마이페이지 본문) -->
                 <h1 class="myPage-title">프로필</h1>
                 <span class="myPage-subject">프로필 이미지를 변경할 수 있습니다.</span>
+                <form action="profile" method="POST" name="myPageFrm" id="profile" enctype="multipart/form-data">
+                    <!-- 상대경로로 파일 업로드 -->
+                    <div class="profile-image-area">
+        
+                        <img th:with="user=#{user.default.image}" th:src="${session.loginMember.profileImg ?: user }" 
+                        id="profileImg">
+        <!-- th:with : 여기서만 잠깐 쓰는 변수 같은 것
+        # : messages.properties의 값을 읽어오겠다는 뜻
+        th:src에 session.을 붙여야 한다!!
+        ?: : 엘비스 연산자 (값이 없을 때에는 오른쪽게 동작, 있을 때에는 왼쪽게 동작)
+        있으면 ${session.loginMember.profileImg 보여주고 없으면 user 사진이 보인다 user= #{user.default.image}
+        프로필 사진 바꾸자마자 세션에 업데이트하는 코드 추가해야 한다!
+        (안그러면 바로 안보이고 로그아웃 후에 다시 로그인해야지만 보임)
+        -->
+                    </div>
+                    <span id="deleteImage">x</span>
+        
+                    <div class="profile-btn-area">
+                        <label for="imageInput">이미지 선택</label>
+                        <!-- label태그 연결돼서 라벨 클릭돼도 input태그가 상호작용함 -->
+                        <input type="file" name="profileImg" id="imageInput" accept="image/*">
+                        <!-- html 속성에 쓰는 inline 스타일이 우선순위가 두 번째로 높아서 보이게 됨(display : none 적용 X) -->
+                        <!-- 이 input 태그 display : none 으로 숨겨놓음 -->
+                        <!-- input type="file"에서 파일 선택을 안한 경우 -> value == ''(빈칸) -->
+                        <!-- 파일 선택한 경우 value == 파일명 보임 -->
+                        <!-- input태그의 value -->
+                        <!-- 파일 선택 후 다른 파일 선택 -> value == 마지막으로 선택한 파일명 -->
+                        <!-- 파일 선택 후 취소 -> value == ''(빈칸) -->
+                        <!-- input type="file"의 특징! -->
+                        <button>변경하기</button>
+                    </div>
+        
+                    <div class="myPage-row">
+                        <label>이메일</label>
+                        <span th:text="${session.loginMember.memberEmail}"></span>
+                        <!-- 세션에 로그인한 사람의 이메일 -->
+                    </div>
+        
+                    <div class="myPage-row">
+                        <label>가입일</label>
+                        <span th:text="${session.loginMember.enrollDate}"></span>
+                    </div>
+        
+                </form>
+
+
+
+
+
+
+
+
+
+
+
+
+
             </section>
         </section>
     </main>
     <!-- 푸터 추가 -->
     <th:block th:replace="~{common/footer}"></th:block>
+    <script th:inline="javascript">
+        /*  th:inline="javascript" : 타임리프 코드를 자바스크립트 코드로 번역해라*/
+        const loginMemberProfileImg = /*[[${session.loginMember.profileImg}]]*/"회원 프로필 이미지";
+        // 로그인한 회원의 프로필 이미지를 얻어와서 저장 (null이거나 null아니거나)
+        //다음 스크립트에서 이거 사용 가능!!!!
+    </script>
+    <script src="/js/myPage/myPage.js"></script>
 </body>
 </html>

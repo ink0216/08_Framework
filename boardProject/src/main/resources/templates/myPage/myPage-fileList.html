@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"> <!-- 타임리프 사용 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이 페이지</title>
+
+    <!-- 공용 css/js 추가 -->
+    <th:blick th:replace="~{common/common}"></th:blick>
+
+    <!-- myPage 전용 CSS 추가 -->
+    <link rel="stylesheet" href="/css/myPage/myPage-style.css">
+</head>
+<body>
+    <!-- 마이페이지 이동해도 header, footer는 그대로 있다 -->
+    <main>
+        <!-- 헤더 추가 -->
+        <th:block th:replace="~{common/header}"></th:block>
+
+        <section class="myPage-content">
+            <!-- 마이페이지 화면 출력 부분 -->
+
+            
+            <th:block th:replace="~{myPage/sideMenu}">
+                <!-- 왼쪽 고정 사이드 메뉴 추가 -->
+                <!-- 조각 경로 : forward하는 것처럼 접두사 접미사 빼고 작성하면 된다 -->
+            </th:block>
+
+            <section class="myPage-main">
+                <!-- 사이드 메뉴 오른쪽 부분(마이페이지 본문) -->
+                <h1 class="myPage-title">업로드한 파일 목록</h1>
+                <!-- table로 업로드한 파일 목록 출력 -->
+                <table border="1" style="border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>원본 파일명</th>
+                            <th>업로드 회원</th>
+                            <th>업로드 날짜</th>
+                        </tr>
+                    </thead>
+                    <tbody> <!-- tr태그 반복 == th:each 반복문 -->
+                        <tr th:each="file : ${list}" th:object="${file}">
+                            <!-- <tr th:each="file : ${list}">이렇게 쓰면 앞에 file.해야해서 object사용 -->
+                                <!-- object한 거 꺼낼 때는 *을 씀 -->
+                            <td th:text="*{fileNo}">파일 번호</td>
+                            <td>
+                                <a th:href="|*{filePath}*{fileRename}|" th:text="*{fileOriginalName}" 
+                                th:download="*{fileOriginalName}">파일명</a>
+                                <!-- 문자열 이어쓰기 됨 -->
+                                <!-- th:download="다운되는 파일의 이름 지정"
+                                서버에는 중복안되게 저장하고, 다운로드는 원본 이름대로-->
+                            </td>
+                            <td th:text="*{memberNickname}">업로드 회원</td>
+                            <td th:text="*{fileUploadDate}">업로드 날짜</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </section>
+    </main>
+    <!-- 푸터 추가 -->
+    <th:block th:replace="~{common/footer}"></th:block>
+    <script src="/js/myPage/myPage.js"></script>
+</body>
+</html>

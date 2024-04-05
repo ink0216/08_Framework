@@ -1,5 +1,7 @@
 package edu.kh.project.member.model.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +16,8 @@ import lombok.ToString;
 //private 캡슐화 때문에 간접접근 필요 +
 @NoArgsConstructor //기본생성자(이것도 커맨드 객체 만들 때 필요)
 @ToString
+@Builder //Build Pattern 이용
+@AllArgsConstructor //이거 있어야 Build Pattern 이용가능
 public class Member {
 	//MEMBER 테이블에 값 넣거나 꺼내올 때 사용
 	   private int 		memberNo;

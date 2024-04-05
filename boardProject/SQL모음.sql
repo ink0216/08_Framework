@@ -111,10 +111,40 @@ SELECT * FROM "TB_AUTH_KEY";
 
 SELECT COUNT(*) FROM "TB_AUTH_KEY"
 WHERE EMAIL = #{가입하려는 이메일 입력값}
-AND AUTH_KEY = #{위 이메일로 보낸 인증번호}
+AND AUTH_KEY = #{위 이메일로 보낸 인증번호};
 
 
+--------------------------------------------------------------------------
+--파일 업로드 테스트용 테이블
+CREATE TABLE "UPLOAD_FILE"(
+	FILE_NO NUMBER PRIMARY KEY,
+	FILE_PATH VARCHAR2(500) NOT NULL,
+	FILE_ORIGINAL_NAME VARCHAR2(300) NOT NULL,
+	FILE_RENAME VARCHAR2(100) NOT NULL,
+	FILE_UPLOAD_DATE DATE DEFAULT SYSDATE,
+	MEMBER_NO NUMBER REFERENCES "MEMBER" --FK 제약조건 설정
+	--부모테이블의 PK역할하는 MEMBER_NO 참조(누가 올렸는지 기록)
+);
+COMMENT ON COLUMN "UPLOAD_FILE".FILE_NO IS '파일 번호(PK)';
+COMMENT ON COLUMN "UPLOAD_FILE".FILE_PATH IS '클라이언트 요청 경로(webPath)';
+COMMENT ON COLUMN "UPLOAD_FILE".FILE_ORIGINAL_NAME IS '파일 원본명';
+COMMENT ON COLUMN "UPLOAD_FILE".FILE_RENAME IS '변경된 파일명'; 
+--서버의 한 폴더에 같은이름,같은확장자 파일 2개이상이 업로드 돼서 여러 명이 같은 이름,확장자로 업로드 시 나중 파일로 덮어씌워져서 
+--항상 이름이 바뀌어서 저장되도록 함
+COMMENT ON COLUMN "UPLOAD_FILE".FILE_UPLOAD_DATE IS '업로드 날짜';
+COMMENT ON COLUMN "UPLOAD_FILE".MEMBER_NO IS 'MEMBER 테이블의 PK(MEMBER_NO)참조';
 
+--파일 번호에 사용할 시퀀스
+CREATE SEQUENCE SEQ_FILE_NO NOCACHE;
 
+SELECT * ;
 
+--DB에는 Date타입인데 String타입으로 바꿔야 한다 TO_CHAR 이용해서 문자열로 바꾸기
+--파일 목록 조회
+SELECT FILE_NO , FILE_PATH , FILE_ORIGINAL_NAME , FILE_RENAME , 
+	TO_CHAR(FILE_UPLOAD_DATE, 'YYYY-MM-DD HH24:MI:SS') FILE_UPLOAD_DATE , --컬럼 별칭(DTO에 담기게 하려고)
+	MEMBER_NICKNAME 
+FROM UPLOAD_FILE
+JOIN "MEMBER" USING(MEMBER_NO)
+ORDER BY FILE_NO DESC; --그럼 최근 게 가장 위에 나옴
 

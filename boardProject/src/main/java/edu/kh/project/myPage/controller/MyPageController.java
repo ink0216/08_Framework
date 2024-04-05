@@ -1,6 +1,7 @@
 package edu.kh.project.myPage.controller;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.kh.project.member.model.dto.Member;
+import edu.kh.project.myPage.model.dto.UploadFile;
 import edu.kh.project.myPage.model.service.MyPageService;
 import lombok.RequiredArgsConstructor;
 
@@ -282,6 +284,7 @@ public class MyPageController {
 	@PostMapping("file/test1")
 	public String fileUpload1(
 			@RequestParam("uploadFile") MultipartFile uploadFile,
+			//컨트롤러가 MultipartFile 형태로 업로드 된 파일을 얻어올 수 있다
 			RedirectAttributes ra
 			//input태그의 name속성
 			//MultipartFile : 파일을 다루는 객체 ->MultipartFile에 파일이 담겨있다!!
@@ -294,5 +297,117 @@ public class MyPageController {
 			
 		}
 		return "redirect:/myPage/fileTest";
+	}
+	/**파일 업로드 + DB
+	 * @return
+	 * @throws IOException 
+	 * @throws IllegalStateException 
+	 */
+	@PostMapping("file/test2")
+	public String fileUpload2(
+			@RequestParam("uploadFile") MultipartFile uploadFile,
+			//누가 올렸는지도 알고싶으니까 로그인멤버도 얻어오기(그 번호)
+			@SessionAttribute("loginMember") Member loginMember,
+			RedirectAttributes ra //redirect할 때 메시지 보내기 위해
+			) throws IllegalStateException, IOException {
+		//로그인한 회원의 번호(누가 파일을 업로드 했는지!)
+		int memberNo = loginMember.getMemberNo();
+		
+		//파일 업로드하고 DB에 파일 정보를 INSERT할거여서
+		//업로드 된 파일 정보를 DB에 INSERT후 결과 행의 개수를 반환 받을거여서 결과가 int
+		int result = service.fileUpload2(uploadFile, memberNo);
+		
+		String message;
+		if(result>0) {
+			message="파일 업로드 성공!!";
+		}else {
+			message="파일 업로드 실패..";
+		}
+		ra.addFlashAttribute("message", message);
+		return "redirect:/myPage/fileTest"; //파일 업로드 페이지로 리다이렉트
+	}
+	/**파일 목록 조회
+	 * @param model
+	 * @return
+	 */
+	@GetMapping("fileList")
+	public String fileList(Model model //forward할 때 DB에서 조회한 파일 목록을 담아서 보내야 해서
+			) {
+		//파일 목록 조회 서비스 호출
+		List<UploadFile> list = service.fileList(); //목록이니까 리스트로 여러 개 받아옴
+		model.addAttribute("list", list);
+		return "myPage/myPage-fileList"; //forward
+	}
+	/**여러 파일 한번에 업로드하는 두 방법
+	 * @param aaaList
+	 * @param bbbList
+	 * @return
+	 * @throws IOException 
+	 * @throws IllegalStateException 
+	 */
+	@PostMapping("file/test3")
+	public String fileUpload3(
+			@RequestParam("aaa") List<MultipartFile> aaaList, //배열이나 리스트로 얻어옴
+			@RequestParam("bbb") List<MultipartFile> bbbList,
+			@SessionAttribute("loginMember") Member loginMember,
+			RedirectAttributes ra
+			) throws IllegalStateException, IOException {
+		//aaa에서 파일 모두 미제출 시 -> 0,1번 인덱스 파일이 모두 비어있음
+		//bbb에서 파일 아무것도 미제출 시 ->리스트가 비어있는 게 아니라 0번인덱스 파일이 비어있는거임
+		//	(bbb는 리스트가 비어있는 건 아니고 한 칸은 담겨있는데 그게 빈칸일 뿐)
+		int memberNo = loginMember.getMemberNo();
+		//result == 삽입(업로드)된 파일 개수
+		int result = service.fileUpload3(aaaList, bbbList,memberNo);
+		String message;
+		if(result ==0) {
+			//업로드한 파일이 하나도 없는 경우
+			message="업로드된 파일이 없습니다.";
+		}else {
+			message=result+"개 파일이 업로드 되었습니다.";
+		}
+		ra.addFlashAttribute("message", message);
+		return "redirect:/myPage/fileTest"; //redirect
+	}
+	/**프로필 이미지 변경
+	 * @param profileImg
+	 * @param loginMember
+	 * @param ra
+	 * @return
+	 * @throws IOException 
+	 * @throws IllegalStateException 
+	 */
+	@PostMapping("profile")
+	public String profile(
+			@RequestParam("profileImg") MultipartFile profileImg,
+			@SessionAttribute("loginMember") Member loginMember, 
+			//객체 자체를 가져오는 것이 아닌, 세션에 있는 원본의 주소를 가져옴
+			//얕은 복사이기 때문에 그 주소를 가져와서 값을 수정하면 원본도 바뀐다
+			//누구의 프로필 이미지 바꾸고 싶은지도 알아야 함
+			RedirectAttributes ra
+			
+			) throws IllegalStateException, IOException {
+		
+		//로그인한 회원 번호
+		int memberNo = loginMember.getMemberNo();
+		
+		//서비스 호출
+		// -> /myPage/profile/변경된파일명 형태의 문자열을
+		//		현재 로그인한 회원의 PROFILE_IMG 컬럼 값으로 수정해야 함(UPDATE)
+		int result = service.profile(profileImg, loginMember);
+		//파일 업로드 할 때에는 테이블 새로 만들어서 삽입하는 식으로 했다
+		//서버에 저장할 때에는 이름을 바꿔서 해야 함
+		
+		//근데 파일과 다르게 프로필 이미지는 클라이언트가 프로필 이미지 다운받을 필요 없다
+		//PROFILE_IMG에 /myPage/test/사진파일.jpg
+		//원래 있던 회원의 PROFILE_IMG를 위의 모양의 문자열로 만든 것으로 바꿔야 함 UPDATE
+		String message=null;
+		if(result>0) {
+			message="변경 성공!!!";
+			//세션에 저장된 로그인 회원 정보에서
+			//프로필이미지 수정한 경로가 
+		}
+		else message="변경 실패...";
+		ra.addFlashAttribute("message", message);
+		return "redirect:profile";
 	}
 }

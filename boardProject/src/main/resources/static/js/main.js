@@ -242,9 +242,14 @@ outResetBtn.addEventListener("click", ()=>{
     })
     .then(resp => resp.text())
     .then(result => {
-        if(result==0)    alert("등록된 회원 번호가 아닙니다.");
+        if(result==3){
+            alert("등록된 회원 번호가 아닙니다.");
+            return;
+        }    
+            
         if(result==1) {
             alert("탈퇴 복구 성공!!");
+            return;
         }
         else       alert("탈퇴한 회원이 아니어서 탈퇴 복구를 할 수 없습니다. ");
     

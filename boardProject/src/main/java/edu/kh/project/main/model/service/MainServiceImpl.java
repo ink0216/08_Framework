@@ -45,19 +45,23 @@ public class MainServiceImpl implements MainService{
 		 * 3. 탈퇴 상태인 회원인 경우
 		 * */
 		/**<!-- 탈퇴한 회원인지 확인 -->
-	<select id="checkOut"
-	<!-- 탈퇴 회원 복구 -->
+	<select id="checkOut" (탈퇴상태이고 그 번호인 회원 수 조회 0 or 1)
+	
+	<!-- 탈퇴 회원 복구 --> (해당 번호 사람 N으로 바꾸기)
 	<update id="outReset">
-	<!-- 해당 번호의 회원 존재하는지 카운트 -->
+	
+	<!-- 해당 번호의 회원 존재하는지 카운트 -->(해당 사람 존재하는 지 수 0 or 1)
 	<select id="select" resultType="_int">
-		 * 
+		 * 0 == 등록회원 아님 
+		 * 1== 탈퇴 복구 성공
+		 * 2==탈퇴상태 회원 아님
 		 */
 		/*일단 회원인지 확인해서 회원 아니면 리턴
 		 * 회원이면 그때 탈퇴 여부 확인해서 탈퇴 상태 아니면 리턴
 		 * */
 		int result1 = mapper.select(outResetMemberNo);
 		if(result1 ==0) {
-			return 0;
+			return 3;
 		}
 		int result2 = mapper.checkOut(outResetMemberNo);
 		if(result2==0) {
