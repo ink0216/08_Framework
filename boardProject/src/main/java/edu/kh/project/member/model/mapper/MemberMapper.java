@@ -45,4 +45,10 @@ public interface MemberMapper {
 	 * @return
 	 */
 	public List<Member> selectMemberList();
+
+	/**회원 삭제
+	 * @param memberNo
+	 * @return
+	 */
+	public int delete(int memberNo);
 }

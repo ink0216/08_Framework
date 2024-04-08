@@ -12,9 +12,10 @@ import lombok.ToString;
 // - DB에서 조회된 결과 또는 SQL 구문에 사용할 값을 담아 전달하는 용도
 // - 관련성 있는 데이터를 한 번에 묶어서 다룬다
 @Getter //Spring EL 구문 사용 시 getter를 호출 + Mybatis에서 DTO가 전달한 값 꺼내서 쓸 때 필요
-@Setter //커맨드 객체(파라미터와 ~가 같으면 자동으로 세팅해준다 ->setter호출)
+@Setter //커맨드 객체(파라미터와 필드가 같으면 자동으로 세팅해준다 ->setter호출)
 //private 캡슐화 때문에 간접접근 필요 +
 @NoArgsConstructor //기본생성자(이것도 커맨드 객체 만들 때 필요)
+//(객체를 자동으로 만들어서 그 안에 필드를 세팅해준다)
 @ToString
 @Builder //Build Pattern 이용
 @AllArgsConstructor //이거 있어야 Build Pattern 이용가능

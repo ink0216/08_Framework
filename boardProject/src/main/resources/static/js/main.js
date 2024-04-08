@@ -3,7 +3,11 @@
 /* 쿠키에서 key가 일치하는 value 얻어오기 함수 */
 //쿠키가 여러 개이면 'saveId=member01@kh.or.kr; saveId=member01@kh.or.kr; saveId=member01@kh.or.kr;' 형식의 문자열로 되어있다
 //쿠키는 "K=V; K=V;" 형식 ->이걸 쪼개서 객체로 만들기
-const getCookie = key=>{ 
+const getCookie = key=>{ //아이디 저장 checkbox -> 아이디 저장은 쿠키 이용!!
+    //체크박스에 value가 없을 때
+		// - 체크가 된 경우   -> 체크 되면 on 나옴(null아님)
+		// - 체크가 안 된 경우 -> null이 나옴  (MemberController)
+        //아이디 저장은 보통 로그인 성공 시 저장함! -> MemberController의 로그인 성공 시에 쿠키 저장 코드 있다
     /* 매개변수가 하나면 소괄호 생략 가능 */
     const cookies = document.cookie; //"K=V; K=V;" ==문자열
 
@@ -181,10 +185,48 @@ selectMemberList.addEventListener("click", ()=>{
                 tr.append(td);
 
                 // 여기까지만 줄이면 == keyList.forEach(key => tr.append(createTd(member[key])));
-
+                
                 //tbody 자식으로 tr 추가하기
                 memberList.append(tr);
+                
             });
+            
+
+            const btnTd = document.createElement("td");
+            const btn = document.createElement("button");
+            btn.innerText = "삭제";
+
+            btn.addEventListener("click", () => {
+                if(!confirm("정말 삭제하시겠습니까?")){
+                return;
+                }
+
+                console.log(member.memberNo);
+                 //확인 클릭 시
+                fetch("/member/delete", {
+                method : "DELETE",
+                headers : {"Content-Type" : "application/json"},
+                body : member.memberNo})
+                .then(resp=>resp.text())
+                .then(result => {
+                    if(result>0) alert("삭제 성공!!!");
+                    else{
+                        
+                        alert("삭제 실패...");
+                        /* 만약에 alert하고 다른 페이지 가고싶으면 */
+                        /* location.href 쓰면 된다(get방식) */
+                        /* 테이블 UPLOAD_FILE에서 회원 번호 참조하고 있는데
+                        부모 테이블의 데이터 삭제하고싶은 경우
+                        기본값이 ON DELETE RESTRICTED여서
+                        UPLOAD_FILE의 FK제약조건을 삭제하고 
+                        ON DELETE SET NULL이런 것으로 설정하면 된다 */
+                    }    
+                });
+            });
+
+            btnTd.append(btn);
+            tr.append(btnTd);
+            
         })
         //mdn 사이트 : 여기서 여러가지 검색해서 공부 가능
     });

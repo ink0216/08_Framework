@@ -184,7 +184,7 @@ if(secession !=null){
 const profile = document.querySelector("#profile"); 
 
 //두 개의 변수 선언(선생님이 만든 로직)
-let statusCheckCheck = -1; 
+let statusCheck = -1; 
 //프로필 이미지가 새로 업로드 되거나 삭제 되었음을 기록하는 상태변수(어떤 상태인지 기록해둠)
 // -1 : 초기상태(변화 없음)
 //  0 : 프로필 이미지 삭제됨
@@ -218,7 +218,7 @@ if(profile !=null){ //화면에 있을 때에만 요소 얻어오기
 
         console.log("e.target", e.target); //input이 나옴
         console.log("e.target.value", e.target.value); //변경된 값이 나옴(파일명)
-        console.log("e.target.files", e.target.files); //변경된 값이 나옴(파일명) //input type="files"에만 존재하는 속성!!
+        console.log("e.target.files", e.target.files); //input type="files"에만 존재하는 속성!!
         //선택된 파일에 대한 정보가 담긴 배열을 반환해 준다
         //  -> 왜 배열 ? multiple옵션에 대한 대비(여러 파일 선택할 수도 있어서!)
         //      하나밖에 선택 안해도 항상 0번 인덱스에 저장돼서 배열로 나온다
@@ -346,7 +346,7 @@ if(profile !=null){ //화면에 있을 때에만 요소 얻어오기
         imageInput.value=''; //데이터 삭제
 
         //삭제하면 백업본도 필요 없다
-        backupInput.value=undefined; //백업본도 삭제
+        backupInput=undefined; //백업본도 삭제
 
         //삭제 상태임을 기록
         statusCheck=0;

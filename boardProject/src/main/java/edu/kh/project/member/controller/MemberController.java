@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -48,7 +50,7 @@ public class MemberController {
 	 * @return "redirect:/"
 	 */
 	@PostMapping("login")
-	public String login(Member inputMember,
+	public String login(Member inputMember, //커맨드객체(기본생성자로 객체 만들어서 필드에 파라미터 담김)
 			RedirectAttributes ra, 
 			Model model,
 			@RequestParam(value="saveId" , required=false) String saveId,
@@ -72,7 +74,7 @@ public class MemberController {
 		//but Bcrypt암호화는 복호화가 불가!! ->암호화한 비밀번호(DB에 존재)랑 원래 비밀번호를 matches함수를 이용해서 판단!
 		
 		//체크박스에 value가 없을 때
-		// - 체크가 된 경우   -> 체크 되면 on 나옴(null아님)
+		// - 체크가 된 경우   -> 체크 되면 "on" 나옴(null아님)
 		// - 체크가 안 된 경우 -> null이 나옴
 		log.debug("saveId : " +saveId); //saveId 얻어오기
 		//로그인 서비스 호출
@@ -273,6 +275,13 @@ public class MemberController {
 		//모든 회원 조회
 		return service.selectMemberList();
 	}
+	@DeleteMapping("delete")
+	@ResponseBody
+	public int delete(
+			@RequestBody int memberNo
+			) {
+		return service.delete(memberNo);
+	}
 }
 /*Cookie란?
  * - 클라이언트 측(브라우저)에서 관리하는 데이터(옛날에는 파일 형식으로 저장, )
@@ -282,7 +291,7 @@ public class MemberController {
  * 		(파라미터만 넘어가는 줄 알았는데 쿠키도 같이 넘어간다)
  * - Cookie의 생성, 수정, 삭제는 Server가 관리
  * 		but Cookie 저장은 Client가 함!
- * - Cookie는 HttpServletResponse를 이용해서 생성해야 하고, 
- * 	클라이언트에게 전달(응답)할 수 있다
+ * - Cookie는 서버가 HttpServletResponse를 이용해서 생성해야 하고, 
+ * 	클라이언트에게 전달==응답(서버가 클라이언트에게 전달하는 것은 응답!!)할 수 있다
  * */
 

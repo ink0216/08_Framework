@@ -7,6 +7,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
@@ -14,7 +15,7 @@ import edu.kh.project.email.model.mapper.EmailMapper;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 
-//@Transactional : 이거 안쓰면 기본값은 commit이고, 이걸 쓰면 예외 발생하면 롤백할게 설정하는 것!
+@Transactional //: 이거 안쓰면 기본값은 commit이고, 이걸 쓰면 예외 발생하면 롤백할게 설정하는 것!(롤백하려고 쓰는 것!)
 //Mybatis == JDBC(DBCP) -> SQL 실행 후 문제 없으면 connection이 닫히면서 자동으로 Commit된다!!
 //Spring == Java
 @Service //Bean 등록 + Service 역할 명시

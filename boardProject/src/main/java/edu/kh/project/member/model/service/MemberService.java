@@ -48,4 +48,10 @@ public interface MemberService {
 	 */
 	List<Member> selectMemberList();
 
+	/**회원 삭제
+	 * @param memberNo
+	 * @return
+	 */
+	int delete(int memberNo);
+
 }

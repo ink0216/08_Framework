@@ -199,8 +199,8 @@ public class MyPageController {
 		int result = 0;
 		
 		result = service.changePw(memberNo, paramMap);
-		String path;
-		String message;
+		String path=null;
+		String message=null;
 		if(result>0) {
 			path="/myPage/info";
 			message="비밀번호가 변경 되었습니다.";

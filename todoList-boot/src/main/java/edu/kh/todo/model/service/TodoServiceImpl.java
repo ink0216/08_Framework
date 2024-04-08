@@ -25,6 +25,8 @@ import edu.kh.todo.model.mapper.TodoMapper;
 //- rollbackFor 속성 : 어떤 예외가 발생했을 때 rollback할지 지정
 //---------------------------------------------------
 //모든 종류의 예외 발생 시 바로 rollback 수행하라는 의미가 됨 ->그게 아니면 커밋해줌
+//@Transactional 어노테이션은 예외 발생 시 롤백하기 위해서 쓰는 것이어서, 
+//이 어노테이션 안써도 성공 시 커밋은 자동으로 된다
 @Transactional(rollbackFor=Exception.class)
 @Service // 비즈니스 로직 역할 명시 + Bean으로 등록(스프링이 알아서 만들어주고 사용하고 해줌)
 public class TodoServiceImpl implements TodoService{
