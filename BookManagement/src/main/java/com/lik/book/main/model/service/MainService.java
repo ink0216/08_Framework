@@ -1,6 +1,7 @@
 package com.lik.book.main.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.lik.book.main.model.dto.Book;
 
@@ -16,5 +17,17 @@ public interface MainService {
 	 * @return bookList
 	 */
 	List<Book> selectAll();
+
+	/**책 검색
+	 * @param search
+	 * @return
+	 */
+	List<Book> search(String keyword);
+
+	/**가격 수정
+	 * @param map
+	 * @return
+	 */
+	String edit(Map<String, Object> map);
 
 }

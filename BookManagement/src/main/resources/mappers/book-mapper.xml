@@ -21,4 +21,18 @@
 	FROM "BOOK" ORDER BY BOOK_NO
 	</select>
 	
+	<select id="search" resultType="Book">
+	SELECT BOOK_NO, BOOK_TITLE, BOOK_WRITER, BOOK_PRICE, 
+	TO_CHAR(REG_DATE, 'YYYY"년" MM"월" DD"일" HH24"시" MI"분" SS"초"') REG_DATE
+	FROM "BOOK"
+	WHERE BOOK_TITLE LIKE '%'||#{keyword}||'%'
+	ORDER BY BOOK_NO
+	<!-- sql에서는 이어쓰기가 +가 아니라 ||(버티컬 바)임!!! -->
+	</select>
+	<update id="edit">
+	UPDATE "BOOK"
+	SET BOOK_PRICE=#{newPrice}
+	WHERE BOOK_NO=#{bookNo}
+	
+	</update>
 </mapper>

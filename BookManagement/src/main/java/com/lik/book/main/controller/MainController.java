@@ -1,10 +1,13 @@
 package com.lik.book.main.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -37,7 +40,10 @@ public class MainController {
 	 */
 	@PostMapping("add")
 	public String add(
-			Book book, //@RequestParam은 하나씩 얻어올 때 사용하고, DTO로 여러 개를 한 번에 받아올 때에는 @ModelAttribute를 쓰는데, 생략 가능하다
+			Book book, 
+			//@RequestParam은 하나씩 얻어올 때 사용하고, 
+			//DTO로 여러 개를 한 번에 받아올 때에는 @ModelAttribute를 쓰는데, 
+			//생략 가능하다
 			RedirectAttributes ra
 			) {
 		int result = service.add(book);
@@ -58,8 +64,34 @@ public class MainController {
 	public List<Book> selectAll(){
 		return service.selectAll();
 	}
+	/**검색 페이지로 포워드
+	 * @return
+	 */
 	@GetMapping("actions")
 	public String actions() {
-		return "/common/";
+		return "/common/actions";
+	}
+	/**책 검색
+	 * @return
+	 */
+	@GetMapping("search")
+	@ResponseBody
+	public List<Book> search(
+			@RequestParam("keyword") String keyword
+			) {
+		List<Book> bookList = service.search(keyword);
+		return bookList;
+	}
+	/**가격 수정
+	 * @return
+	 */
+	@PutMapping("edit")
+	public String edit(
+			@RequestBody Map<String, Object> map
+			//js에서 body에 두 개 이상 담아서 보낼 때에는 js객체고 묶고
+			//그걸 json으로 Stringify 해서 한 번에 보내야 하고
+			//컨트롤러에서는 맵으로 받으면 자동으로 변환된다
+			) {
+		return service.edit(map);
 	}
 }

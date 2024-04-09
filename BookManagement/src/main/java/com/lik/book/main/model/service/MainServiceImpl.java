@@ -1,6 +1,7 @@
 package com.lik.book.main.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -21,5 +22,17 @@ public class MainServiceImpl implements MainService{
 	@Override
 	public List<Book> selectAll() {
 		return mapper.selectAll();
+	}
+	
+	//책 검색
+	@Override
+	public List<Book> search(String keyword) {
+		return mapper.search(keyword);
+	}
+	
+	//가격 수정
+	@Override
+	public String edit(Map<String, Object> map) {
+		return mapper.edit(map);
 	}
 }

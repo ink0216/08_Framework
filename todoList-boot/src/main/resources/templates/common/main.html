@@ -53,16 +53,16 @@
             <!-- each문이 써진 태그가 반복됨
                 하나씩 꺼낸 것을 th:object라고 하면 -> 하나씩 뜯어서 쓸 수 있게 된다
                 object 써서 뜯어 쓸 떄에는 *을 붙인다-->
-        <td th:text="*{todoNo}">할 일 번호</td>
-        <td> <!-- 타임리프에서 주소 할 때에는 @ -->
-            <a th:href="@{/todo/detail(todoNo=*{todoNo})}" 
-            th:text="*{todoTitle}">할 일 제목</a>
-            <!-- () : 쿼리스트링으로 해석
-            /todo/detail?todoNo=5
-            반복 출력하려는 todoNo 출력-->
-        </td>
-        <td th:text="*{complete}">완료 여부(Y / N)</td>
-        <td th:text="*{regDate}">등록일</td>
+            <td th:text="*{todoNo}">할 일 번호</td>
+            <td> <!-- 타임리프에서 주소 할 때에는 @ -->
+                <a th:href="@{/todo/detail(todoNo=*{todoNo})}" 
+                th:text="*{todoTitle}">할 일 제목</a>
+                <!-- () : 쿼리스트링으로 해석
+                /todo/detail?todoNo=5
+                반복 출력하려는 todoNo 출력-->
+            </td>
+            <td th:text="*{complete}">완료 여부(Y / N)</td>
+            <td th:text="*{regDate}">등록일</td>
         </tr>
 
     </tbody>

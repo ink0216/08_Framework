@@ -1,6 +1,7 @@
 package com.lik.book.main.model.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -19,5 +20,17 @@ public interface MainMapper {
 	 * @return
 	 */
 	public List<Book> selectAll();
+
+	/**책 검색
+	 * @param search
+	 * @return
+	 */
+	public List<Book> search(String keyword);
+
+	/**가격 수정
+	 * @param map
+	 * @return
+	 */
+	public String edit(Map<String, Object> map);
 
 }

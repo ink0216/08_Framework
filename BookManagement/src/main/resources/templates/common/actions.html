@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +7,12 @@
 </head>
 <body>
     <h1>책 검색, 수정, 삭제</h1>
-    <form action="">
-    제목 : <input type="text" placeholder="내용을 입력해 주세요."
-    name="search"> <button>검색</button>
-    <table>
+    
+        <!-- form태그는 무조건 동기식이어서
+        비동기로 하려면 버튼 이벤트로 해야함-->
+    제목 : <input type="text" placeholder="내용을 입력해 주세요." id="search" 
+    name="search"> <button id="searchBtn">검색</button>
+    <table border="1" >
         <thead>
             <th>책 번호</th>
             <th>제목</th>
@@ -22,6 +24,6 @@
         </thead>
         <tbody></tbody>
     </table>
-    </form>
+    <script src="/js/actions.js"></script>
 </body>
 </html>
