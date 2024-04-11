@@ -71,14 +71,21 @@
 <nav>
     <!-- navigator -->
     <ul>
-        <li>
-            <a href="#">공지사항</a>
-        </li>
-        <li>
-            <a href="#">자유 게시판</a>
-        </li>
-        <li>
-            <a href="#">질문 게시판</a>
-        </li>
+        <th:block th:each="boardType : ${application.boardTypeList} ">
+            <!-- th:each="하나씩 : 리스트" ==반복문 -->
+            <!-- application scope에 있는 boardTypeList를 꺼내와서 -->
+            <li>
+                <a th:href="@{/board/{boardCode}(boardCode=${boardType.boardCode})}"
+                
+                th:text="${boardType.boardName}"
+                >게시판이름</a>
+                <!-- 앞은 board로 시작할거고 뒤에는 boardCode가 들어올 건데
+                그 boardCode가 무엇인지를 소괄호 안에 작성-->
+                <!-- 주소가 board/2 이런식으로 만들어진다 -->
+                <!-- 주소에는 @ 이용! -->
+            </li>
+        </th:block>
+        
+        
     </ul>
 </nav>

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MainController {
 	private final MainService service;
-	@RequestMapping("/")
+	@RequestMapping("/") //method 가리지 않음
 	public String mainPage() {
 		return "common/main";
 	}
@@ -86,12 +87,25 @@ public class MainController {
 	 * @return
 	 */
 	@PutMapping("edit")
-	public String edit(
+	@ResponseBody
+	public int edit(
 			@RequestBody Map<String, Object> map
 			//js에서 body에 두 개 이상 담아서 보낼 때에는 js객체고 묶고
 			//그걸 json으로 Stringify 해서 한 번에 보내야 하고
 			//컨트롤러에서는 맵으로 받으면 자동으로 변환된다
 			) {
 		return service.edit(map);
+	}
+	/**삭제하기
+	 * @return
+	 */
+	@DeleteMapping("delete")
+	@ResponseBody
+	public int delete(
+			@RequestBody int bookNo
+			//body에는 항상 하나만 받을 수 있기 때문에
+			//어노테이션 뒤에 key안쓴다!!
+			) {
+		return service.delete(bookNo);
 	}
 }

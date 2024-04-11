@@ -24,8 +24,8 @@ searchBtn.addEventListener("click", ()=>{
         const updateBtn = document.createElement("button");
         updateBtn.innerText="수정버튼";
         updateBtn.addEventListener("click", (e)=>{
-            let newPrice = prompt("수정할 가격 입력 : ");
-            if(typeof newPrice == 'number'){
+            let newPrice = Number(prompt("수정할 가격 입력 : "));
+            if(!isNaN(newPrice)){
                 console.log(book.bookNo); //이제 여기서 book.bookNo를 담아서 요청 보내기!!!!!
                 const obj = {
                     bookNo : book.bookNo,
@@ -49,8 +49,9 @@ searchBtn.addEventListener("click", ()=>{
                 .then(result=>{
                     if(result>0){
                     
-    e.target.parentElement.previousElementSibling.previousElementSibling.firstElementChild.value
+    e.target.parentElement.previousElementSibling.previousElementSibling.innerText
     =newPrice;
+    /* document.querySelector("body > table > tbody > tr:nth-child(4) > td:nth-child(4)").firstChild (콘솔창) */
                     }  
                 });
                 //두 개를 묶어서 보내려면 
@@ -66,7 +67,24 @@ searchBtn.addEventListener("click", ()=>{
         const deleteBtn = document.createElement("button");
         deleteBtn.innerText="삭제버튼";
         deleteBtn.addEventListener("click", ()=>{
-
+            //삭제 요청 보내기
+            //delete 요청
+            fetch("/delete", {
+                method : "DELETE",
+                headers : {"Content-Type" : "application/json"},
+                body : book.bookNo
+            })
+            .then(resp=>resp.text())
+            .then(result=>{
+                if(result>0){
+                    alert("삭제 성공!!!");
+                    location.href="/"; 
+                } 
+                else{
+                    alert("삭제 성공!!!");
+                    location.href="/"; 
+                } 
+            });
         });
         const td1 = document.createElement("td");
         const td2 = document.createElement("td");

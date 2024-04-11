@@ -258,8 +258,7 @@ CREATE TABLE "COMMENT" (
 	"COMMENT_DEL_FL"	CHAR(1)	DEFAULT 'N'	NOT NULL,
 	"BOARD_NO"	NUMBER		NOT NULL,
 	"MEMBER_NO"	NUMBER		NOT NULL,
-	"PARENT_COMMENT_NO"	NUMBER		NOT NULL,
-	"Field"	VARCHAR(255)		NULL
+	"PARENT_COMMENT_NO"	NUMBER		NOT NULL
 );
 
 COMMENT ON COLUMN "COMMENT"."COMMENT_NO" IS '댓글 번호(PK)';
@@ -378,6 +377,162 @@ CHECK("BOARD_DEL_FL" IN ('Y','N'));
 ALTER TABLE "COMMENT" ADD --코멘트는 무조건 쌍따옴표로 써야 함(예약어가 존재해서)
 CONSTRAINT "COMMENT_DEL_CHECK" 
 CHECK("COMMENT_DEL_FL" IN ('Y','N'));
+------------------------------------------------------------------
+/*게시판 종류 추가(BOARD_TYPE)*/
+/*게시판 번호 안겹치는게 좋으니까 시퀀스 이용!*/
+CREATE SEQUENCE SEQ_BOARD_CODE NOCACHE;
+
+INSERT INTO "BOARD_TYPE"
+VALUES (SEQ_BOARD_CODE.NEXTVAL, '공지 게시판');
+INSERT INTO "BOARD_TYPE"
+VALUES (SEQ_BOARD_CODE.NEXTVAL, '정보 게시판');
+INSERT INTO "BOARD_TYPE"
+VALUES (SEQ_BOARD_CODE.NEXTVAL, '자유 게시판');
+--DML 수행 후에 반드시 COMMIT해야한다!!!!
+--DML 수행 여러 개 하면 트랜잭션에 다 임시로 저장돼있다가 롤백하면 다 지워지고, 커밋하면 DB에 들어감!(저장됨)
+--TCL : COMMIT + ROLLBACK
+COMMIT;
+
+--읽어오는 인터셉터 클래스 만들기(스프링)
+
+SELECT * FROM "BOARD_TYPE"
+		ORDER BY BOARD_CODE;
+
+	--인터셉터 이용해서 게시글 목록 조회할 건데
+	--그러려면 목록 있어야 하니까 샘플 데이터 넣기
+	/*게시판(BOARD) 테이블 샘플 데이터 삽입하기*/
+	/*1000 ~5000 개 넣기*/
+	/*PL(절차적 언어)/SQL 이용!*/
+	/*SQL안에서 C언어 같은 코드 쓸 수 있다*/
+	/*1부터 2000까지 알아서 1씩 증가하면서
+	 * 내부의 INSERT 코드 수행*/
+	
+	/*게시글 번호 시퀀스 만들기*/
+	CREATE SEQUENCE SEQ_BOARD_NO NOCACHE;
+	SELECT * FROM "MEMBER";
+
+	BEGIN
+		FOR I IN 1..2000 LOOP
+			INSERT INTO "BOARD" 
+			VALUES (SEQ_BOARD_NO.NEXTVAL,
+							SEQ_BOARD_NO.CURRVAL ||'번째 게시글',
+						SEQ_BOARD_NO.CURRVAL ||'번째 게시글 내용입니다.',
+						DEFAULT,DEFAULT,DEFAULT,DEFAULT,
+						CEIL(DBMS_RANDOM.VALUE(0,3)),
+						1
+					);
+		END LOOP;
+		
+	END; --이거는 ALT X로 실행해야 된다!!
+	-- PL/SQL은 별도의 처리 안 하면 무조건 -1이 결과값으로 나온다
+	
+--DEFAULT 값이 지정 안돼있으면 NULL이 들어감
+-- || : 연결 연산자
+-- DBMS_RANDOM.VALUE(0,3) : 0.0 이상 3.0 미만의 난수 발생
+-- CEIL : 올림
+-- 난수를 다 1의자리까지 올림 -> 난수는 랜덤으로 나오지만, CEIL 처리된 난수는 1,2,3밖에 안나오게 된다
+-- CEIL(DBMS_RANDOM.VALUE(0,3)) : 1,2,3 중 하나
+
+	--게시판 종류별 샘플 데이터 삽입 확인
+	SELECT COUNT(*) 
+	FROM "BOARD"
+	GROUP BY BOARD_CODE
+	ORDER BY BOARD_CODE;
+---------------------------------------------------
+	--댓글 테이블 COMMENT
+	--댓글 번호 시퀀스 생성
+	CREATE SEQUENCE SEQ_COMMENT_NO NOCACHE;
+
+	--게시글 목록 조회 할 때 
+	-- 번호 제목[댓글 개수] 작성일 작성자
+	--댓글 샘플 데이터 넣기
+	BEGIN
+		FOR I IN 1..2000 LOOP
+			INSERT INTO "COMMENT" 
+			VALUES(
+				SEQ_COMMENT_NO.NEXTVAL,
+				SEQ_COMMENT_NO.CURRVAL ||'번째 댓글 입니다.',
+				DEFAULT,DEFAULT,
+				CEIL(DBMS_RANDOM.VALUE(0,2000)),
+				1,
+				NULL
+			);
+		END LOOP;
+	END;
+COMMIT;
+	--게시글 번호 최소값, 최대값 조회하기
+SELECT MIN(BOARD_NO), MAX(BOARD_NO) FROM "BOARD";
+--부모 댓글 번호 NULL 가능으로 만들기
+ALTER TABLE "COMMENT"
+MODIFY PARENT_COMMENT_NO NUMBER NULL; --숫자타입으로 할 거고 NULL허용할거다
+--댓글 삽입 확인
+SELECT COUNT(*) FROM "COMMENT"
+GROUP BY BOARD_NO 
+ORDER BY BOARD_NO;
+
+--특정 게시판의 삭제되지 않은 게시글 목록 조회하는 SQL
+--단, 최신 글이 제일 위에 존재해야하고
+--몇 초/분/시간 전 또는 YYYY-MM-DD 형식으로 작성일 조회하겠다
+-- + 댓글 개수
+-- + 좋아요 개수
+-- 번호 제목[댓글개수] 작성자닉네임 작성일 조회수 좋아요개수
+
+--상관 서브쿼리 이용해서 댓글 개수 조회하기
+--앞에서 조회한 BOARD_NO에 따라서 서브쿼리 수행
+--서브쿼리는 원래 서브쿼리가 먼저 해석되고
+--근데 상관 서브쿼리는 반대다!
+--밖의 메인쿼리의 한 행이 해석*조회된 후
+--1행 조회 결과를 이용해서 서브쿼리를 수행하는 형식 
+-- (메인쿼리를 모두 조회할 때까지 반복)
+--한 행 조회하는 서브쿼리를 2000번 반복한다 (행이 2000개여서)
+
+--시간은 선택함수 이용 CASE문
+SELECT BOARD_NO, BOARD_TITLE , MEMBER_NICKNAME,READ_COUNT,
+(SELECT COUNT(*)
+	FROM "COMMENT" C
+	WHERE C.BOARD_NO = B.BOARD_NO) COMMENT_COUNT,
+	(SELECT COUNT(*)
+	FROM BOARD_LIKE L
+	WHERE L.BOARD_NO=B.BOARD_NO) LIKE_COUNT,
+	CASE --이 네 가지 중 하나를 선택해서 한 컬럼이 나온다
+		WHEN SYSDATE-BOARD_WRITE_DATE < 1/24/60 
+		THEN FLOOR((SYSDATE-BOARD_WRITE_DATE)*24*60*60)||'초 전'
+		
+		WHEN SYSDATE-BOARD_WRITE_DATE < 1/24 
+		THEN FLOOR((SYSDATE-BOARD_WRITE_DATE)*24*60)||'분 전'
+		
+		WHEN SYSDATE-BOARD_WRITE_DATE < 1 
+		THEN FLOOR((SYSDATE-BOARD_WRITE_DATE)*24)||'시간 전'
+		
+		ELSE TO_CHAR(BOARD_WRITE_DATE, 'YYYY-MM-DD') --아무 케이스에도 안 들어가는 경우
+	END BOARD_WRITE_DATE --별칭
+	
+FROM "BOARD" B
+JOIN "MEMBER" USING(MEMBER_NO)
+WHERE BOARD_DEL_FL ='N'
+AND BOARD_CODE=1
+ORDER BY BOARD_NO DESC; --이걸 다 담을 DTO 만들기
+--각각의 게시글에 따른 댓글 개수가 나옴
+
+--특정 게시글의 댓글 개수 조회
+SELECT COUNT(*)
+FROM "COMMENT"
+WHERE BOARD_NO = 30;
+
+--현재 시간 -하루 전 조회 ->정수 == 일 단위
+--날짜랑 날짜를 뺄 수 있다!
+SELECT 
+	(SYSDATE-TO_DATE('2024-04-10 12:14:30', 'YYYY-MM-DD HH24:MI:SS'))*60*60*24
+FROM DUAL;
+
+--지정된 게시판에서 삭제되지 않은 게시글 수를 조회하기
+SELECT COUNT(*)
+FROM "BOARD"
+WHERE BOARD_DEL_FL='N'
+AND BOARD_CODE=3;
+
+
+
 --------------------------------------------------------------------
 /*책 관리 프로젝트(연습용)*/
 CREATE TABLE "BOOK" (

@@ -8,7 +8,9 @@
 <body>
     <h1>책 등록</h1>
     <form action="/add" method="POST">
-        <label>
+        <label> <!-- form태그는 무조건 동기식이다!!(비동기는 불가능) -->
+            <!-- 동기식 : 포워드 or 리다이렉트
+                비동기식 : 값만 보내줌(화면의 일부분만 바뀌도록 값 보냄)-->
             제목 : <input type="text" placeholder="내용을 입력해 주세요." name="bookTitle">
         </label>
         <br>

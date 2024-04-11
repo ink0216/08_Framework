@@ -31,6 +31,12 @@ public interface MainMapper {
 	 * @param map
 	 * @return
 	 */
-	public String edit(Map<String, Object> map);
+	public int edit(Map<String, Object> map);
+
+	/**책 삭제
+	 * @param bookNo
+	 * @return
+	 */
+	public int delete(int bookNo);
 
 }

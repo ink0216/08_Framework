@@ -32,7 +32,13 @@ public class MainServiceImpl implements MainService{
 	
 	//가격 수정
 	@Override
-	public String edit(Map<String, Object> map) {
+	public int edit(Map<String, Object> map) {
 		return mapper.edit(map);
+	}
+	
+	//책 삭제
+	@Override
+	public int delete(int bookNo) {
+		return mapper.delete(bookNo);
 	}
 }

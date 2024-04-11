@@ -28,6 +28,12 @@ public interface MainService {
 	 * @param map
 	 * @return
 	 */
-	String edit(Map<String, Object> map);
+	int edit(Map<String, Object> map);
+
+	/**책 삭제
+	 * @param bookNo
+	 * @return
+	 */
+	int delete(int bookNo);
 
 }

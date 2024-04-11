@@ -29,10 +29,15 @@
 	ORDER BY BOOK_NO
 	<!-- sql에서는 이어쓰기가 +가 아니라 ||(버티컬 바)임!!! -->
 	</select>
+	
 	<update id="edit">
 	UPDATE "BOOK"
 	SET BOOK_PRICE=#{newPrice}
 	WHERE BOOK_NO=#{bookNo}
 	
 	</update>
+	<delete id="delete">
+	DELETE FROM "BOOK"
+	WHERE BOOK_NO=#{bookNo}
+	</delete>
 </mapper>
