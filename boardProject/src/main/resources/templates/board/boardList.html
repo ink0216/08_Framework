@@ -19,7 +19,21 @@
 
         <section class="board-list">
 
+            <!-- 인터셉터 이용 방법 (BoardNameInterceptor)
+            타임리프는 로직 쓰는 것 안좋아하고 백엔드에서 보내주는 값 출력만 하는 것 좋아함-->
             <h1 class="board-name" th:text="${boardName}">게시판 이름</h1>
+
+            <!-- application, request scope 값 이용 방법 -->
+            <th:block th:each=" boardType : ${application.boardTypeList}">
+                <h1 class="board-name" 
+                th:if="${boardType.boardCode} == ${boardCode}"
+                th:text="${boardType.boardName}">게시판 이름</h1>
+                <!-- 반복해서 검색해서 boardType의 boardCode(application scope에서 꺼낸 것)랑
+                    request scope에서 꺼낸 거랑 같을 때에만 게시판 이름을 출력하겠다
+                근데 인터셉터로도 할 수 있다-->
+            </th:block>
+
+
 
             <!-- 검색 구현 후 사용 -->
             <!-- <h3 style="margin:30px">OOO 검색 결과</h3> -->
@@ -39,36 +53,70 @@
                     </thead>
 
                     <tbody>
-                        <!-- 게시글이 존재하지 않을 때 -->
-                        <tr>
-                            <th colspan="6">게시글이 존재하지 않습니다.</th>
-                        </tr>
+                        <th:block th:if="${#lists.size(boardList)==0}">
+                            <!-- 리스트를 조회했다 근데 게시글이 존재하지 않는 경우는
+                            boardList는 null일까 비어있을까
+                        조회 결과가 없어도 List<Board> 만들어져있음(0행)->비어있는 List가 반환된다
+                            여러 행 조회 시 결과가 없을 경우 == List가 비어있음 (null아님!!!)-->
+                            <!-- boardList.size()==0으로 해도 되지만 타임리프에서 권장 안하고
+                            타임리프에서는 #lists 권장! -->
+                            <!-- #lists : 타임리프에서 list 관련 기능을 제공하는 객체 -->
+                            <!-- 게시글이 존재하지 않을 때 -->
+                                <!-- ${boardList.size() == 0} -->
+						<!-- ${#lists.size(boardList) == 0} -->
+						<!-- ${#lists.isEmpty(boardList)} --> 
+                        <!-- 이 셋 중에 하나 쓰면 된다 -->
+                            <tr>
+                                <th colspan="6">게시글이 존재하지 않습니다.</th>
+                            </tr>
+                        </th:block>
 
 
 
-                        <!-- 게시글이 존재할 때 -->
-                        <tr>
-                            <td>게시글 번호</td>
-                            <td> 
-                               <!-- 썸네일 추가 예정 -->
+                        <th:block th:unless="${#lists.size(boardList)==0}"> 
+                            <!-- unless : false일 때 수행하는 것 -->
+                            <!-- 게시글이 존재할 때 -->
+                            <tr th:each=" board: ${boardList}" th:object="${board}">
+                                <!-- th:object="${board}" 쓰면 이 tr태그 내에서 *을 이용해서 
+                                필드명을 더 쉽게 꺼낼 수 있다 앞에 board. 안써도 된다-->
+                                <!-- tr태그가 조회한 개수만큼 반복해야한다 -->
+                                <!-- 하나씩 꺼낸 것을 board라고 부르겠다 -->
+                                <td th:th:text="*{boardNo}">게시글 번호</td>
+                                <td> 
+                                    <!-- 썸네일 추가 예정 -->
+    
+        <a th:href="@{/board/{boardCode}/{boardNo}(boardCode=${boardCode},boardNo=*{boardNo},cp=${pagination.currentPage})}" 
 
-                               <a href="#">게시글 제목</a>
-                               [0] <!-- 댓글 수 -->
-                            </td>
-
-                            <!-- 작성자 닉네임 -->
-                            <td>닉네임</td>
-
-                             <!-- 작성일 -->
-                            <td>2023-10-26</td>
-
-                            <!-- 조회수 -->
-                            <td>0</td>
-
-                            <!-- 좋아요 수 -->
-                            <td>0</td>
-
-                        </tr>
+                                    th:text="*{boardTitle}">게시글 제목</a>
+                                    <!-- cp는 왼쪽에 없어서 쿼리스트링으로 들어가는데 
+                                        상세 조회 주소에 cp가 포함된 이유
+                                        == 상세페이지 -> '목록으로 '버튼 클릭 시 목록 화면으로 돌아올 때 사용할거다
+                                    3페이지 보고 있었으면 3페이지 목록으로 오도록-->
+                                    <!-- 1번 공지게피한의 1998번글을 보겠다 -->
+                                    <!-- /board/1/1998 : 현재 방법(PathVariable 이용하면 간단해짐) -->
+                                    <!-- /board/list?code=1&no=1988 : 옛날방법 -->
+                                    <!-- 이거 클릭 시 상세조회 요청 보내게 만들기! -->
+                                    <!-- a태그 주소를 타임리프로 조작할거다 -->
+                                    <th:block th:text="|[*{commentCount}]|"></th:block><!-- 댓글 수 -->
+                                    <!-- 안에 텍스트 쓰고 싶은데 다른 문자랑 합쳐서 쓰고 싶으면
+                                    양쪽에 | 씌워주면 된다(지금은 []랑 같이 합쳐서 썼다)-->
+                                    <!-- [[*{commentCount}]] -->
+                                </td>
+    
+                                <!-- 작성자 닉네임 -->
+                                <td th:text="*{memberNickname}">닉네임</td>
+    
+                                    <!-- 작성일 -->
+                                <td th:text="*{boardWriteDate}">2023-10-26</td>
+    
+                                <!-- 조회수 -->
+                                <td th:text="*{readCount}">0</td>
+    
+                                <!-- 좋아요 수 -->
+                                <td th:text="*{likeCount}">0</td>
+    
+                            </tr>
+                        </th:block>
                     </tbody>
                 </table>
             </div>
@@ -84,38 +132,58 @@
             <!-- ============================================================================================================== -->
 
             <!-- 게시글이 있을 때만 페이지네이션이 보이게 할 예정 -->
+            <!-- 페이지 넘길 때 누르는 숫자 -->
             <div class="pagination-area">
 
-                <ul class="pagination">
+                <ul class="pagination" th:object="${pagination}">
+                    <!-- 전달받은 것을 여기서 뜯어서 쓰겠따 -->
                 
                     <!-- 첫 페이지로 이동 -->
-                    <li><a href="#">&lt;&lt;</a></li>
+                    <li><a th:href="@{/board/{boardCode}(boardCode=${boardCode}, cp=1)}">&lt;&lt;</a></li>
+                    <!-- 왼쪽에 boardCode라고 써져있는데 그 boardCode는 @PathVariable이 올린거야 -->
+                    <!-- 진짜 @PathVariable이 request scope로 써서 여기서 읽을 수 있다 -->
+                    <!-- 왼쪽에 cp없으면 쿼리스트링으로 자동 변환된다 -->
+                    <!-- &lt; : < -->
+                    <!-- 두개 -> << -->
+                    <!-- Spring el에서 주소 조합할 때에는 @를 쓴다 -->
 
-                    <!-- 이전 목록 마지막 번호로 이동 -->
-                    <li><a href="#">&lt;</a></li>
-
+                    <!-- 이전 목록의 마지막 번호로 이동 -->
+                    <li><a th:href="@{/board/{boardCode}(boardCode=${boardCode},cp=*{prevPage})}">&lt;</a></li>
+                    <!-- 원래 cp=${pagination.prevPage}로 해야되는데 너무 길어서
+                    th:object로 하고 $를 *로 바꿔주면 앞의 pagination. 안써도 된다-->
                     <!-- 특정 페이지로 이동 -->
-                    <!-- 현재 보고있는 페이지 -->
-                    <li>
-                        <a class="current">1</a>
-                    </li>
-
-                    <!-- 보고있지 않은 페이지 -->                    
-                    <li> <a href="#">2</a> </li>
-                    <li> <a href="#">3</a> </li>
+                    <!-- <th:block th:each=" i : ${#numbers.sequence(pagination.startPage,pagination.endPage)}"> -->
+                    <th:block th:each=" i : *{#numbers.sequence(startPage,endPage)}">
+                        <!-- 위에  pagination을 object 해놔서 *로 하고 pagination. 안써도 된다-->
+                        <!-- $ 안의 pagination 앞에도 $ 써야 되는데 안써도 된다 밖에 있어서 -->
+                        <!-- 현재 보고있는 페이지 -->
+                        <li th:if="${i == pagination.currentPage}">
+                            <!-- <li th:if="${i} == *{currentPage}"> jsp el 에서는 ${}안에서 다 해결해야 했지만
+                                여기서는 if문으로 묶여 있어서 이렇게 해도 된다(따로따로 꺼내서 비교하는 것 가능하다!)-->
+                            <a class="current" th:text="${i}">현재 페이지</a>
+                        </li>
+    
+                        <!-- 보고있지 않은 페이지 -->                    
+                        <li th:unless="${i == pagination.currentPage}"> 
+                            <a th:href="@{/board/{boardCode}(boardCode=${boardCode},cp=${i})}" 
+                            th:text="${i}">이동할 페이지</a> 
+                            <!-- cp는 없으니까 쿼리스트링으로 넣을거야 -->
+                        </li>
+                    </th:block>
+                    <!-- <li> <a href="#">3</a> </li>
                     <li> <a href="#">4</a> </li>
                     <li> <a href="#">5</a> </li>
                     <li> <a href="#">6</a> </li>
                     <li> <a href="#">7</a> </li>
                     <li> <a href="#">8</a> </li>
                     <li> <a href="#">9</a> </li>
-                    <li> <a href="#">10</a> </li>
-
+                    <li> <a href="#">10</a> </li> -->
+                    <!-- #numbers.sequence(11,15) -> {11,12,13,14,15} 배열 반환 -> 향상된 for문으로 하나씩 꺼내서 출력 가능 -->
                     <!-- 다음 목록 시작 번호로 이동 -->
-                    <li><a href="#">&gt;</a></li>
+                    <li><a th:href="@{/board/{boardCode}(boardCode=${boardCode},cp=*{nextPage})}">&gt;</a></li>
 
                     <!-- 끝 페이지로 이동 -->
-                    <li><a href="#">&gt;&gt;</a></li>
+                    <li><a th:href="@{/board/{boardCode}(boardCode=${boardCode},cp=*{maxPage})}">&gt;&gt;</a></li>
                 </ul>
             </div>
 

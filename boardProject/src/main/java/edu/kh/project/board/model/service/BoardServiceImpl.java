@@ -62,7 +62,8 @@ public class BoardServiceImpl implements BoardService{
 		int offset = (cp-1)*limit;
 		//3페이지 보고싶으면 앞의 20개는 건너뛰고 열 개 조회하면 됨
 		
-		RowBounds rowBounds = new RowBounds(offset, limit);
+		RowBounds rowBounds = new RowBounds(offset, limit); //몇 행 범위를 offset만큼 건너뛰고 몇 행만큼 볼 지
+		//20, 10 -> 20개 건너뛰고 그 다음부터 10개 조회한다 ->이걸 가능하게 하는게 RowBounds이다!!!
 		
 		/*Mapper 메서드 호출 시
 		 * - 첫 번째 매개변수 -> 무조건 SQL 에 전달할 파라미터가 됨
@@ -79,7 +80,28 @@ public class BoardServiceImpl implements BoardService{
 		return map;
 	}
 	
-	
+	//게시글 상세 조회
+	@Override
+	public Board selectOne(Map<String, Integer> map) {
+		//mapper 태그 하나 당 sql 하나씩만 수행 태그 하나 당 매퍼의 메서드 하나씩 연결돼있다
+		//[여러 sql을 실행하는 방법]
+		// 1) 하나의 Service 메서드에서
+		//		여러 Mapper 메서드를 호출하는 방법(가장 쉬운 방법)
+		
+		// 2) 수행하려는 SQL이 
+		//		-1. 모두 SELECT이면서
+		//		-2. 먼저 조회된 결과 중 일부를 이용해 
+		//			나중에 수행되는 SQL의 조건으로 삼는 경우
+		//	-->Mybatis의 <resultMap>, <collection> 태그를 이용해
+		//		Mapper 메서드 1회 호출로 여러 SELECT를 한 번에 수행할 수 있다
+		//(특수한 조건일 때만 사용할 수 있지만 코드가 쉬운 방법)
+		
+		//상세조회하면 컬럼들이 나오는데 컬럼 값들 중에서 두 번째 SELECT문의 BOARD_NO를 이용해서
+		//이미지 조회할 떄의 BOARD_NO에 넣어줄 수 있고
+		//댓글 조회할 떄의 BOARD_NO에도 넣어줄 수 있다
+		//첫 SQL 의 결과 중 일부를 이용해서 뒤의 SQL에 이용하는 경우이므로 이 상황에 해당됨
+		return mapper.selectOne(map);
+	}
 	
 	
 	

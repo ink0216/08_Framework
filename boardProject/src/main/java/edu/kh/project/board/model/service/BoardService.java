@@ -3,6 +3,8 @@ package edu.kh.project.board.model.service;
 import java.util.List;
 import java.util.Map;
 
+import edu.kh.project.board.model.dto.Board;
+
 public interface BoardService {
 	//인터셉터 호출 코드
 	//반환할 게 맵 타입이야 그 안에는 두 컬럼값이 들어갈거야
@@ -32,6 +34,12 @@ public interface BoardService {
 	 * @return map
 	 */
 	Map<String, Object> selectBoardTypeList(int boardCode, int cp);
+
+	/**게시글 상세 조회
+	 * @param map
+	 * @return board
+	 */
+	Board selectOne(Map<String, Integer> map);
 	
 	
 	

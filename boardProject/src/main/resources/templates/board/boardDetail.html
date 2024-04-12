@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="|${boardName}-${board.boardNo}번 글|">게시판 이름</title>
+    <!-- *************************************************************** -->
+    <!-- boardNameInterceptor가 세팅해준 값 -->
+    <th:block th:replace="~{common/common}"></th:block>
+
+
+    <link rel="stylesheet" href="/css/board/boardDetail-style.css">
+    <link rel="stylesheet" href="/css/board/comment-style.css">
+
+</head>
+<body>
+    <main>
+        <th:block th:replace="~{common/header}"></th:block>
+
+        <section class="board-detail" th:object="${board}">  
+            <!-- 제목 -->
+            <h1 class="board-title" 
+            th:text="|*{boardTitle}-${boardName}|">  게시글 제목  </h1>
+            <!-- boardName은 인터셉터가 세팅한 거다 -->
+            <!-- 프로필 + 닉네임 + 작성일 + 조회수 -->
+            <div class="board-header">
+                <div class="board-writer">
+
+                    <!-- 프로필 이미지 -->
+                    <!-- 프로필 이미지가 없을 경우 기본 이미지 출력 -->
+                    <img th:unless="*{profileImg}"
+                    th:src="#{user.default.image}">
+                    <!-- 타임리프에서만 되는 건데
+                    *{객체명} 값이 null이면 자동으로 false가 됨-->
+                    <!-- # : messages.properties 파일 안의 값을 꺼내 쓰는 것! -->
+                    <!-- PROFILE_IMG 조회해옴 -->
+                    <!-- --------------------------------------------- -->
+                    <!-- 프로필 이미지가 있을 경우 있는 프로필 이미지 출력 -->
+                    <img th:if="*{profileImg}"
+                    th:src="*{profileImg}">
+
+
+                    <span th:text="*{memberNickname}">작성자 닉네임</span>
+
+                    
+                    <!-- 좋아요 하트 -->
+                    <span class="like-area">
+                        
+                        <!-- 비동기로 좋아요 누를 때 동작(4월 15일 월요일 예정) -->
+                        <!-- 좋아요 누른적이 있으면 fa-solid, 없으면 fa-regular 클래스 추가 -->
+                        <i class="fa-heart fa-regular" id="boardLike"></i>
+
+                        <!-- 좋아요 개수 -->
+                        <span th:text="*{likeCount}">0</span>
+                    </span>
+
+                </div>
+
+                <div class="board-info">
+                    <p> <span>작성일</span> [[*{boardWriteDate}]] </p>   
+                    
+                    <!-- 수정한 게시글인 경우 -->
+                    <p th:if="*{boardUpdateDate}"> <span>마지막 수정일</span> [[*{boardUpdateDate}]] </p>   
+                    <!-- 저 위치에 출력되도록 하고싶으면 th:text의 다른 형태인 대괄호 두 겹으로 쓰면 된다!! -->
+                    <!-- 수정한 적이 있어야만 이 p태그가 보여지도록 하기
+                    *{boardUpdateDate} : 이 필드가 null이면 자동으로 false가 됨
+                    참조하는 객체가 있으면 true, 없으면 false가 자동으로 되도록 타임리프에 지정돼있다(위에서 처럼)-->
+
+
+                    <p> <span>조회수</span>[[*{readCount}]]</p>                    
+                </div>
+            </div>
+
+
+
+            <!-- ====================== 이미지가 있을 경우 출력하는 구문 ====================== -->
+        <th:block th:if="${#lists.size(board.imageList)}>0">
+
+        <!-- 썸네일이 있을 경우 -->
+            <th:block th:if="*{thumbnail}">
+                <!-- 썸네일이 있을 경우에만 -->
+                <h5>썸네일</h5>
+                    <div class="img-box">
+                        <div class="boardImg thumbnail">
+                            <img th:src="|${thumbnail.imgPath}${thumbnail.imgRename}|">
+                            <a th:href="|${thumbnail.imgPath}${thumbnail.imgRename}|"
+                            th:download="${thumbnail.imgOriginalName}">다운로드</a> 
+                            <!-- 다운로드는 원본명으로 됨 -->   
+                        </div>
+                    </div>
+            </th:block>
+                
+                
+                <th:block th:if="${#lists.size(board.imageList)> start} ">
+                    <!-- 이미지가 몇 개 있는지 개수 -->
+                    <!-- 썸네일이 있으면 1, 없으면 0이라고 컨트롤러에서 설정한 start -->
+                    <h5>업로드 이미지</h5>
+                    <th:block th:each=" i : ${#numbers.sequence(start,#lists.size(board.imageList)-1)}">
+                        <!-- 4장 있었으면 #lists.size(board.imageList) ==4
+                        그럼 마지막 인덱스는 그것보다 1 작다-->
+                        <!-- start부터 list의 사이즈만큼 반복 -->
+                        <!-- 넘버즈 시퀀스 이용해야한다 -->
+                        <div class="img-box">
+                            <div class="boardImg">
+                                <img th:src="|${board.imageList[i].imgPath}${board.imageList[i].imgRename}|">   
+                                <a th:href="|${board.imageList[i].imgPath}${board.imageList[i].imgRename}|"
+                                th:download="${board.imageList[i].imgOriginalName}">다운로드</a>                
+                            </div>
+                        </div>
+                    </th:block>
+                </th:block> 
+        </th:block>
+            <!-- ====================== 이미지가 있을 경우 출력하는 구문  ====================== -->
+            
+            <!-- 내용 -->
+            <div class="board-content" th:text="*{boardContent}">내용</div>
+
+
+
+            <!-- 버튼 영역-->
+            <div class="board-btn-area">
+
+                <!-- 로그인한 회원과 게시글 작성자 번호가 같은 경우-->
+
+            <!-- <th:block th:if="${session.loginMember !=null and board.memberNo}==session.loginMember.memberNo"> -->
+            <!-- 
+                    ${객체?.필드} : 안전 탐색 연산자(Safe Navigation Operator)
+객체가 null인지 판별해서 null이 아닌 경우에만 수행
+                -->
+            <th:block th:if="${board.memberNo == session.loginMember?.memberNo}">  
+                <!-- loginMember가 있을 때에만 board.memberNo랑 비교 -->
+                <!-- 로그인한 사람이 번호랑 작성자의 번호가 같을 때에만 수정,삭제 버튼을 보여지게 하겠다 -->
+                    <button id="updateBtn">수정</button>
+                    <button id="deleteBtn">삭제</button>
+            </th:block>
+                <button id="goToListBtn">목록으로</button>
+            </div>
+
+        </section>
+
+
+        <!-- 댓글 영역-->
+        <th:block th:replace="~{board/comment}"></th:block>
+
+    </main>
+
+
+    <th:block th:replace="~{common/footer}"></th:block>
+
+
+    <script src="/js/board/boardDetail.js"></script>
+    <script src="/js/board/comment.js"></script>
+    
+</body>
+</html>

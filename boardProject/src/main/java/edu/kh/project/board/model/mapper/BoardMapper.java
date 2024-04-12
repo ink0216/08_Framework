@@ -29,4 +29,10 @@ public interface BoardMapper {
 	 */
 	List<Board> selectBoardList(int boardCode, RowBounds rowBounds);
 
+	/**
+	 * @param map
+	 * @return
+	 */
+	Board selectOne(Map<String, Integer> map);
+
 }

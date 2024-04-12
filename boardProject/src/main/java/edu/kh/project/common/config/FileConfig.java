@@ -42,6 +42,20 @@ public class FileConfig implements WebMvcConfigurer{
 	@Value("${my.profile.resource-location}") //프로필 이미지 요청 시 연결할 서버 폴더 경로
 	private String profileResourceLocation; 
 	
+	//------------------------------------------------------------------------------
+	@Value("${my.board.resource-handler}") //게시글 이미지 요청 주소
+	private String boardResourceHandler; 
+	
+	@Value("${my.board.resource-location}") //게시글 이미지 요청 시 연결할 서버 폴더 경로
+	private String boardResourceLocation; 
+	//이 두개를 config.properties에서 값을 가지고 온다
+	
+	
+	
+	
+	
+	
+	
 	
 	//WebMvcConfigurer 오버라이딩 1
 	@Override
@@ -66,6 +80,13 @@ public class FileConfig implements WebMvcConfigurer{
 		.addResourceHandler(profileResourceHandler) // /myPage/profile 요청이 오면
 		.addResourceLocations(profileResourceLocation); //이 폴더에 접근할 수 있게 하겠다
 		//언제든지 경로 바꿀 수 있게, 얻어와서 쓰도록 만든다
+		
+		//------------------------------------------------------------------------------------
+		//어떤 요청이 오면 어떤거랑 연결할 지 등록해놔야된다
+		//게시글 이미지 요청 오면 서버 폴더 연결 추가
+		registry
+		.addResourceHandler(boardResourceHandler)
+		.addResourceLocations(boardResourceLocation);
 	}
 	
 	/*MultipartResolver 관련 설정*/

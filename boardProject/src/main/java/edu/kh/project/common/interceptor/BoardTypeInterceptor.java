@@ -55,6 +55,9 @@ public class BoardTypeInterceptor implements HandlerInterceptor{
 	@Override //전처리
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+		//하는 일 : boardTypeInterceptor에 적혀있음 
+				//전처리 -> application scope 객체를 얻어와서 boardTypeList가 없으면 서비스를 이용해서 다 조회해와서
+				//application scope에 세팅하는 것 (최초 접속했을 때임)
 		
 		//진짜 request랑 response를 가로챔
 		
@@ -66,13 +69,14 @@ public class BoardTypeInterceptor implements HandlerInterceptor{
 		//여기서 DB까지 갈 건데 
 		//Dispatcher Servlet에서 Controller로 가는 요청 가로챘으니까 DB로 갈 때 컨트롤러 가면 안됨
 		//바로 서비스로 가서 매퍼로 감
-		ServletContext application = request.getServletContext(); //요청 객체를 이용해서 얻어올 수 있다
-		log.info("BoardTypeInterceptor - postHandle(전처리) 동작 실행"); //정보만 보여줄 거면 info 레벨로 하면 된다
+		ServletContext application = request.getServletContext(); //application scope의 객체 이름이 ServletContext임
+		//요청 객체를 이용해서 얻어올 수 있다
+		
 		if(application.getAttribute("boardTypeList") ==null) {
 			//속성값을 얻어왔는데 null이었을 경우
 			//application scope에 boardTypeList가 없을 경우
-			//없을 때에만 DB에서 조회해서 집어넣겠다
-			
+			//없을 때에만 DB에서 조회해서 집어넣겠다 ->결과 반환받아서 application scope에 세팅해놓겠다
+			log.info("BoardTypeInterceptor - postHandle(전처리) 동작 실행"); //정보만 보여줄 거면 info 레벨로 하면 된다
 			//boardTypeList 조회 서비스 호출
 			List<Map<String, Object>> boardTypeList = service.selectBoardTypeList();
 			//map : 한 행

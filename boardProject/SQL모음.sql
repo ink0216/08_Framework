@@ -531,6 +531,141 @@ FROM "BOARD"
 WHERE BOARD_DEL_FL='N'
 AND BOARD_CODE=3;
 
+--------------------------------------------------------------------
+--게시판 이미지 테이블
+/*BOARD_IMG 테이블 용 시퀀스 생성*/
+CREATE SEQUENCE SEQ_IMG_NO NOCACHE;
+
+/*BOARD_IMG 테이블에 샘플 데이터 삽입 5개 하기*/
+INSERT INTO "BOARD_IMG"
+VALUES(SEQ_IMG_NO.NEXTVAL,
+	'/images/board/', --이미지 경로에 넣을 것을 써놯다			
+	'원본1.jpg',
+	'test1.gif',
+	0,--이미지 순서
+	1998--게시글 번호
+);
+INSERT INTO "BOARD_IMG"
+VALUES(SEQ_IMG_NO.NEXTVAL,
+	'/images/board/', --이미지 경로에 넣을 것을 써놯다			
+	'원본2.jpg',
+	'test2.gif',
+	1,--이미지 순서
+	1998--게시글 번호
+);
+INSERT INTO "BOARD_IMG"
+VALUES(SEQ_IMG_NO.NEXTVAL,
+	'/images/board/', --이미지 경로에 넣을 것을 써놯다			
+	'원본3.jpg',
+	'test3.jpg',
+	2,--이미지 순서
+	1998--게시글 번호
+);
+INSERT INTO "BOARD_IMG"
+VALUES(SEQ_IMG_NO.NEXTVAL,
+	'/images/board/', --이미지 경로에 넣을 것을 써놯다			
+	'원본4.jpg',
+	'test4.webp',
+	3,--이미지 순서
+	1998--게시글 번호
+);
+INSERT INTO "BOARD_IMG"
+VALUES(SEQ_IMG_NO.NEXTVAL,
+	'/images/board/', --이미지 경로에 넣을 것을 써놯다			
+	'원본5.jpg',
+	'test5.webp',
+	4,--이미지 순서
+	1998--게시글 번호
+);
+COMMIT;
+---------------------------------------
+/*게시글 상세 조회하는 SQL*/
+--제목, 내용, 작성일, 수정일, 조회수, 좋아요수, 닉네임, 프로필이미지
+SELECT BOARD_NO, BOARD_TITLE , BOARD_CONTENT ,BOARD_CODE ,READ_COUNT ,
+	MEMBER_NO, MEMBER_NICKNAME, PROFILE_IMG,
+	TO_CHAR(BOARD_WRITE_DATE,'YYYY"년" MM"월" DD"일" HH24:MI:SS') BOARD_WRITE_DATE,
+	--HH는 12시 표기법, HH24는 24시 표기법
+	TO_CHAR(BOARD_UPDATE_DATE,'YYYY"년" MM"월" DD"일" HH24:MI:SS') BOARD_UPDATE_DATE,
+	--수정일
+	(SELECT COUNT(*)FROM "BOARD_LIKE"
+		WHERE BOARD_NO=1998) LIKE_COUNT,
+		(SELECT IMG_PATH||IMG_RENAME
+			FROM "BOARD_IMG" 
+			WHERE BOARD_NO=1998
+			AND IMG_ORDER=0) THUMBNAIL
+		--썸네일 이미지 조회
+			--IMG_ORDER 가 0인 게 썸네일 할거다
+			--상세조회할 때 첨부된 이미지 전체랑 댓글도 전체 조회돼야 한다
+			--SELECT 세 번 하면 됨
+FROM "BOARD"
+JOIN "MEMBER" USING(MEMBER_NO)
+WHERE BOARD_DEL_FL ='N'
+AND BOARD_CODE=1
+AND BOARD_NO =1998;
+--삭제가 안된 몇 번 게시판의 몇 번 글
+--상관 쿼리로도 할 수 있따
+-------------------------------------------------
+/*상세조회되는 게시글의 첨부된 모든 이미지 조회하기*/
+SELECT * FROM "BOARD_IMG"
+WHERE BOARD_NO =1998
+ORDER BY IMG_ORDER; --이미지 순서에 따라서
+--이 결과를 저장할 DTO 만들기
+
+/*상세조회되는 게시글의 모든 댓글 조회*/
+/*계층형 쿼리
+ * START WITH
+ * 계층형에서 NULL인 애들이 1레벨이야
+ * CONNECT BY PRIOR 
+ * COMMENT_NO랑 PARENT_COMMENT_NO가 같은 것끼리 연결해줄거야
+ * 정렬은 같은 레벨끼리 정렬하는데 COMMENT_NO 오름차순으로 정렬할거야
+ * */
+
+SELECT LEVEL, C.* 
+FROM
+		(SELECT COMMENT_NO, COMMENT_CONTENT,
+		  TO_CHAR(COMMENT_WRITE_DATE, 'YYYY"년" MM"월" DD"일" HH24"시" MI"분" SS"초"') COMMENT_WRITE_DATE,
+		    BOARD_NO, MEMBER_NO, MEMBER_NICKNAME, PROFILE_IMG, PARENT_COMMENT_NO, COMMENT_DEL_FL
+		FROM "COMMENT"
+		JOIN MEMBER USING(MEMBER_NO)
+		WHERE BOARD_NO = 1998) C --서브쿼리의 결과가 테이블 됨
+WHERE COMMENT_DEL_FL = 'N'
+	OR 0 != (SELECT COUNT(*) FROM "COMMENT" SUB
+					WHERE SUB.PARENT_COMMENT_NO = C.COMMENT_NO
+					AND COMMENT_DEL_FL = 'N')
+	START WITH PARENT_COMMENT_NO IS NULL
+	CONNECT BY PRIOR COMMENT_NO = PARENT_COMMENT_NO
+	ORDER SIBLINGS BY COMMENT_NO;
+--이 결과를 저장할 DTO 만들기
+
+--상세조회하면서 SELECT 3회 할거다
+--DTO없는 이미지랑, 댓글에 대한 DTO 만들고 결과 다 가져와서 화면에 꾸미면 된다!!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 --------------------------------------------------------------------
