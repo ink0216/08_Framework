@@ -48,5 +48,6 @@ public class Board {
 	//특정 게시글에 작성된 댓글 목록 조회해서 여기 다 담아놓기
 	private List<Comment> commentList; //세 번째 select 담김
 	
-	
+	//좋아요 눌렀는 지 여부 확인하는 필드
+	private int likeCheck;
 }

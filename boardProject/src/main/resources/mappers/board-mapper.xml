@@ -119,6 +119,8 @@
 	그 안에 collection 두개 들어있어서 각각 selectImageList, selectCommentList sql실행
 	따라서 Mapper에서 메서드 하나 수행시켰는데 xml select가 총 세 개 수행된다!!!! -->
 	<!-- 조회 결과를 Board DTO의 필드에 넣어주겠다 근데 resultType말고 resultMap 쓸거다 -->
+	<!-- 원래는 결과가 담긴 dto를 쓰는 건데
+	boardDTO랑 연결돼있다->select의 결과가 board -->
 	<select id="selectOne" resultMap="board_rm">
 	SELECT BOARD_NO, BOARD_TITLE , BOARD_CONTENT ,BOARD_CODE ,READ_COUNT ,
 	MEMBER_NO, MEMBER_NICKNAME, PROFILE_IMG,
@@ -131,7 +133,10 @@
 	(SELECT IMG_PATH||IMG_RENAME
 			FROM "BOARD_IMG" 
 			WHERE BOARD_NO=#{boardNo}
-			AND IMG_ORDER=0) THUMBNAIL
+			AND IMG_ORDER=0) THUMBNAIL,
+			(SELECT COUNT(*) FROM "BOARD_LIKE"
+				WHERE MEMBER_NO =#{memberNo}
+				AND BOARD_NO =#{boardNo}) LIKE_CHECK
 		
 FROM "BOARD"
 JOIN "MEMBER" USING(MEMBER_NO)
@@ -169,6 +174,43 @@ WHERE COMMENT_DEL_FL = 'N'
 	
 	</select>
 	
+	<!-- 게시글 좋아요 해제 -->
+	<delete id="deleteBoardLike">
+	DELETE FROM "BOARD_LIKE"
+	WHERE MEMBER_NO =#{memberNo} 
+	AND BOARD_NO = #{boardNo}
+	</delete>
 	
+	<!-- 게시글 좋아요 체크  -->
+	<insert id="insertBoardLike">
+	INSERT INTO "BOARD_LIKE"(MEMBER_NO, BOARD_NO)
+	VALUES (#{memberNo},#{boardNo})
 	
+	</insert>
+	
+	<!-- 게시글 좋아요 수 조회 -->
+	<!-- select의 resultType은 별칭이 지정돼있는 경우에는 안써도 되는데 쓰는 것이 좋다 -->
+	<select id="selectLikeCount" resultType="_int">
+	SELECT COUNT(*) FROM "BOARD_LIKE"
+	WHERE BOARD_NO=#{boardNo}
+	
+	</select>
+	<!-- #{}내부 키 값은 map이나 dto로 담겨서 올 때에만 중요하고, 값이 하나만 들어올 때에는 이름 다르게 해도 된다!!
+	temp로 넘겨줬는데 넘겨준 것이 그거밖에 없어서 mapper에서 boardNo라고 해도 된다 -->
+	
+	<!-- 조회수 1 증가 -->
+	<update id="updateReadCount">
+	UPDATE "BOARD" SET
+	READ_COUNT = READ_COUNT+1
+	WHERE BOARD_NO = #{boardNo}
+	</update>
+	<!-- 우변의 READ_COUNT는 증가 전의 READ_COUNT값이 나올 거고 거기에 1 더해서 좌변에 다시 대입해줌 -->
+	
+	<!-- 조회수를 조회 -->
+	<select id="selectReadCount" resultType="_int">
+	SELECT READ_COUNT
+	FROM "BOARD"
+	WHERE BOARD_NO = #{boardNo}
+	
+	</select>
 </mapper>

@@ -1,0 +1,99 @@
+/*게시글 좋아요 버튼(하트)클릭 시 비동기로 좋아요 INSERT/DELETE */
+//회원번호, 게시글 번호 필요하니까 얻어와야 함!
+//1) 로그인 한 회원의 번호 얻어오기
+//      ->session에서 얻어오기
+//      ->근데 session은 서버에서 관리하기 때문에 JS로 바로 얻어올 수 없다(비동기로 얻어올 수 있는데 그렇게 안함)
+//      ->타임리프 이용하기!!!!!
+//  타임리프, jsp : 템플릿 엔진(화면을 쉽게 만들어주는 도구,기능)
+// 자바 웹, Spring == 모두 Servlet 기반
+// Servlet(Java) : 요청 받으면 응답 화면 만들어서 출력해주는 역할
+// Servlet(Java)
+//HTML에서 Java 코드를 쓸 수 있는 것처럼 쓰지만 타임리프는 결국에 java 파일로 변한다
+//jsp(단독 실행 불가능한 단점)는 확장자를 .jsp로 했지만
+//타임리프는 확장자가 .html이어서 단독 실행 가능하다
+//타임리프도 .html이지만 컴파일 되면 java 파일이 된다!!!
+
+// Thymeleaf는 
+
+//html 코드(css,js) 
+//th:로 시작하는 타임리프 코드(java코드로 결국 변환된다)
+//Spring El(${}, *{})
+
+//로 이루어져 있음
+// Thymeleaf에서 코드 해석 순서
+// 1. th:코드 + Spring El(변수 선언하듯이 이들이 먼저 해석됨) -> 자바 코드가 먼저 해석돼서
+//                                                          ->자바에서 값을 얻어와놔서 그 값을 
+//                                                              나중에 해석될 html에서 사용할 수 있다
+// 2. html 코드(css,js) 
+//2) 현재 게시글 번호 얻어오기
+
+//3) 좋아요 여부 얻어오기
+// 이 세개 다 boardDetail.html의 script 태그에서 해놨다
+
+// 1. #boardLike가 클릭되었을 때 
+const boardLike = document.querySelector("#boardLike");
+boardLike.addEventListener("click", e=>{
+    //2. 로그인 여부 검사(좋아요 클릭은 로그인한 회원만 할 수 있게)
+    //로그인 상태가 아닌 경우 동작 X
+    if(loginMemberNo == null){
+        alert("로그인 후 이용해 주세요");
+        return;
+    }
+    //로그인 한 경우
+    //3. 준비된 3개의 변수를 객체로 저장(이따 JSON으로 변환할 예정)
+    const obj = {
+        "memberNo" : loginMemberNo,
+        "boardNo" : boardNo,
+        "likeCheck" : likeCheck
+
+    };
+
+    //4. 좋아요 INSERT/DELETE를 하나의 요청을 보내기
+    //likeCheck 값에 따라서 INSERT를 할 지 DELETE를 할지 정하기
+    fetch("/board/like",{
+        method : "POST",
+        headers : {"Content-Type" : "application/json"},
+        body : JSON.stringify(obj)
+        /* 객체를 JSON으로 문자열화해서 전달한다! */
+    })
+    .then(resp=>resp.text()) //INSERT,DELETE의 결과 숫자를 text(글자)로 변환
+    .then(count=>{
+        //count == 첫 번째 then의 파싱되어 반환된 값인데 문자열 형태로 '-1' 또는 게시글 좋아요 수가 들어있을거다
+        console.log("count : ", count);
+
+        if(count== -1){
+            console.log("좋아요 처리 실패");
+            return;
+        }
+        //5. likeCheck 값을 0 <->1 바꾸기
+        //(왜 ? 그래야지 클릭 될 때마다 INSERT/DELETE 동작을 번갈아가며 할 수 있어서)
+        likeCheck = likeCheck==0 ? 1 : 0; //toggle처럼
+        //0이었으면 1로 바꿔. 아니면 0으로 바꿔
+
+        //6. 화면에 하트 채웠다가 비웠다가 -> toggle이용
+        // e.target == 하트버튼
+        e.target.classList.toggle("fa-regular");
+        e.target.classList.toggle("fa-solid");
+        //fa-regular 랑 fa-solid는 공존할 수 없음
+
+        //7. 게시글 전체 좋아요 수 업데이트하기
+        e.target.nextElementSibling.innerText=count;
+
+
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -2,11 +2,9 @@ package edu.kh.project.myPage.model.service;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,7 +17,8 @@ import edu.kh.project.member.model.dto.Member;
 import edu.kh.project.myPage.model.dto.UploadFile;
 import edu.kh.project.myPage.model.mapper.MyPageMapper;
 import lombok.RequiredArgsConstructor;
-
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Service //bean 등록
 @Transactional(rollbackFor = Exception.class) //모든 예외 발생 시 롤백하라는 뜻!(checked, unchecked가리지 않고) 
 //수정 삭제 이런거 할거니까(그냥 하면 Unchecked만 처리해서 rollbackFor 속성 이용해서 예외 범위 수정)
@@ -31,7 +30,7 @@ public class MyPageServiceImpl implements MyPageService{
 	
 	//BCrypt 암호화 객체 의존성 주입(Security Config 참고)
 	//@Autowired //이건 권장 X -> @RequiredArgsConstructor를 쓰는 게 좋은데 쓸려면 final 필드여야 한다!
-		private final BCryptPasswordEncoder bcrypt;
+	private final BCryptPasswordEncoder bcrypt;
 	
 	//@RequiredArgsConstructor를 이용했을 때 자동 완성되는 구문
 //	@Autowired

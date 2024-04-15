@@ -48,6 +48,14 @@ public class BoardNameInterceptor implements HandlerInterceptor{
 		//컴퓨터 주소는 ip 주소로 구분
 		log.debug("uri : "+uri); // /board/1 나옴 -> 요청 주소에 있는 맨 뒤를 짤라와서 boardCode를 뽑아내서 scope에 세팅하겠다!
 		
+		//좋아요 개수 하다가 
+		// /board/like -> ["", board, like]
+		//근데 바로 밑의 코드에서 2번 인덱스인 like를 꺼내서 integer로 파싱한다고 하니까 오류가 났다
+		// -> try-catch로 묶기
+		
+		try {
+			
+		
 		//잘라내기
 		int boardCode = Integer.parseInt(uri.split("/")[2]); //자르면  ["", "board","1"]로 반환됨
 				// /board/1
@@ -71,6 +79,12 @@ public class BoardNameInterceptor implements HandlerInterceptor{
 				//비교 결과가 같다면 request scope에 boardname 을 추가
 				break; //같은 것 찾았다면 그 뒤에 더 검사할 필요 없다
 			}
+		}
+		}catch(Exception e) {
+			//아무것도 안쓰면 
+			//int temp= //int로 바꼈다
+//			Integer.parseInt(String.valueOf(boardType.get("boardCode")));
+			//여기서 오류 날 건데 여기 아무것도 안쓰면 아무것도 안하고 그냥 넘어간다 오류 안난다
 		}
 		HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
 	}

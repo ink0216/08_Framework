@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>메인페이지</title>
+</head>
+<body>
+  <h1>회원 번호 일치하는 고객 정보 수정</h1>
+  <form action="/edit" method="POST">
+    <label>
+      회원번호 : <input type="number" name="customerNo">
+    </label> <br>
+    <label>
+      이름 : <input type="text" name="customerName">
+    </label><br>
+    <label>
+      전화번호 : <input type="number" name="customerTel">
+    </label><br>
+    <label>
+      주소 : <input type="text" name="customerAddress">
+    </label><br>
+    <button>수정</button>
+  </form>
+</body>
+</html>

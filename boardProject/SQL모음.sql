@@ -592,7 +592,10 @@ SELECT BOARD_NO, BOARD_TITLE , BOARD_CONTENT ,BOARD_CODE ,READ_COUNT ,
 		(SELECT IMG_PATH||IMG_RENAME
 			FROM "BOARD_IMG" 
 			WHERE BOARD_NO=1998
-			AND IMG_ORDER=0) THUMBNAIL
+			AND IMG_ORDER=0) THUMBNAIL,
+			(SELECT COUNT(*) FROM "BOARD_LIKE"
+				WHERE MEMBER_NO =NULL
+				AND BOARD_NO =1998) LIKE_CHECK --좋아요 눌렀는 지 확인할거다
 		--썸네일 이미지 조회
 			--IMG_ORDER 가 0인 게 썸네일 할거다
 			--상세조회할 때 첨부된 이미지 전체랑 댓글도 전체 조회돼야 한다
@@ -640,9 +643,18 @@ WHERE COMMENT_DEL_FL = 'N'
 --상세조회하면서 SELECT 3회 할거다
 --DTO없는 이미지랑, 댓글에 대한 DTO 만들고 결과 다 가져와서 화면에 꾸미면 된다!!
 
+-----------------------------------------------
+/*좋아요 테이블(BOARD_LIKE) 샘플 데이터 추가*/
+INSERT INTO "BOARD_LIKE" 
+VALUES (1,1998); --1번 회원이 1998번 글에 좋아요를 클릭함 을 의미!!!->좋아요 취소 시 이 행을 DELETE하면 됨
+COMMIT;
 
+SELECT * FROM "BOARD_LIKE";
 
-
+--좋아요 눌렀는 지 여부 확인 (1 : 누름 // 2: 안누름)
+SELECT COUNT(*) FROM "BOARD_LIKE"
+WHERE MEMBER_NO =1
+AND BOARD_NO =1998;
 
 
 

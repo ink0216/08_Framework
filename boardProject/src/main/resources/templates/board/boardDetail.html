@@ -48,9 +48,12 @@
                     <span class="like-area">
                         
                         <!-- 비동기로 좋아요 누를 때 동작(4월 15일 월요일 예정) -->
-                        <!-- 좋아요 누른적이 있으면 fa-solid, 없으면 fa-regular 클래스 추가 -->
-                        <i class="fa-heart fa-regular" id="boardLike"></i>
-
+                        <!-- 좋아요 누른적이 있으면 fa-solid(채워진 하트), 없으면 fa-regular(비어있는 하트) 클래스 추가 -->
+                        <i class="fa-heart" id="boardLike"
+                        th:classappend="*{likeCheck == 1} ? fa-solid : fa-regular "
+                        ></i>
+                        <!-- 삼항 연산자 likeCheck가 1이면 fa-solid 추가하고, 아니면 fa-regular 클래스 추가 -->
+                        <!-- fa : fontAwesome -->
                         <!-- 좋아요 개수 -->
                         <span th:text="*{likeCount}">0</span>
                     </span>
@@ -148,6 +151,42 @@
 
     <th:block th:replace="~{common/footer}"></th:block>
 
+    <script th:inline="javascript">
+        //로그인 한 상태인 경우 로그인한 회원 번호를 전역 변수로 저장하는 코드
+
+        /* th:inline="javascript" 
+            const a = [[${boardName}]]; 
+            //이렇게 한 경우 공지 게시판 이렇게 
+            만약 th:inline="javascript"가 없었으면 공지게시판 이렇게 나오는데
+            문자열 리터럴 "", ''가 있어야 해서 오류나는데
+            자바에서 읽어왔더니 String이더라 그래서 javascript에 맞게 리터럴 추가해서 넣어주겠다 하는 게
+            th:inline="javascript" 이다!!
+            [[${adsa}]] : th:text를 직접 쓸 수 있는 건데 이렇게 쓰면 
+            const loginMemberNo = 
+            //타임리프에서  자바 코드 js
+            ? : 이 loginMember가 null이 아닐 때에만 동작하는 안전 연산자?
+
+            session.loginMember?.memberNo
+            //-session에서 loginMember를 얻어 왔는데
+            //null이 아닌 경우에만 회원 번호를 얻어오기
+            // loginMember가 null인 경우에는 null반환
+            // -> const loginMemberNo 에는 memberNo 또는 null이 넘어온다
+            //js보다 java코드가 해석 우선순위 높아서 java 코드 해석된 후에는 같은 줄의 js 코드는 무시돼서 아예 해석되지 않는다
+            //주석도 해석 안됨
+            
+        */
+        const loginMemberNo= /*[[${session.loginMember?.memberNo}]]*/"로그인한 멤버";
+        //위의 script에서 선언한 변수는 아래의 script태그들에서 사용할 수 있다
+
+        /*현재 게시글 번호를 전역 변수로 저장*/
+        const boardNo = /*[[${board.boardNo}]]*/"게시글 번호";
+        //foward할 때 board를 model에 담아서 request scope로 전달했어서 여기서 사용할 수 있다
+
+        /*현재 게시글 좋아요 여부(boardLike컬럼 추가해서 필드에 담아서 가져왔었다)를 전역 변수로 저장*/
+        let likeCheck=/*[[${board.likeCheck}]]*/"좋아요 여부";
+        //이건 좋아요 해제돼있으면 체크하거나, 체크돼있으면 해제할 때 사용
+        //const면 값을 바꿀 수 없어서 let으로 하기
+    </script>
 
     <script src="/js/board/boardDetail.js"></script>
     <script src="/js/board/comment.js"></script>
