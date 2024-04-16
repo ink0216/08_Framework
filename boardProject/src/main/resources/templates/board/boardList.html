@@ -125,7 +125,10 @@
 
             <div class="btn-area">
                 <!-- 로그인 상태일 때만 글쓰기 버튼 노출 -->
-                <button id="insertBtn">글쓰기</button>                     
+                <button id="insertBtn" th:if="${session.loginMember}">글쓰기</button>     
+                <!-- session.loginMember 하면 null아니면 객체인데
+                타임리프는 객체가 있으면 true, null이면 false로 하기로 돼있어서 =!null 안써도 된다!!!
+                (자동으로 객체가 있을 때 라는 의미로 동작)-->                
             </div>
 
 
@@ -210,7 +213,12 @@
     
 
     <th:block th:replace="~{common/footer}"></th:block>
-
+    <script th:inline="javascript">
+        //전역변수 선언하면 밑의 js 파일에서 쓸 수 있다
+        //이 html은 타임리프로 돼서 자바 코드 해석된다
+        const boardCode = /*[[${boardCode}]]*/"게시판 코드 번호"; 
+        //@PathVariable로 request scope로 설정돼서 forward한 html에서 사용 가능한 값
+    </script>
     <script src="/js/board/boardList.js"></script>
 
 </body>

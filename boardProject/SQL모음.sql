@@ -656,6 +656,92 @@ SELECT COUNT(*) FROM "BOARD_LIKE"
 WHERE MEMBER_NO =1
 AND BOARD_NO =1998;
 
+/*여러 행을 한번에 INSERT하는 방법!
+ * -> INSERT + SUBQUERY 이용!!!
+ * INSERT ALL 하면 한 테이블에 여러 개 넣을 수 있다 근데 이번엔 사용 X
+ * INSERT VALUES 하면 한 행씩만 삽입 가능
+ * 
+ * BOARD_IMG 컬럼 6개
+ * UNION(합집합) 이용하면 합친 것을 한 번에 INSERT할 수 있다
+ *  -> 근데 문제 발생
+ * 		IMG_NO를 삽입하기 위해서 SEQ_IMG_NO.NEXTVAL를 삽입해야하는데
+ * 		서브쿼리 안에는 시퀀스를 못 넣는다!!
+ * INSERT INTO "BOARD_IMG"
+(
+SELECT SEQ_IMG_NO.NEXTVAL, '경로1', '원본1', '변경1', 1, 1984 FROM DUAL
+UNION
+SELECT SEQ_IMG_NO.NEXTVAL, '경로2', '원본2', '변경2', 2, 1984 FROM DUAL
+
+); 이렇게 하면 오류난다
+ * [해결방법]
+ * 시퀀스로 번호 생성하는 부분을 별도의 함수로 분리한 후 호출하면 문제 없음
+ * 
+ * 함수 : TO_CHAR()처럼 뒤에 ()붙는 것
+ * */
+INSERT INTO "BOARD_IMG"
+(
+SELECT NEXT_IMG_NO(), '경로1', '원본1', '변경1', 1, 1984 FROM DUAL
+UNION
+SELECT NEXT_IMG_NO(), '경로2', '원본2', '변경2', 2, 1984 FROM DUAL
+UNION
+SELECT NEXT_IMG_NO(), '경로2', '원본2', '변경2', 2, 1984 FROM DUAL
+);
+SELECT * FROM BOARD_IMG;
+ROLLBACK;
+--컬럼명이 BOARD_IMG랑 SELECT문의 컬럼명이랑 달라도 자료형만 같으면 잘 삽입된다!!
+--SEQ_IMG_NO 시퀀스의 다음 값을 반환하는 함수 생성하기
+
+
+CREATE OR REPLACE FUNCTION NEXT_IMG_NO
+
+--반환형 숫자가 반환될거다
+RETURN NUMBER 
+
+--사용할 변수를 미리 선언
+IS IMG_NO NUMBER;
+
+BEGIN
+	SELECT SEQ_IMG_NO.NEXTVAL --10번 생성 시
+	INTO IMG_NO --생성된 10번을 여기다 넣겠다
+	FROM DUAL;
+
+	RETURN IMG_NO; --이 값을 리턴하겠다
+END;
+;
+SELECT NEXT_IMG_NO() FROM DUAL;
+
+
+
+
+
+SELECT SEQ_IMG_NO.NEXTVAL FROM DUAL;
+
+SELECT * FROM "BOARD"
+WHERE BOARD_DEL_FL ='Y';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

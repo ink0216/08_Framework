@@ -82,6 +82,29 @@ boardLike.addEventListener("click", e=>{
 
     });
 });
+/*삭제 버튼이 자기가 쓴 글일 때에만 나오도록 돼있다
+게시글 삭제
+-1. 삭제 버튼 클릭 시 "정말 삭제하시겠습니까?" -> 확인/취소
+	confirm쓰기
+-2. 취소 클릭 시 alert("취소됨");
+-3. 확인 클릭 시 /editBoard/{boardCode}/{boardNo}/delete로 get방식 요청하기
+-4. 삭제는 진짜 삭제가 아니라, {boardCode} 게시판의 {boardNo} 글의 BOARD_DEL_FL 값을 'Y'로 변경
+-5. 변경 성공 시 -> 해당 게시판 목록 1페이지로 리다이렉트하기
+	변경 실패 시 -> 원래 보고있던 글 상세조회로 리다이렉트 */
+const deleteBtn = document.querySelector("#deleteBtn");
+deleteBtn.addEventListener("click", ()=>{
+    if(!confirm("정말 삭제하시겠습니까?")){
+        alert("취소됨");
+        return;
+    }
+
+
+    //location.href="/editBoard/"+boardCode+"/"+boardNo+"/delete";
+
+
+
+
+});
 
 
 

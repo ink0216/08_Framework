@@ -89,7 +89,8 @@
                             <img th:src="|${thumbnail.imgPath}${thumbnail.imgRename}|">
                             <a th:href="|${thumbnail.imgPath}${thumbnail.imgRename}|"
                             th:download="${thumbnail.imgOriginalName}">다운로드</a> 
-                            <!-- 다운로드는 원본명으로 됨 -->   
+                            <!-- 다운로드는 원본명으로 됨 
+                            서버에 저장될 때에는 rename으로-->   
                         </div>
                     </div>
             </th:block>
@@ -180,6 +181,10 @@
 
         /*현재 게시글 번호를 전역 변수로 저장*/
         const boardNo = /*[[${board.boardNo}]]*/"게시글 번호";
+        //foward할 때 board를 model에 담아서 request scope로 전달했어서 여기서 사용할 수 있다
+
+        /*현재 게시판 코드를 전역 변수로 저장*/
+        const boardCode = /*[[${board.boardCode}]]*/"게시판 코드";
         //foward할 때 board를 model에 담아서 request scope로 전달했어서 여기서 사용할 수 있다
 
         /*현재 게시글 좋아요 여부(boardLike컬럼 추가해서 필드에 담아서 가져왔었다)를 전역 변수로 저장*/

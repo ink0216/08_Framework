@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.kh.project.board.model.mapper.EditBoardMapper">
+  	<!-- 
+		useGeneratedKeys 속성 : DB 내부적으로 생성한 키 (시퀀스로 만든 PK 컬럼값)를
+						전달된 파라미터의 필드로 대입 가능 여부 지정
+						시퀀스를 생성하자 마자 자바에서 쓸 수 있게 하겠다
+		
+		** 동적 SQL **
+		- 프로그램 수행 중 SQL을 변경하는 기능 (마이바티스의 가장 강력한 기능)
+		
+		<selectKey> 태그 : INSERT/UPDATE 시 사용할 키(시퀀스로 만든 PK 컬럼값)를
+						조회해서 파라미터의 지정된 필드에 대입
+		
+		order 속성 : 메인 SQL이 수행되기 전/후에 selectkey가 수행되도록 지정
+		전 : BEFORE == 이 태그(selectKey) 밑의 코드보다 먼저 실행할거야
+		후 : AFTER
+		
+		keyProperty 속성 : selectKey 조회 결과를 저장할 파라미터의 필드
+	-->
+	
+	<!-- 게시글 글 부분만 작성 -->
+	<!-- selectKey가 먼저 동작해서 반환되는 int값을 
+	insert할 때 전달받은 Board(parameterType)의 boardNo 필드에 먼저 저장하겠다(keyProperty)
+	그럼 나중에 insert할 때에는 #{boardNo}로 그 값을 꺼내서 쓴다
+	boardNo는 처음에 0이었을건데
+	시퀀스로 먼저 만들어서 넣어놓은 boardNo를 selectKey에서 대입해놓고 그 밑의 코드에서 꺼내서 쓰면 게시글번호가 들어가있음 
+	-->
+	<insert id="boardInsert" useGeneratedKeys="true" parameterType="Board">
+		<selectKey order="BEFORE" resultType="_int" keyProperty="boardNo">
+		SELECT SEQ_BOARD_NO.NEXTVAL FROM DUAL
+		</selectKey>
+	
+		INSERT INTO "BOARD" 
+		VALUES(#{boardNo}, 
+				#{boardTitle},
+				#{boardContent},
+				DEFAULT,
+				DEFAULT,
+				DEFAULT,
+				DEFAULT,
+				#{boardCode},
+				#{memberNo}
+				)
+	</insert>
+	
+	<!-- List의 별칭 == list
+		ArrayList의 별칭 == arraylist -->
+		
+		<!-- 동적 SQL 중 <foreach> 
+			- Mybatis에서 제공하는 향상된 for문
+			- 특정 SQL 구문을 반복할 때 사용한다
+			- 반복 사이에 구분자(separator)를 추가할 수 있음
+			
+			[지원하는 속성]
+	  		collection : 반복할 객체의 타입 작성(list, set, map...)
+			item : collection에서 순차적으로 꺼낸 하나의 요소를 저장하는 변수
+			index : 현재 반복 접근중인 인덱스 (0,1,2,3,4 ..)
+			
+			open : 반복 전에 출력할 sql
+			close : 반복 종료 후에 출력한 sql
+			
+			separator : 반복 사이사이 구분자
+			
+			open="(" close=")" -> 하면 자동으로 소괄호 생긴다
+			separator 앞뒤로 띄어쓰기 붙여야 한다!
+			
+			list안의 요소가 하나였으면 한번만 반복해서 UNION없이 수행될거고
+			list안의 요소가 2개 이상이면 상황에 따라 UNION 추가되면서 수행된다 == 동적 SQL
+			
+			SQL형태를 상황에 따라 변경시킨다
+			 -->
+	<!-- 게시글 이미지 모두 삽입(한번에 다중 insert가 진행된다) -->
+	<insert id="insertUploadList" parameterType="list">
+	INSERT INTO "BOARD_IMG" 
+	<foreach collection="list" item="img" open="(" close=")" separator=" UNION ">
+	
+	SELECT NEXT_IMG_NO(), #{img.imgPath}, 
+			#{img.imgOriginalName}, #{img.imgRename}, 
+			#{img.imgOrder}, #{img.boardNo} FROM DUAL
+	
+	</foreach>
+	</insert>
+	<update id="delete">
+		UPDATE "BOARD"
+		SET BOARD_DEL_FL = 'Y'
+		WHERE BOARD_NO = #{boardNo}
+		AND BOARD_CODE = #{boardCode}
+	</update>
+</mapper>
