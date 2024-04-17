@@ -71,6 +71,7 @@
 			SQL형태를 상황에 따라 변경시킨다
 			 -->
 	<!-- 게시글 이미지 모두 삽입(한번에 다중 insert가 진행된다) -->
+	<!-- list에서 하나씩 꺼내서 img라고 부를거고 select가 반복해서 실행될건데 중간에 UNION이 들어가게 한다 -->
 	<insert id="insertUploadList" parameterType="list">
 	INSERT INTO "BOARD_IMG" 
 	<foreach collection="list" item="img" open="(" close=")" separator=" UNION ">
@@ -81,10 +82,55 @@
 	
 	</foreach>
 	</insert>
-	<update id="delete">
-		UPDATE "BOARD"
-		SET BOARD_DEL_FL = 'Y'
-		WHERE BOARD_NO = #{boardNo}
-		AND BOARD_CODE = #{boardCode}
+	<!-- 게시글 삭제 -->
+	<!-- 이 사람이 어디에 쓴 몇 번 글 삭제 -->
+	<update id="boardDelete">
+		UPDATE "BOARD" SET
+		BOARD_DEL_FL = 'Y'
+		WHERE BOARD_CODE = #{boardCode}
+		AND BOARD_NO     = #{boardNo}
+		AND MEMBER_NO    = #{memberNo}
 	</update>
+	
+	<!-- 게시글 글(제목/내용) 부분만 작성(update) -->
+	<update id="boardUpdate">
+	UPDATE "BOARD" SET
+	BOARD_TITLE = #{boardTitle},
+	BOARD_CONTENT = #{boardContent}
+	WHERE BOARD_CODE = #{boardCode}
+	AND BOARD_NO = #{boardNo}
+	AND MEMBER_NO = #{memberNo}
+	
+	</update>
+	
+	<!-- 게시글 이미지 수정 시 삭제된 이미지가 있는 경우 이미지 삭제 -->
+	<!-- # : 해당 컬럼 자료형에 맞는 리터럴로 변환시켜줌  
+			1을 NUMBER 컬럼에 넣는 경우 1로 들어가고 CHAR 컬럼에 넣으면 '1'로 변환돼서 들어감
+		 $ : 따옴표 없이 SQL에 값 그대로 추가되는 것 -> 문자열이라도 '',"" 추가되지 않고 SQL에 그대로 들어가게 된다
+		 -->
+	<delete id="deleteImage">
+	DELETE FROM "BOARD_IMG"
+	WHERE IMG_ORDER IN (${deleteOrder})
+	AND BOARD_NO = #{boardNo}
+	</delete>
+	
+	<!-- 게시글 이미지를 새 이미지로 수정 -->
+	<update id="updateImage">
+	UPDATE "BOARD_IMG"
+	
+	SET IMG_ORIGINAL_NAME = #{imgOriginalName},
+	IMG_RENAME = #{imgRename}
+	
+	WHERE BOARD_NO = #{boardNo}
+	AND IMG_ORDER = #{imgOrder}
+	
+	</update>
+	
+	<!-- 게시글에 새 이미지를 삽입(1행씩만) -->
+	<!-- SEQ_IMG_NO.NEXTVAL 이거 써도 된다 -->
+	<insert id="insertImage">
+		INSERT INTO "BOARD_IMG"
+		VALUES(NEXT_IMG_NO(), #{imgPath}, #{imgOriginalName}, 
+		#{imgRename}, #{imgOrder}, #{boardNo})
+	</insert>
 </mapper>

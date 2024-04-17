@@ -135,8 +135,9 @@
             <th:block th:if="${board.memberNo == session.loginMember?.memberNo}">  
                 <!-- loginMember가 있을 때에만 board.memberNo랑 비교 -->
                 <!-- 로그인한 사람이 번호랑 작성자의 번호가 같을 때에만 수정,삭제 버튼을 보여지게 하겠다 -->
-                    <button id="updateBtn">수정</button>
-                    <button id="deleteBtn">삭제</button>
+                <button id="updateBtn">수정</button>
+                <button id="deleteBtn">삭제(GET)</button>
+                <button id="deleteBtn2">삭제(POST)</button>
             </th:block>
                 <button id="goToListBtn">목록으로</button>
             </div>

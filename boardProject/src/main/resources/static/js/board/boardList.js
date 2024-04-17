@@ -13,7 +13,7 @@ if(insertBtn !=null){
         location.pathname.split("/")[2] */
         //alert(boardCode);
         location.href=`/editBoard/${boardCode}/insert`; //get방식
-        // ``안의 ${}은 el구문 아니고, 변수명을 적는 것이다
+        // ``안의 ${}은 el구문 아님!그냥 변수명을 적는 것이다
     });
 
 }

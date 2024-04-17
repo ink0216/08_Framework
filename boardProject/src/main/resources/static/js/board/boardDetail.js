@@ -69,6 +69,7 @@ boardLike.addEventListener("click", e=>{
         //(왜 ? 그래야지 클릭 될 때마다 INSERT/DELETE 동작을 번갈아가며 할 수 있어서)
         likeCheck = likeCheck==0 ? 1 : 0; //toggle처럼
         //0이었으면 1로 바꿔. 아니면 0으로 바꿔
+        //삼항연산자에 따라 대입해
 
         //6. 화면에 하트 채웠다가 비웠다가 -> toggle이용
         // e.target == 하트버튼
@@ -91,20 +92,97 @@ boardLike.addEventListener("click", e=>{
 -4. 삭제는 진짜 삭제가 아니라, {boardCode} 게시판의 {boardNo} 글의 BOARD_DEL_FL 값을 'Y'로 변경
 -5. 변경 성공 시 -> 해당 게시판 목록 1페이지로 리다이렉트하기
 	변경 실패 시 -> 원래 보고있던 글 상세조회로 리다이렉트 */
+/* 삭제(GET) */
 const deleteBtn = document.querySelector("#deleteBtn");
-deleteBtn.addEventListener("click", ()=>{
-    if(!confirm("정말 삭제하시겠습니까?")){
-        alert("취소됨");
+
+if(deleteBtn != null){
+    deleteBtn.addEventListener("click", () => {
+    if( !confirm("삭제 하시겠습니까?") ) {
+        alert("취소됨")
+        return;
+    }
+    // location.pathname : /board/1/2010 이렇게 요청주소만 나온다!
+    // 근데 요청 보내야 하는 주소는 /editBoard/1/2010/delete로 만들어야하니까
+    //고쳐나가기
+    // board를 editBoard로 고치고
+    //실패할 때 원래 페이지로 돌아오려고쿼리스트링으로 cp 부여놓음
+    const url = location.pathname.replace("board","editBoard") + "/delete"; // /editBoard/1/2000/delete
+    const queryString = location.search; // ? cp=1
+    location.href = url + queryString;
+    });
+}
+
+
+/* 삭제(POST) */
+// POST 방식 요청 방법 -1. form태그 이용 *******
+//                      -2. ajax 방법 이용 
+/*비동기요청은 보통 페이지 이동 없이 화면 일부만 바꾸고 싶을 때
+요청을 받았을 때 화면 전환할 때는 동기식 이용!
+게시글 삭제 하면 목록으로 가던지 상세조회하던지 페이지 이동하므로 동기식 !
+
+삭제를 해야 할 때 form태그를 만들어서 제출
+POST를 동기식으로 해야하는데 화면에 form 태그 만들어놓고 싶지는 않으면
+필요할 때 
+값 hidden타입으로
+form.submit()하면 진짜 제출 된다
+
+ */
+const deleteBtn2 = document.querySelector("#deleteBtn2");
+
+if(deleteBtn2 != null){
+    deleteBtn2.addEventListener("click", () => {
+
+    if( !confirm("삭제 하시겠습니까?") ) {
+        alert("취소됨")
         return;
     }
 
+    const url = location.pathname.replace("board","editBoard")  + "/delete"; 
 
-    //location.href="/editBoard/"+boardCode+"/"+boardNo+"/delete";
+    // form태그 생성
+    const form = document.querySelector("form");
+    form.action = url;
+    form.method = "POST";
 
+    // cp값을 저장할 input 생성
+    const input = document.querySelector("input");
+    input.type = "hidden";
+    input.name = "cp";
 
+    // 쿼리스트링에서 원하는 파라미터 얻어오기
+    const params = new URLSearchParams(location.search); 
+    //주소에 있는 파라미터만 다루는 객체 URLSearchParams
+    //location.search 하면 쿼리스트링만 나오게 함
+    
+    const cp = params.get("cp"); //주소 쿼리스트링에 있는 cp값이 얼마냐 해서 값 꺼내올 수 있다
+    input.value = cp;
 
+    form.append(input);
 
-});
+    // 화면에 form태그를 추가한 후 제출하기
+    document.querySelector("body").append(form);
+    form.submit();
+    });
+}
+//************************************게시글 수정 버튼********************************* */
+/*updateBtn 수정 버튼이 클릭 되었을 때 수정 페이지로 전환 */
+const updateBtn = document.querySelector("#updateBtn");
+
+if(updateBtn !=null){
+    //수정버튼이 존재할 때에만 클릭 이벤트 추가 (로그인이 되어있고 작성자일 경우)
+    updateBtn.addEventListener("click", ()=>{
+        // 목표 주소 : /editBoard/1/2010/update?cp=1 라는 주소로 요청 보내기(GET)
+
+        //현재 주소 : /board/1/2010?cp=1
+        location.href=location.pathname.replace('board', 'editBoard') //get방식
+                        +"/update"+ location.search;
+        // location.pathname ==  /board/1/2010 의 문자열!
+        // 그 문자열의 board를 editBoard로 바꾸겠다
+
+        //쿼리스트링은 location.search == ?cp=1 이렇게 현재 주소의 쿼리스트링 전체가 붙는다 (뒤에 쿼리스트링 더 있으면 다 붙는다)
+        //쿼리스트링은 검색할 때 사용하는 거다
+    });
+}
 
 
 
