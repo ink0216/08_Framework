@@ -107,7 +107,7 @@ if(deleteBtn != null){
     // board를 editBoard로 고치고
     //실패할 때 원래 페이지로 돌아오려고쿼리스트링으로 cp 부여놓음
     const url = location.pathname.replace("board","editBoard") + "/delete"; // /editBoard/1/2000/delete
-    const queryString = location.search; // ? cp=1
+    const queryString = location.search; // ?cp=1
     location.href = url + queryString;
     });
 }
@@ -140,12 +140,12 @@ if(deleteBtn2 != null){
     const url = location.pathname.replace("board","editBoard")  + "/delete"; 
 
     // form태그 생성
-    const form = document.querySelector("form");
+    const form = document.createElement("form");
     form.action = url;
     form.method = "POST";
 
     // cp값을 저장할 input 생성
-    const input = document.querySelector("input");
+    const input = document.createElement("input");
     input.type = "hidden";
     input.name = "cp";
 
@@ -183,6 +183,28 @@ if(updateBtn !=null){
         //쿼리스트링은 검색할 때 사용하는 거다
     });
 }
+//------------------------------------------------------------------
+//목록으로 버튼 클릭 시
+const goToListBtn = document.querySelector("#goToListBtn");
+goToListBtn.addEventListener("click", ()=>{
+    //상세조회할 때 없을 일 없으니까 if문으로 안감싸도 된다
+
+    //상세 조회 주소를 목록 주소로 바꾸면 된다!!!
+    //상세 조회 : /board/1/2011?cp=1
+    
+    //목록 : /board/1?cp=1
+    //location.pathname == '/board/1/2011'
+    //location.search == '?cp=1' (쿼리스트링만 나옴)
+
+    // '/board/1/2011'.subString(0,8) : String이면 subString가능!!
+    // 마지막 / 인덱스 찾는 것 lastIndexOf 사용!
+    let url = location.pathname;
+    url= url.substring(0,url.lastIndexOf("/"));
+    //url의 0번부터 url의 마지막 /가 있는 인덱스까지 자름
+    location.href=url+location.search; //쿼리스트링
+
+
+});
 
 
 

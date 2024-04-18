@@ -720,8 +720,88 @@ SELECT * FROM "BOARD"
 WHERE BOARD_DEL_FL ='Y';
 
 
+INSERT INTO "COMMENT"	VALUES(
+			SEQ_COMMENT_NO.NEXTVAL,
+			'부모 댓글 1',
+			DEFAULT, DEFAULT,
+			2000,
+			9,
+			NULL
+);
 
 
+INSERT INTO "COMMENT"	VALUES(
+			SEQ_COMMENT_NO.NEXTVAL,
+			'부모 댓글 2',
+			DEFAULT, DEFAULT,
+			2000,
+			9,
+			NULL
+);
+
+INSERT INTO "COMMENT"	VALUES(
+			SEQ_COMMENT_NO.NEXTVAL,
+			'부모 댓글 3',
+			DEFAULT, DEFAULT,
+			2000,
+			9,
+			NULL
+);
+COMMIT;
+SELECT COMMENT_NO ,PARENT_COMMENT_NO ,COMMENT_CONTENT 
+FROM "COMMENT" WHERE BOARD_NO=2000;
+--------------------
+SELECT LEVEL,COMMENT_NO ,PARENT_COMMENT_NO ,COMMENT_CONTENT 
+FROM "COMMENT" WHERE BOARD_NO=2000
+ --LEVEL : 계층형 쿼리에서만 쓸 수 있음!
+/*계층형 쿼리 댓글도 계층형으로 나오게 하기*/
+START WITH PARENT_COMMENT_NO IS NULL --PARENT_NO가 NULL인 행이 최상위 부모(LV.1)이다
+CONNECT BY PRIOR COMMENT_NO=PARENT_COMMENT_NO--부모의 COMMENT_NO와 같은 PARENT_COMMENT_NO를 가진 행을 자식으로 연결
+ORDER SIBLINGS BY COMMENT_NO; --형제(같은 레벨 요소들)간의 정렬 순서를 COMMENT_NO 오름차순
+--계층형쿼리 완성!
+
+
+--부모 댓글 1의 자식 댓글 만들기
+INSERT INTO "COMMENT"	VALUES(
+			SEQ_COMMENT_NO.NEXTVAL,
+			'부모 1의 자식 1 ',
+			DEFAULT, DEFAULT,
+			2000,
+			9,
+			2003
+);
+--부모 댓글 2의 자식 댓글 만들기
+INSERT INTO "COMMENT"	VALUES(
+			SEQ_COMMENT_NO.NEXTVAL,
+			'부모 2의 자식 1 ',
+			DEFAULT, DEFAULT,
+			2000,
+			9,
+			2001
+);
+
+--부모 댓글 2의 자식1의 자식 댓글 만들기
+INSERT INTO "COMMENT"	VALUES(
+			SEQ_COMMENT_NO.NEXTVAL,
+			'부모 2의 자식 1의 자식 1 ',
+			DEFAULT, DEFAULT,
+			2000,
+			9,
+			2006
+); 
+
+
+
+--부모 댓글 1의 자식 댓글 만들기
+INSERT INTO "COMMENT"	VALUES(
+			SEQ_COMMENT_NO.NEXTVAL,
+			'부모 1의 자식 2 ',
+			DEFAULT, DEFAULT,
+			2000,
+			9,
+			2003
+);
+COMMIT;
 
 
 
