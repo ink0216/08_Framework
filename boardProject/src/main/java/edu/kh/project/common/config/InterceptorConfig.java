@@ -38,7 +38,7 @@ public class InterceptorConfig implements WebMvcConfigurer{
 		//생성되고 bean 으로 등록된 boardTypeInterceptor를 얻어와서 매개변수로 전달
 		.addPathPatterns("/**") //얘는 모든 요청을 가로채서 일을 하라고 시킴
 		//하는 일 : boardTypeInterceptor에 적혀있음 
-		//전처리 -> application scope 객체를 ㅇㄷ어와서 boardTypeList가 없으면 서비스를 이용해서 다 조회해와서
+		//전처리 -> application scope 객체를 얻어와서 boardTypeList가 없으면 서비스를 이용해서 다 조회해와서
 		//application scope에 세팅하는 것 (최초 접속했을 때임)
 		//가로챌 요청 주소를 지정(어떤 요청이 오는 것들만 가로챌 지)
 		//여러 주소 작성 시 "","" -> 콤마로 구분해서 여러 개 쓰면 된다

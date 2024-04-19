@@ -802,6 +802,105 @@ INSERT INTO "COMMENT"	VALUES(
 			2003
 );
 COMMIT;
+-------------------------------------------------------------------------------------------------
+--240419시험
+DROP TABLE TB_USER;
+--시퀀스도 없애기
+COMMIT; 
+
+-- 사용자 테이블
+
+CREATE TABLE TB_USER(
+
+USER_NO NUMBER PRIMARY KEY,
+
+USER_ID VARCHAR2(50) UNIQUE NOT NULL,
+
+USER_NAME VARCHAR2(50) NOT NULL,
+
+USER_AGE NUMBER NOT NULL
+
+);
+SELECT * FROM TB_BOARD;
+
+-- 사용자 시퀀스
+
+CREATE SEQUENCE SEQ_UNO;
+
+-- 샘플 데이터
+
+INSERT INTO TB_USER VALUES(SEQ_UNO.NEXTVAL, 'gd_hong', '홍길동', 20);
+
+INSERT INTO TB_USER VALUES(SEQ_UNO.NEXTVAL, 'sh_han', '한소희', 28);
+
+INSERT INTO TB_USER VALUES(SEQ_UNO.NEXTVAL, 'jm_park', '지민', 27);
+
+INSERT INTO TB_USER VALUES(SEQ_UNO.NEXTVAL, 'jm123', '지민', 25);
+
+-- 게시판 테이블
+
+CREATE TABLE TB_BOARD(
+
+BOARD_NO NUMBER PRIMARY KEY,
+
+BOARD_TITLE VARCHAR2(50) NOT NULL,
+
+BOARD_CONTENT VARCHAR2(2000) NOT NULL,
+
+BOARD_DATE DATE DEFAULT SYSDATE,
+
+BOARD_READCOUNT NUMBER DEFAULT 0,
+
+USER_NO NUMBER REFERENCES TB_USER
+
+);
+
+-- 게시판 시퀀스
+
+CREATE SEQUENCE SEQ_BNO;
+
+-- 샘플 데이터
+
+INSERT INTO TB_BOARD VALUES(SEQ_BNO.NEXTVAL, '처음입니다', '만나서 반가워요', SYSDATE, DEFAULT, 1);
+
+INSERT INTO TB_BOARD VALUES(SEQ_BNO.NEXTVAL, '신입입니다', '잘 부탁드립니다!', SYSDATE, DEFAULT, 2);
+
+INSERT INTO TB_BOARD VALUES(SEQ_BNO.NEXTVAL, '날씨가 좋네요', '즐거운 한 주 보내세요', SYSDATE, DEFAULT, 3);
+
+INSERT INTO TB_BOARD VALUES(SEQ_BNO.NEXTVAL, '저도 처음이에요', '좋은 추억 쌓아요', SYSDATE, DEFAULT, 4);
+
+INSERT INTO TB_BOARD VALUES(SEQ_BNO.NEXTVAL, '오늘 처음인 분이 많네요', '다들 환영합니다', SYSDATE, DEFAULT, 3);
+
+COMMIT;
+
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -902,6 +1001,7 @@ USER_AGE NUMBER NOT NULL
 SELECT * FROM TB_USER;
 
 CREATE SEQUENCE SEQ_UNO;
+DROP SEQUENCE SEQ_UNO;
 
 -- 샘플 데이터 삽입
 

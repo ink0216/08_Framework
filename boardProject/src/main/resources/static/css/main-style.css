@@ -6,7 +6,9 @@
     /* 전체 */
     /* border: 1px solid black; */
     /* 주석처리 해놓으면 브라우저에서 껐다 켰다 할 수 있다 */
-    box-sizing: border-box; /* w,h 설정이 원래는 content 사이즈에만 적용됐는데 border, content,padding을 합친 사이즈가 되도록 */
+    box-sizing: border-box; 
+    /* w,h 설정이 원래는 content 사이즈에만 적용됐는데 
+    border, content,padding을 합친 사이즈가 되도록 */
     /* content / padding / border / margin */
     padding: 0;
     margin: 0;
