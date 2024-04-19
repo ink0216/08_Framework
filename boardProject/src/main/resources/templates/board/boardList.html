@@ -85,9 +85,18 @@
                                 <td> 
                                     <!-- 썸네일 추가 예정 -->
     
-        <a th:href="@{/board/{boardCode}/{boardNo}(boardCode=${boardCode},boardNo=*{boardNo},cp=${pagination.currentPage})}" 
+        <a th:unless="${param.key}" 
+        th:href="@{/board/{boardCode}/{boardNo}(boardCode=${boardCode},boardNo=*{boardNo},cp=${pagination.currentPage})}" 
 
                                     th:text="*{boardTitle}">게시글 제목</a>
+                                    <!-- param에 key가 없을 때 (검색이 아닌 경우) -->
+        <a th:if="${param.key}" 
+        th:href="@{/board/{boardCode}/{boardNo}
+        (boardCode=${boardCode},boardNo=*{boardNo},cp=${pagination.currentPage}, key=${param.key}, query=${param.query})}" 
+
+                                    th:text="*{boardTitle}">게시글 제목</a>
+                                    <!-- param에 key가 있을 때(검색인 경우) -->
+                                    <!-- , key=${param.key}, query=${param.query} -->
                                     <!-- cp는 왼쪽에 없어서 쿼리스트링으로 들어가는데 
                                         상세 조회 주소에 cp가 포함된 이유
                                         == 상세페이지 -> '목록으로 '버튼 클릭 시 목록 화면으로 돌아올 때 사용할거다
@@ -138,7 +147,8 @@
             <!-- 페이지 넘길 때 누르는 숫자 -->
             <div class="pagination-area">
 
-                <ul class="pagination" th:object="${pagination}">
+                <ul class="pagination" th:unless="${param.key}" th:object="${pagination}">
+                    <!-- 파라미터중에 key값이 없을 때 == 일반 목록 조회인 경우(검색X) ->이 페이지 네이션이 보이게 할거다 -->
                     <!-- 전달받은 것을 여기서 뜯어서 쓰겠따 -->
                 
                     <!-- 첫 페이지로 이동 -->
@@ -173,6 +183,14 @@
                             <!-- cp는 없으니까 쿼리스트링으로 넣을거야 -->
                         </li>
                     </th:block>
+
+                    	<!-- 일치하는 게시글이 없을 경우 -->
+					<th:block th:unless="*{startPage lt endPage}">
+						<li>
+							<a class="current">1</a>
+						</li>
+					</th:block>
+					
                     <!-- <li> <a href="#">3</a> </li>
                     <li> <a href="#">4</a> </li>
                     <li> <a href="#">5</a> </li>
@@ -188,15 +206,85 @@
                     <!-- 끝 페이지로 이동 -->
                     <li><a th:href="@{/board/{boardCode}(boardCode=${boardCode},cp=*{maxPage})}">&gt;&gt;</a></li>
                 </ul>
+
+                <ul class="pagination" th:if="${param.key}" th:object="${pagination}">
+                    <!-- 파라미터중에 key값이 있을 때 == 검색인 경우(검색어가 있을 때) ->이 페이지 네이션이 보이게 할거다 -->
+                    <!-- 전달받은 것을 여기서 뜯어서 쓰겠따 -->
+                
+                    <!-- 첫 페이지로 이동 -->
+                    <li><a th:href="@{/board/{boardCode}(boardCode=${boardCode}, cp=1, key=${param.key}, query=${param.query})}">&lt;&lt;</a></li>
+                    <!-- 왼쪽에 boardCode라고 써져있는데 그 boardCode는 @PathVariable이 올린거야 -->
+                    <!-- 추가한 내용 :  , key=${param.key}, query=${param.query} -->
+                    <!-- 진짜 @PathVariable이 request scope로 써서 여기서 읽을 수 있다 -->
+                    <!-- 왼쪽에 cp없으면 쿼리스트링으로 자동 변환된다 -->
+                    <!-- &lt; : < -->
+                    <!-- 두개 -> << -->
+                    <!-- Spring el에서 주소 조합할 때에는 @를 쓴다 -->
+
+                    <!-- 이전 목록의 마지막 번호로 이동 -->
+                    <li><a th:href="@{/board/{boardCode}(boardCode=${boardCode},cp=*{prevPage}, key=${param.key}, query=${param.query})}">&lt;</a></li>
+                    <!-- 원래 cp=${pagination.prevPage}로 해야되는데 너무 길어서
+                    th:object로 하고 $를 *로 바꿔주면 앞의 pagination. 안써도 된다-->
+                    <!-- 특정 페이지로 이동 -->
+                    <!-- <th:block th:each=" i : ${#numbers.sequence(pagination.startPage,pagination.endPage)}"> -->
+                    <th:block th:if="*{startPage lt endPage}" th:each=" i : *{#numbers.sequence(startPage,endPage)}">
+                        <!-- 위에  pagination을 object 해놔서 *로 하고 pagination. 안써도 된다-->
+                        <!-- $ 안의 pagination 앞에도 $ 써야 되는데 안써도 된다 밖에 있어서 -->
+                        <!-- 현재 보고있는 페이지 -->
+                        <li th:if="${i == pagination.currentPage}">
+                            <!-- <li th:if="${i} == *{currentPage}"> jsp el 에서는 ${}안에서 다 해결해야 했지만
+                                여기서는 if문으로 묶여 있어서 이렇게 해도 된다(따로따로 꺼내서 비교하는 것 가능하다!)-->
+                            <a class="current" th:text="${i}">현재 페이지</a>
+                        </li>
+    
+                        <!-- 보고있지 않은 페이지 -->                    
+                        <li th:unless="${i == pagination.currentPage}"> 
+                            <a th:href="@{/board/{boardCode}(boardCode=${boardCode},cp=${i}, key=${param.key}, query=${param.query})}" 
+                            th:text="${i}">이동할 페이지</a> 
+                            <!-- cp는 없으니까 쿼리스트링으로 넣을거야 -->
+                        </li>
+                    </th:block>
+                    	<!-- 일치하는 게시글이 없을 경우 -->
+					<th:block th:unless="*{startPage lt endPage}">
+						<li>
+							<a class="current">1</a>
+						</li>
+					</th:block>
+                    <!-- <li> <a href="#">3</a> </li>
+                    <li> <a href="#">4</a> </li>
+                    <li> <a href="#">5</a> </li>
+                    <li> <a href="#">6</a> </li>
+                    <li> <a href="#">7</a> </li>
+                    <li> <a href="#">8</a> </li>
+                    <li> <a href="#">9</a> </li>
+                    <li> <a href="#">10</a> </li> -->
+                    <!-- #numbers.sequence(11,15) -> {11,12,13,14,15} 배열 반환 -> 향상된 for문으로 하나씩 꺼내서 출력 가능 -->
+                    <!-- 다음 목록 시작 번호로 이동 -->
+                    <li><a th:href="@{/board/{boardCode}(boardCode=${boardCode},cp=*{nextPage}, key=${param.key}, query=${param.query})}">&gt;</a></li>
+
+                    <!-- 끝 페이지로 이동 -->
+                    <li><a th:href="@{/board/{boardCode}(boardCode=${boardCode},cp=*{maxPage}, key=${param.key}, query=${param.query})}">&gt;&gt;</a></li>
+                </ul>
             </div>
 
 
 
 
 			<!-- 검색창 -->
-            <form action="#" method="get" id="boardSearch">
+            <form th:action="@{{boardCode}(boardCode=${boardCode})}" method="get" id="boardSearch">
+                <!-- 주소 조합할 때에는 @붙인다!!(a태그에서도) -->
+                <!-- 상대경로 방식! 
+                그 boardCode는 request scope에 존재하는 boardCode값을 넣을 거다
+                request scope에 있는 boardCode는 @PathVariable로 세팅된거다!!-->
+                <!-- 절대경로는 앞에서부터 주소 바꾸는것, 상대경로는 뒤에서부터 주소 바꾸는 것
+                boardController의 첫 메서드로 요청 보냄!-->
 
                 <select name="key" id="searchKey">
+                    <!-- select도 input태그!!
+                    input태그는 보통 name옆에 value를 쓰는데
+                select는 name은 select태그를 쓰고 value는 option 태그를 사용하는 특이한 형태의 input태그이다
+            parameter값은 select의 name속성값, value는 선택한 option태그의 value값이 된다!!!
+        -->
                     <option value="t">제목</option>
                     <option value="c">내용</option>
                     <option value="tc">제목+내용</option>

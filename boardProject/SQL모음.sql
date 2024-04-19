@@ -873,18 +873,58 @@ INSERT INTO TB_BOARD VALUES(SEQ_BNO.NEXTVAL, '오늘 처음인 분이 많네요'
 
 COMMIT;
 
-
-
-
-
-
-
-
-
 -------------------------------------------------------------------------------------------------
+--게시글 검색하던 SQL
 
 
 
+-- 게시글 검색
+
+SELECT BOARD_NO, BOARD_TITLE, MEMBER_NICKNAME, READ_COUNT,
+	(SELECT
+	COUNT(*)
+	FROM "COMMENT" C
+	WHERE C.BOARD_NO = B.BOARD_NO  
+	AND COMMENT_DEL_FL = 'N') COMMENT_COUNT,
+
+	(SELECT COUNT(*)
+	FROM "BOARD_LIKE" L
+	WHERE L.BOARD_NO = B.BOARD_NO) LIKE_COUNT,
+	 
+	 CASE
+		 WHEN SYSDATE - BOARD_WRITE_DATE < 1 / 24 / 60 
+		 THEN FLOOR((SYSDATE - BOARD_WRITE_DATE) * 24 * 60 * 60)  || '초 전'
+		 
+		 WHEN SYSDATE - BOARD_WRITE_DATE < 1 / 24 
+		 THEN FLOOR((SYSDATE - BOARD_WRITE_DATE)* 24 * 60) || '분 전'
+		 
+		 WHEN SYSDATE - BOARD_WRITE_DATE < 1
+		 THEN FLOOR((SYSDATE - BOARD_WRITE_DATE) * 24) || '시간 전'
+		 
+		 ELSE TO_CHAR(BOARD_WRITE_DATE, 'YYYY-MM-DD')
+	 	
+	 END BOARD_WRITE_DATE
+
+FROM "BOARD" B
+JOIN "MEMBER" USING(MEMBER_NO)
+WHERE BOARD_DEL_FL = 'N'
+AND BOARD_CODE = 1
+
+-- 제목에 '10' 이 포함된 게시글 조회
+-- AND BOARD_TITLE LIKE '%10%'
+
+-- 내용에 '10' 이 포함된 게시글 조회
+-- AND BOARD_CONTENT LIKE '%10%'
+
+-- 제목 또는 내용에 '10' 이 포함된 게시글 조회
+AND (BOARD_TITLE LIKE '%10%' 
+     OR  BOARD_CONTENT LIKE '%10%')
+
+--작성자 닉네임에 '샘플'이 포함된 게시글 조회
+AND MEMBER_NICKNAME LIKE '%샘플%'
+ORDER BY BOARD_NO DESC;
+--상황에 따라 SQL이 달라지게 하는 동적 SQL 사용
+--목록조회에서 한 코드를 재활용하기
 
 
 

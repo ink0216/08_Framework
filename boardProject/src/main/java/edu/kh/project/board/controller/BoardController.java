@@ -37,9 +37,11 @@ public class BoardController {
 	
 	//게시판 클릭 시마다 화면이 다 다를 때에는 1,2,3으로 각각 해도 되지만
 	//모든 게시판은 다 비슷한 형태여서 하나로 할 수 있다
-	/**게시글 목록 조회
+	/**게시글 목록 조회 + 검색
 	 * @param boardCode : 어떤 게시판인지 게시판 종류 구분
 	 * @param cp : 현재 조회 요청한 게시판 페이지 (없으면 1)
+	 * @param paramMap : 제출된 파라미터가 모두 저장된 Map
+	 * 					(검색 시 key, query가 담겨있다)
 	 * @return
 	 * - /board/OOO
 	 * 		/board 이하 1레밸 자리에 숫자로만 된 요청주소가 작성되어 있을 때에만 여기로 매핑되게 하는 법
@@ -57,7 +59,7 @@ public class BoardController {
 			//뒷자리에 들어오는 boardCode에는 0부터 9까지의 숫자 한 자리 이상 올 수 있다 하는 정규식 사용 가능
 			@PathVariable("boardCode") int boardCode,
 			@RequestParam(value="cp", required=false, defaultValue="1") int cp,
-			Model model //request scope로 값 전달하는 용도
+			Model model, //request scope로 값 전달하는 용도
 			//current page
 			//cp가 없으면 기본값은 1로 해서 1페이지 보여지게 할 거야
 			
@@ -76,14 +78,32 @@ public class BoardController {
 			// /board/1 요청 오면 그 중에 1을 얻어와서 boardCode 변수에 저장하겠다
 			//->깃허브에서 이용 가능
 			// 주소의 닉네임 자리에 다른 사람 닉네임 넣으면 그 사람 깃허브 들어갈 수 잇다
+			
+			@RequestParam Map<String, Object> paramMap //파라미터 다 한꺼번에 받음
+			// @RequestParam("key")하면 여러 파라미터 중 특정한 것만 뽑아와서 담을 때 사용
+			//요청할 때 제출한 파라미터 가져오기 
 			) {
 		log.debug("boardCode : "+boardCode);
 		
 		//조회 서비스 호출 후 결과 반환 받기
 		//반환돼야 하는 결과가 두 개인데 
 		//메서드는 하나씩만 반환할 수 있어서
-		Map<String, Object> map = service.selectBoardTypeList(boardCode, cp);
-		//몇 번 게시판의 몇 페이지 분량 조회할거야
+		Map<String, Object> map =null;
+		
+		//검색이 아닌 경우 -> 파라미터로서 key랑 query가 전달되지 않음
+		if(paramMap.get("key")==null) {
+			//모든 게시글 목록조회
+			map= service.selectBoardTypeList(boardCode, cp);
+			//몇 번 게시판의 몇 페이지 분량 조회할거야
+		}else {
+			//key가 파라미터에 들어온 채로 넘어왔다 == 이건 검색을 한거다
+			//boardCode를 paramMap에 추가
+			paramMap.put("boardCode", boardCode);
+			
+			//검색 서비스 호출
+			map = service.searchList(paramMap, cp);
+		}
+		
 		
 		//map을 쪼개서 보내기
 		//묶은 이유 : 반환할 수 있는 것은 하나만 할 수 있어서 묶어서 받았음
