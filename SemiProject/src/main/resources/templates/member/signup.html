@@ -8,22 +8,28 @@
 </head>
 <body>
     <!-- 아시아 아프리카 북아메리카 남아메리카 유럽 오세아니아 -->
+    <div class="fcontainer">
 <section class="header">
     <div class="left">
-        <img src="../../static/images/logo.jpg" alt="여행로고" id="logo">
+        <a href="/">
+            <img src="../../static/images/logo.jpg" alt="여행로고" id="logo">
+        </a>
     </div>
     <div class="center">
         <div>
             <input type="text" placeholder="검색어를 입력해 주세요.">
             <i class="fa-solid fa-magnifying-glass"></i>
         </div>
-        
     </div>
     <div class="right">
         <div>
-            <div>메인페이지</div>
+            <a href="#">
+                <div>메인페이지</div>
+            </a>
             |
-            <div>로그인</div>
+            <a href="#">
+                <div>로그인</div>
+            </a>
         </div>
     </div>
 </section>
@@ -38,7 +44,7 @@
     <div class="container">
         <div class="colitems">
             <section class="top">
-                <label for="email">이메일</label>
+                <div class="required">*</div><label for="email">이메일</label>
             </section>
             <section class="mid">
                 <input type="text" placeholder="이메일" id="email">
@@ -51,7 +57,7 @@
         </div>
         <div class="colitems">
             <section class="top">
-                <label for="authkey">인증번호</label>
+                <div class="required">*</div><label for="authkey">인증번호</label>
             </section>
             <section class="mid">
                 <input type="text" placeholder="인증번호 입력" id="authkey">
@@ -64,7 +70,7 @@
         </div>
         <div class="colitems">
             <section class="top">
-                <label for="password">비밀번호</label>
+                <div class="required">*</div><label for="password">비밀번호</label>
             </section>
             <section class="mid">
                 <input type="password" placeholder="비밀번호" id="password"> <br>
@@ -77,7 +83,7 @@
         </div>
         <div class="colitems">
             <section class="top">
-                <label for="nickname">닉네임</label>
+                <div class="required">*</div><label for="nickname">닉네임</label>
             </section>
             <section class="mid">
                 <input type="text" placeholder="닉네임" id="nickname">
@@ -89,7 +95,7 @@
         </div>
         <div class="colitems">
             <section class="top">
-                <label for="tel">전화번호</label>
+                <div class="required">*</div><label for="tel">전화번호</label>
             </section>
             <section class="mid">
                 <input type="text" placeholder="(-없이 숫자만 입력)" id="tel">
@@ -112,6 +118,7 @@
         </div>
         <button>가입하기</button>
     </div>
+</div>
     <footer>
         <p>Copyright &copy; KH Information Educational Institute A-Class</p>
     

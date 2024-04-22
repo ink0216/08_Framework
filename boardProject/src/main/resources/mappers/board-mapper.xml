@@ -118,7 +118,7 @@
 	</select>
 	
 	<!-- 게시글 상세 조회 -->
-	<!-- selectOne 내부 SQL 수행하고났더니 resultMpa에 board_rm 돼있어서 그거 찾아가서 실행
+	<!-- selectOne 내부 SQL 수행하고났더니 resultMap에 board_rm 돼있어서 그거 찾아가서 실행
 	위에 보니까 id가 board_rm인 resultMap이 있다
 	그 안에 collection 두개 들어있어서 각각 selectImageList, selectCommentList sql실행
 	따라서 Mapper에서 메서드 하나 수행시켰는데 xml select가 총 세 개 수행된다!!!! -->
