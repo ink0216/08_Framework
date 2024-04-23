@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>내정보</title>
+  
+  <link rel="stylesheet" href="../../static/css/member/signup-style.css">
+  <link rel="stylesheet" href="../../static/css/myPage/myPage-style.css">
+</head>
+<body>
+
+  <main>
+    <!-- 헤더 -->
+    <!-- 아시아 아프리카 북아메리카 남아메리카 유럽 오세아니아 -->
+    <div class="fcontainer">
+      <section class="header">
+        <div class="left">
+          <a href="/">
+            <img src="../../static/images/logo.jpg" alt="여행로고" id="logo">
+          </a>
+        </div>
+
+        <div class="center">
+          <div>
+            <input type="text" placeholder="검색어를 입력해 주세요.">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </div>
+        </div>
+
+        <div class="right">
+          <div>
+            <a href="#">
+              <div>메인페이지</div>
+            </a>
+            |
+            <a href="#">
+              <div>로그인</div>
+            </a>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="nav">
+        <span>아시아</span>
+        <span>유럽</span>
+        <span>북아메리카</span>
+        <span>남아메리카</span>
+        <span>아프리카</span>
+        <span>오세아니아</span>
+      </section>
+    </div>
+
+    <section class="main-content">
+      <!-- 사이드 메뉴 -->
+    
+      <section class="left-side">
+        <h1 class="side-title"> 
+          사이드메뉴
+        </h1>
+          
+
+        <ul class="list-group">
+          <li>
+            <a href="myPage-profile.html">프로필</a>
+          </li>
+          <li>
+            <a href="myPage-info.html">내정보 변경</a>
+          </li>
+          <li>
+            <a href="../../templates/myPage/myPage-changePw.html">비밀번호 변경</a>
+          </li>
+          <li>
+            <a href="myPage-secession.html">회원 탈퇴</a>
+          </li>
+          <li>
+            <a href="myPage-writing.html">내가 쓴글</a>
+
+          </li>
+        </ul>
+      </section>
+
+
+      <!-- 화면 -->
+      <section class="myPage-main">
+        <h1 class="myPage-title">내정보</h1>
+
+
+        <form action="" name="myPageFrm">
+          
+          <div class="myPage-row">
+            <label>닉네임</label>
+
+            <input type="text" name="memberNickname" 
+              maxlength="10" id="memberNickname" 
+              th:value="${session.loginMember.memberNickname}">
+          </div>
+
+          <div class="myPage-row">
+            <label>전화번호</label>
+            <input type="text" name="memberTel" 
+              maxlength="11" id="memberTel"
+              th:value="${session.loginMember.memberTel}">
+          </div>
+
+          <div class="myPage-row info-title">
+            <span>주소</span>
+          </div>
+
+          <div class="myPage-row info-address">
+            <input type="text" name="memberAddress" 
+              placeholder="우편번호" id="postcode"
+              th:value="${postcode}">
+            
+              <button type="button">검색</button>
+          </div>
+
+          <div class="myPage-row info-address">
+            <input type="text" name="memberAddress" 
+              placeholder="도로명/지번 주소" id="address"
+              th:value="${address}">
+          </div>
+          
+          <div class="myPage-row info-address">
+            <input type="text" name="memberAddress" 
+              placeholder="상세 주소" id="detailAddress"
+              th:value="${detailAddress}">
+          </div>
+
+          <button class="myPage-submit">수정하기</button>
+        </form>
+      </section>
+
+    </section>
+
+  </main>
+  
+</body>
+</html>

@@ -112,7 +112,7 @@ public class DBConfig {
 		//현재 프로젝트 안에서 특정 자원들을 얻어올건데 
 		//resources폴더(classpath)에 mappers 폴더의 모든 xml을 읽어온다
 
-	sessionFactoryBean.setTypeAliasesPackage("edu.kh.project");
+	sessionFactoryBean.setTypeAliasesPackage("edu.kh.travel");
 	//해당 패키지 내 모든 클래스의 별칭을 등록한다
 	// - Mybatis는 특정 클래스 지정 시 패키지명.클래스명을 모두 작성해야 함
 	//	ex) 특정 클래스를 지칭하고 싶으면 edu.kh.todo.model.dto.Todo로 해야 Mybatis가 인식했는데

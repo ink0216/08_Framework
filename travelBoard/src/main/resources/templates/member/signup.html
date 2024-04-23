@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+    <link  rel="stylesheet" href="../../static/css/member/signup-style.css"></link>
+</head>
+<body>
+    <!-- 아시아 아프리카 북아메리카 남아메리카 유럽 오세아니아 -->
+    <div class="fcontainer">
+<section class="header">
+    <div class="left">
+        <a href="/">
+            <img src="../../static/images/logo.jpg" alt="여행로고" id="logo">
+        </a>
+    </div>
+    <div class="center">
+        <div>
+            <input type="text" placeholder="검색어를 입력해 주세요.">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+    </div>
+    <div class="right">
+        <div>
+            <a href="#">
+                <div>메인페이지</div>
+            </a>
+            |
+            <a href="#">
+                <div>로그인</div>
+            </a>
+        </div>
+    </div>
+</section>
+<section class="nav">
+    <span>아시아</span>
+    <span>유럽</span>
+    <span>북아메리카</span>
+    <span>남아메리카</span>
+    <span>아프리카</span>
+    <span>오세아니아</span>
+</section>
+    <div class="container">
+        <div class="colitems">
+            <section class="top">
+                <div class="required">*</div><label for="email">이메일</label>
+            </section>
+            <section class="mid">
+                <input type="text" placeholder="이메일" id="email">
+                <button>인증번호 받기</button>
+            </section>
+            <section class="bottom">
+                메일을 받을 수 있는 이메일을 입력해주세요.
+            </section>
+            
+        </div>
+        <div class="colitems">
+            <section class="top">
+                <div class="required">*</div><label for="authkey">인증번호</label>
+            </section>
+            <section class="mid">
+                <input type="text" placeholder="인증번호 입력" id="authkey">
+                <button>인증하기</button>
+            </section>
+            <section class="bottom">
+                인증번호가 일치하지 않습니다.
+            </section>
+            
+        </div>
+        <div class="colitems">
+            <section class="top">
+                <div class="required">*</div><label for="password">비밀번호</label>
+            </section>
+            <section class="mid">
+                <input type="password" placeholder="비밀번호" id="password"> <br>
+                <input type="password" placeholder="비밀번호 확인" id="passwordCheck">
+            </section>
+            <section class="bottom">
+                영어, 숫자, 특수문자(!,@,#,-,_) 6~20글자 사이로 입력해주세요.
+            </section>
+            
+        </div>
+        <div class="colitems">
+            <section class="top">
+                <div class="required">*</div><label for="nickname">닉네임</label>
+            </section>
+            <section class="mid">
+                <input type="text" placeholder="닉네임" id="nickname">
+            </section>
+            <section class="bottom">
+                한글,영어,숫자로만 2~10글자
+            </section>
+            
+        </div>
+        <div class="colitems">
+            <section class="top">
+                <div class="required">*</div><label for="tel">전화번호</label>
+            </section>
+            <section class="mid">
+                <input type="text" placeholder="(-없이 숫자만 입력)" id="tel">
+            </section>
+            <section class="bottom">
+                전화번호를 입력해주세요.(- 제외)
+            </section>
+            
+        </div>
+        <div class="colitems">
+            <section class="top">
+                <label for="address">주소</label>
+            </section>
+            <section class="mid">
+                <input type="text" placeholder="우편번호" id="address">
+                <button>검색</button> <br>
+                <input type="text" placeholder="도로명/지번 주소" id="address"> <br>
+                <input type="text" placeholder="상세 주소" id="address">
+            </section>
+        </div>
+        <button>가입하기</button>
+    </div>
+</div>
+    <footer>
+        <p>Copyright &copy; KH Information Educational Institute A-Class</p>
+    
+        <article>
+            <a href="#">프로젝트 소개</a>    
+            <span>|</span>
+            <a href="#">이용약관</a>    
+            <span>|</span>
+            <a href="#">개인정보처리방침</a>    
+            <span>|</span>
+            <a href="#">고객센터</a>    
+        </article>
+    </footer>
+    
+    <!-- font awesome 라이브러리 추가 + key 등록 -->
+    <!-- 이걸 써놔야 거기서 받은 아이콘 쓸 수 있다 -->
+    <!-- <script src="https://kit.fontawesome.com/a373078820.js" crossorigin="anonymous">
+        /* 선생님꺼 */
+    </script> -->
+    <script src="https://kit.fontawesome.com/dc2005e1de.js" 
+    crossorigin="anonymous">
+    /* 내 fontawsome 링크 */
+    </script>
+    <!-- <script th:inline="javascript">
+        const message =  /*[[${message}]]*/ "전달 받은 message";
+    
+        if(message != null) alert(message);
+    </script> -->
+</body>
+</html>
