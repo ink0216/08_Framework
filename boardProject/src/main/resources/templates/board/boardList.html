@@ -16,7 +16,7 @@
         
         <th:block th:replace="~{common/header}"></th:block>
 
-
+        
         <section class="board-list">
 
             <!-- 인터셉터 이용 방법 (BoardNameInterceptor)
@@ -244,7 +244,7 @@
                             <!-- cp는 없으니까 쿼리스트링으로 넣을거야 -->
                         </li>
                     </th:block>
-                    	<!-- 일치하는 게시글이 없을 경우 -->
+<!-- 일치하는 게시글이 없을 경우 -->
 					<th:block th:unless="*{startPage lt endPage}">
 						<li>
 							<a class="current">1</a>

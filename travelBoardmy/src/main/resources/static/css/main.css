@@ -1,0 +1,134 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    
+}
+
+#loginForm {
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    max-width: 320px;
+    width: 100%;
+    position:relative;
+
+
+}
+
+element.style{
+    position:relative;
+}
+#loginForm h2 {
+    margin-bottom: 20px;
+}
+
+#memberEmail {
+    margin-top:70px;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-top:none;
+    border-right:none;
+    border-left:none;
+   
+    box-sizing: border-box;
+    outline:none;
+    border-color:black;
+    border-width:1px;
+}
+
+
+#memberPw {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border-top:none;
+    border-right:none;
+    border-left:none;
+    outline:none;
+    border-color:black;
+    border-width:1px;
+    
+}
+
+
+
+
+
+
+
+#loginForm button {
+    background-color: skyblue;
+    border:blue;
+    
+    padding: 10px 0;
+    width: 150px;
+    cursor: pointer;
+    border-radius:50px;
+    margin-top:40px;
+    margin-bottom:40px;
+}
+
+#loginForm button:hover {
+    cursor:pointer;
+}
+
+
+#selectContinent{
+    width:150px;
+    height:50px;
+    
+    text-align: center;
+}
+
+#loginText{
+    text-decoration: none;
+    text-align:center;
+    
+}
+
+
+/* .fa-circle-info:hover{
+    cursor:pointer
+} */
+
+label[for="toggle"]{
+    cursor:pointer;
+}
+
+#toggle{
+    display:none;
+}
+
+#toggle + div{
+    display:none;
+}
+
+#toggle:checked + div{
+    display:none;
+}
+
+#toggle:checked + div{
+    display:block;
+}
+
+
+.explain{
+    position: absolute;
+    width: 450px;
+    height: 200px;
+    margin-top: 5px;
+    border: 2px solid skyblue;
+    background-color: white;
+    top:250px;
+    
+    
+    border-radius: 10px;
+    text-align: left;
+    left: 400px;
+}

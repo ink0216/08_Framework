@@ -1,0 +1,236 @@
+.main-content{
+
+  display: flex;
+  width: 1000px;
+  min-height: 700px;
+  margin: 5px ;
+}
+/* ******************************************************** */
+    /* 사이드 메뉴 */
+
+.left-side{
+  width: 25%;
+  border-right: 2px solid #ffffff;
+  background-color: rgb(217, 235, 229);
+}
+
+.side-title{
+  margin: 10px;
+  font-size: 35px;
+}
+
+.list-group{
+  width: 100%;
+  list-style: none;
+  padding-right: 20px;
+  padding-top: 20px;
+}
+.list-group > li{
+  height: 50px;
+  font-size: 18px;
+}
+
+.list-group > li > a{
+  color:black;
+  text-decoration: none;
+
+  display: flex;
+  height: 100%;
+
+  justify-content: center;
+  align-items: center;
+
+  border-bottom : 2px solid white;
+}
+
+.list-group > li > a:hover{
+  background-color: wheat;
+}
+
+/* ***************************************** */
+    /* 마이페이지 공통 부분 */
+.myPage-main{
+  width: 75%;
+  padding: 0 50px;
+}
+.myPage-title{
+  margin: 10px;
+  font-size: 30px;
+}
+
+/* 마이페이지 행 단위 스타일 지정 */
+.myPage-row{
+  width: 500px;
+  height: 50px;
+  margin-top: 20px;
+
+  display: flex;
+  align-items: center;
+  border-bottom : 3px solid rgb(155, 196, 212);
+}
+
+.myPage-row > * {
+  font-size: 17px;
+}
+
+/* 행 제목 */
+.myPage-row > label{
+  width: 35%;
+  font-weight: bold;
+  color: rgb(10, 10, 97);
+}
+
+/* 행 내부 span 태그 */
+.myPage-row > span{
+  width:100%;
+}
+
+/* 행 내부 input 태그 */
+.myPage-row > input{
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  font-weight: normal;
+}
+
+/* 제출 버튼 */
+.myPage-submit{
+  width: 70%;
+  padding: 10px;
+  margin: 50px 0;
+  
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+
+  background-color: skyblue;
+  color: white;
+  cursor: pointer;
+}
+
+.myPage-submit:hover{
+  background-color: rgb(182, 203, 211);
+  color: rgb(110, 171, 196);
+}
+
+/* form태그 */
+form[name='myPageFrm']{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* 내부 input 요소 focus 시 */
+.myPage-row:focus-within{ 
+  border-bottom-color: #455ba8;
+}
+
+
+
+    /* 마이페이지 프로필 */
+
+.profile-image{
+  border: 3px solid black;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+
+  margin: 5px;
+}
+
+.profile-btn{
+  width: 250px;
+  margin: 20px 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-btn > *{
+  width: 120px;
+  height: 40px;
+  margin: 5px;
+  
+  border: none;
+  background-color: skyblue;
+  color: white;
+  font-size: 14px;
+  text-align: center;
+}
+
+#imageInput{ display: none;}
+
+/* ***************************************** */
+/* 내정보 변경 */
+button{
+  width: 130px;
+  height: 40px;
+  border: none;
+  background-color: skyblue;
+  color: white;
+}
+
+button:hover{
+  background-color: rgb(182, 203, 211);
+  color: rgb(110, 171, 196);
+}
+
+
+
+/* ***************************************** */
+
+/* 비밀번호 변경 */
+/* 행 내부 input 태그 */
+.myPage-row > input{
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  font-weight: normal;
+}
+
+
+
+
+/* 회원 탈퇴 */
+.secession-agree{
+  margin-top: 10px;
+}
+
+
+/* 내가 쓴 글 */
+
+.list-writing{
+  width: 100%;
+  min-height: 670px;
+  margin-top: 40px;
+}
+
+.list-table{
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.list-table tr > *{
+  height: 50px;
+  text-align: center;
+}
+
+.list-table > thead{
+  font-size: 18px;
+  background-color: rgb(79, 189, 233);
+}
+
+.list-table > tbody  {
+  border-bottom: 1px solid rgb(79, 189, 233);
+}
+.list-table > tbody >tr {
+  border-bottom: 1px solid rgb(79, 189, 233);
+}

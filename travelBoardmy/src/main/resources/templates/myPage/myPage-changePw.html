@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>비밀번호 변경</title>
+  
+  <link rel="stylesheet" href="../../static/css/member/signup-style.css">
+  <link rel="stylesheet" href="../../static/css/myPage/myPage-style.css">
+</head>
+<body>
+
+  <main>
+    <!-- 헤더 -->
+    <!-- 아시아 아프리카 북아메리카 남아메리카 유럽 오세아니아 -->
+    <div class="fcontainer">
+      <th:block th:replace="~{common/header}"></th:block>
+    </div>
+
+    <!-- 메인 -->
+    <section class="main-content">
+      <!-- 사이드 메뉴 -->
+    
+      <section class="left-side">
+        <h1 class="side-title"> 
+          사이드메뉴
+        </h1>
+          
+
+        <ul class="list-group">
+          <li>
+            <a href="myPage-profile.html">프로필</a>
+          </li>
+          <li>
+            <a href="myPage-info.html">내정보 변경</a>
+          </li>
+          <li>
+            <a href="../../templates/myPage/myPage-changePw.html">비밀번호 변경</a>
+          </li>
+          <li>
+            <a href="myPage-secession.html">회원 탈퇴</a>
+          </li>
+          <li>
+            <a href="myPage-writing.html">내가 쓴글</a>
+          </li>
+        </ul>
+      </section>
+
+
+      <!-- 화면 -->
+      <section class="myPage-main">
+        <h1 class="myPage-title">비밀번호 변경</h1>
+
+        <form action="" name="myPageFrm" id="changePw">
+          
+          <div class="myPage-row">
+            <label>현재 비밀번호 </label>
+            <input type="password">
+          </div>
+          <div class="myPage-row">
+            <label>새 비밀번호 </label>
+            <input type="password">
+          </div>
+          <div class="myPage-row">
+            <label>새 비밀번호 확인 </label>
+            <input type="password">
+          </div>
+
+
+          <button class="myPage-submit">비밀번호 변경</button>
+        </form>
+        
+        
+          
+      </section>
+      
+    </section>
+  </main>
+  
+</body>
+</html>

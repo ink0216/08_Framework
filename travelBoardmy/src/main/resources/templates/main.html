@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"> 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/main.css">
+    
+    
+
+</head>
+<body>
+
+
+    
+        <form action="/member/login" method="POST" id = "loginForm">
+        
+            <i class="fa-solid fa-plane fa-rotate-by fa-9x" style="color: #87ceeb; --fa-rotate-angle: 315deg;"></i>   
+            
+            <div>
+                <input type="text" id="memberEmail" name="memberEmail" placeholder="이메일">
+            </div>
+            <div>
+                <input type="password" id="memberPw" name="memberPw" placeholder="비밀번호">
+            </div>
+            <div>
+                <input type="checkbox" name="saveId">아이디 저장
+            </div>
+            <div id="loginText">
+                <a href="#">회원가입</a> | <a href="#">ID/PW 찾기</a>
+            </div>
+            
+            <button id="connectBoard">게시판 접속</button>
+            
+            <label for="toggle">
+            <i class="fa-solid fa-circle-info fa-lg" style="color: #87ceeb;"></i>
+            </label>
+            <input type="checkbox" id="toggle">
+            <div class="explain">
+                <ul>
+                    <li>여행게시판은 비회원이여도 접속이 가능합니다.</li>
+                    <li>회원 여부와 상관없이 접속하고자 하는 대륙을<br> 선택해주셔야 게시판 입장이 가능합니다.</li>
+                    <li>회원이신 분들은 올바른 이메일과 비밀번호를<br> 입력하시고 대륙까지 선택 후 게시판 접속을 해주세요.</li>
+                    
+                </ul>
+            </div>
+            </div>
+            
+
+            <select name="selectContinent" id="selectContinent">
+                <option value="selectContinent">대륙 선택</option>
+                <option value="AS">아시아</option>
+                <option value="EU">유럽</option>
+                <option value="AF">아프리카</option>
+                <option value="NA">북아메리카</option>
+                <option value="SA">남아메리카</option>
+                <option value="OC">오세아니아</option>
+            </select>
+        </form>
+
+
+        <script src="https://kit.fontawesome.com/a373078820.js" crossorigin="anonymous"></script>
+        <script src="/js/main.js"></script>
+        
+<script th:inline="javascript">
+    const message =  /*[[${message}]]*/ "전달 받은 message";
+
+    if(message != null) alert(message);
+</script>
+</html>
