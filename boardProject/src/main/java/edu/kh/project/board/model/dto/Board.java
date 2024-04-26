@@ -42,7 +42,7 @@ public class Board {
 	//썸네일 이미지 저장할 것
 	private String thumbnail;
 	
-	//특정 게시글 이미지 목록
+	//특정 게시글에 첨부된 이미지 목록
 	private List<BoardImg> imageList; //두 번째 select
 	
 	//특정 게시글에 작성된 댓글 목록 조회해서 여기 다 담아놓기

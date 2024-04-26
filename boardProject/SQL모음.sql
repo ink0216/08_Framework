@@ -118,9 +118,17 @@ AND AUTH_KEY = #{위 이메일로 보낸 인증번호};
 --파일 업로드 테스트용 테이블
 CREATE TABLE "UPLOAD_FILE"(
 	FILE_NO NUMBER PRIMARY KEY,
+	---------------------------------------------
+	--얘네는 왜 세개로 했을까?
 	FILE_PATH VARCHAR2(500) NOT NULL,
+	--클라이언트가 그 파일 다운로드 요청 하려면 FILE_PATH랑 FILE_RENAME이 필요해!
+	 
 	FILE_ORIGINAL_NAME VARCHAR2(300) NOT NULL,
+	--클라이언트가 서버 폴더에 있는 파일을 다운로드 받을 때에는 원본명으로 받고싶다
+	
 	FILE_RENAME VARCHAR2(100) NOT NULL,
+	--서버 폴더에 저장할 때는 이름을 바꿔서 저장해야 한다
+	---------------------------------------------
 	FILE_UPLOAD_DATE DATE DEFAULT SYSDATE,
 	MEMBER_NO NUMBER REFERENCES "MEMBER" --FK 제약조건 설정
 	--부모테이블의 PK역할하는 MEMBER_NO 참조(누가 올렸는지 기록)
@@ -630,7 +638,7 @@ FROM
 		    BOARD_NO, MEMBER_NO, MEMBER_NICKNAME, PROFILE_IMG, PARENT_COMMENT_NO, COMMENT_DEL_FL
 		FROM "COMMENT"
 		JOIN MEMBER USING(MEMBER_NO)
-		WHERE BOARD_NO = 1998) C --서브쿼리의 결과가 테이블 됨
+		WHERE BOARD_NO = 2000) C --서브쿼리의 결과가 테이블 됨
 WHERE COMMENT_DEL_FL = 'N'
 	OR 0 != (SELECT COUNT(*) FROM "COMMENT" SUB
 					WHERE SUB.PARENT_COMMENT_NO = C.COMMENT_NO
@@ -638,6 +646,7 @@ WHERE COMMENT_DEL_FL = 'N'
 	START WITH PARENT_COMMENT_NO IS NULL
 	CONNECT BY PRIOR COMMENT_NO = PARENT_COMMENT_NO
 	ORDER SIBLINGS BY COMMENT_NO;
+/* */
 --이 결과를 저장할 DTO 만들기
 
 --상세조회하면서 SELECT 3회 할거다
