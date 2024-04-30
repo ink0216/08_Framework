@@ -43,7 +43,7 @@ order
     const maxSize = 1024*1024*10;
 
     //업로드된 파일 정보가 담긴 객체를 얻어와 변수에 저장해놨다
-    const file = inputImage.files[0];
+    const file = inputImage.files[0]; //파일은 한 번에 하나씩만 업로드하니까 0번쨰에 있다
     // inputImage.files : input태그에서 업로드 한 파일들이 배열 형태로 얻어와진다
 
     //취소를 누른 경우에도 change 이벤트가 발생해서 따져줘야함

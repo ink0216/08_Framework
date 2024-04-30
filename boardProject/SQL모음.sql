@@ -936,7 +936,41 @@ ORDER BY BOARD_NO DESC;
 --목록조회에서 한 코드를 재활용하기
 
 
+-----------------------------------------------------------------
+--240430 시험
+-- 학생 테이블 생성
 
+CREATE TABLE STUDENT(
+
+STUDENT_NO NUMBER PRIMARY KEY,
+
+STUDENT_NAME NVARCHAR2(10) NOT NULL,
+
+STUDENT_MAJOR NVARCHAR2(20) NOT NULL,
+
+STUDENT_GENDER CHAR(1) CHECK(STUDENT_GENDER IN ('M', 'F')) NOT NULL
+
+);
+
+-- 학번 시퀀스 생성
+
+CREATE SEQUENCE SEQ_STUDENT_NO
+
+START WITH 2024001 NOCACHE;
+
+-- 학생 데이터 추가
+
+INSERT INTO STUDENT VALUES(SEQ_STUDENT_NO.NEXTVAL, '홍길동', '컴퓨터공학과', 'M');
+
+INSERT INTO STUDENT VALUES(SEQ_STUDENT_NO.NEXTVAL, '김영희', '국어국문학과', 'F');
+
+INSERT INTO STUDENT VALUES(SEQ_STUDENT_NO.NEXTVAL, '이정학', '정치외교학과', 'M');
+
+INSERT INTO STUDENT VALUES(SEQ_STUDENT_NO.NEXTVAL, '박변호', '법학과', 'F');
+
+COMMIT;
+SELECT * FROM "STUDENT";
+-----------------------------------------------------------------
 
 
 
