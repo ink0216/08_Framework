@@ -139,7 +139,7 @@ if(deleteBtn2 != null){
 
     const url = location.pathname.replace("board","editBoard")  + "/delete"; 
 
-    // form태그 생성
+    // form태그 생성 (POST 방식 요청은 form태그(동기)랑 ajax(비동기)로만 할 수 있다 )
     const form = document.createElement("form");
     form.action = url;
     form.method = "POST";

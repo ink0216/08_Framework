@@ -167,7 +167,6 @@ public class BoardController {
 		Board board = service.selectOne(map);
 		//조회 결과가 담긴다
 		
-		
 		String path=null;
 		if(board ==null) {//조회 결과가 없는 경우
 			//글을 즐겨찾기 해놨는데 게시글 작성자가 그 글을 삭제한 경우
@@ -271,24 +270,7 @@ public class BoardController {
 					//그래서 같은 브라우저로 다른 사람 아이디 로그인해서 해도 조회수 안늘어난다
 					
 				}
-				
-				
-				
-				
-				
-				
-				
-				
 			}
-				
-			
-			
-			
-			
-			
-			
-			
-			
 			/************* 쿠키를 이용한 조회수 증가(끝) **************/
 			path="board/boardDetail"; //html로 forward
 			model.addAttribute("board", board); //조회한 board를 넘긴다
