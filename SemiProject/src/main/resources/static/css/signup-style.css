@@ -1,0 +1,144 @@
+*{letter-spacing: -1px;
+    /* border: 1px solid black; */
+    margin: 0;
+    padding: 0;
+}
+.header{
+    margin-top: 20px;
+    width: 100%;
+    height: 150px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.left{
+    width: 20%;
+    display: flex;
+}
+.left>a{
+    margin : 0 auto;
+}
+.center{
+    
+    justify-content: center;
+    width: 60%;
+}
+.center>div{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+.center>div>input{
+    margin : 50px 0;
+    height: 40%;
+    width: 95%;
+    border : 5px solid green;
+    border-radius: 30%;
+}
+.center>div>input:focus-within{
+    outline: none;
+}
+.center>div>i{
+    font-size: 30px;
+    color: green;
+}
+.right{
+    width: 20%;
+}
+.right>div{
+    display: flex;
+    justify-content: space-evenly;
+    cursor: pointer;
+}
+.right a{
+    text-decoration: none;
+    color : black;
+}
+#logo{
+    width:150px;
+    height: 150px;
+}
+.fcontainer{
+    width: 80vw;
+}
+.nav{
+    margin: 20px 0;
+    display: flex;
+    position: sticky;
+
+}
+.nav>span{
+    background-color: skyblue;
+    width: 16%;
+    text-align: center;
+    font-size: 25px;
+    font-weight: bold;
+    border-top: 3px solid skyblue;
+    border-bottom: 3px solid skyblue;
+    border-right: 3px solid skyblue;
+    cursor: pointer;
+}
+.nav>span:last-child{
+    border-right: none;
+}
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.colitems{
+    border-bottom: 3px solid skyblue;
+    padding-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 30%;
+    margin: 20px 0;
+}
+.colitems label{
+    cursor: pointer;
+}
+
+.required{
+    color:red;
+}
+.top{
+    font-size: 20px;
+    flex-direction: row;
+    text-align: left;
+
+}
+.top>*{
+    float: left;
+}
+
+
+.mid input{
+    border: none;
+    border-bottom: 1px solid gray;
+    font-size : 20px;
+    margin: 10px 0;
+}
+.mid button{
+    height: 30px;
+    width: 80px;
+    background-color: #7698E3;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 25%;
+    cursor: pointer;
+}
+.mid input:focus-within{
+    outline: none;
+    border-bottom: 3px solid green;
+}
+body{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+
