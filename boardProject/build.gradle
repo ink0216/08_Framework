@@ -38,6 +38,11 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
 	testImplementation 'org.springframework.security:spring-security-test'
+		// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-aop
+		//버전 정보를 안쓰면 항상 최신 버전으로 다운로드 된다!!
+		//AOP는 스프링에 내장돼있음
+		//AOP를 쓸 때 사용하는 문법 == AspectJ
+	implementation 'org.springframework.boot:spring-boot-starter-aop' //Spring AOP+AspectJ
 }
 
 tasks.named('test') {

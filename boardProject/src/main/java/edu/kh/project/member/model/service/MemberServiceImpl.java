@@ -126,14 +126,23 @@ public class MemberServiceImpl implements MemberService{ //샘플 멤버 비밀�
 		public int checkTel(String memberTel) {
 			return mapper.checkTel(memberTel);
 		}
+	
 	//빠른 로그인 -> 위의 일반 로그인에서 비밀번호 비교만 제외하면 된다(빠른 로그인 시 비밀번호 입력은 안할거라서!)
 	@Override
+	@Transactional
 		public Member quickLogin(String memberEmail) {
 		Member loginMember = mapper.login(memberEmail); 
 		if(loginMember ==null) return null; //탈퇴 또는 없는 회원인 경우
 		
 		//조회된 비밀번호 null로 변경하기
 		loginMember.setMemberPw(null);
+		
+//		int temp=1;
+//		if( temp==1) {
+//			
+//			throw new RuntimeException("예외 던지기 테스트");
+//			//예외가 던져지면 @Transactional이 수행되고 롤백된다
+//		}
 			return loginMember;
 		}
 	
@@ -162,3 +171,4 @@ public class MemberServiceImpl implements MemberService{ //샘플 멤버 비밀�
  *   * 로그인 / 비밀번호 변경 / 탈퇴 등 비밀번호가 입력돼야 하는 경우,
  *   	DB에 저장된 암호화된 비밀번호를 조회해와서 matches() 메서드로 비교해야 한다!!!!!
  * */
+

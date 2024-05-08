@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -254,15 +254,25 @@ public class MemberController {
 			Model model,
 			RedirectAttributes ra
 			) {
-		Member loginMember = service.quickLogin(memberEmail);
-		//DB에서 일치하는 정보 세션에 올려 로그인 하기
-		
-		if(loginMember == null) {
-			ra.addFlashAttribute("message", "해당 이메일을 가지는 회원이 존재하지 않습니다.");
-		}else {
-			//존재하는 경우
-			model.addAttribute("loginMember", loginMember); //@SessionAttributes가 세션으로 올려준다
-		}
+		//try {
+			
+			Member loginMember = service.quickLogin(memberEmail);
+			//DB에서 일치하는 정보 세션에 올려 로그인 하기
+			
+			if(loginMember == null) {
+				ra.addFlashAttribute("message", "해당 이메일을 가지는 회원이 존재하지 않습니다.");
+			}else {
+				//존재하는 경우
+				model.addAttribute("loginMember", loginMember); //@SessionAttributes가 세션으로 올려준다
+			}
+//		}catch(Exception e) {
+//			//매개변수 e : 발셍한 예외 정보를 담고 있는 예외 객체(어떤 예외가 언제 발생했는지 정보가 다 적혀 있다) 
+//			e.printStackTrace();
+//			model.addAttribute("e", e); //발생된 예외 객체를 모델에 담아서
+//			return "error/500"; //templates 폴더의 error 폴더의 html로 포워드
+//			
+//			// -> 예외가 발생하면 500.html로 포워드 할거야
+//		}
 		return "redirect:/"; 
 	}
 	@ResponseBody
@@ -282,6 +292,24 @@ public class MemberController {
 			) {
 		return service.delete(memberNo);
 	}
+	
+//	@ExceptionHandler(OracleDatabaseException.class) //예외를 괄호 안에 매개변수로 넣어라
+//	@ExceptionHandler(OracleDatabaseException.class) //예외를 괄호 안에 매개변수로 넣어라
+	//-> MemberController 내부에서 발생하는 모든 OracleDatabaseException을 잡아서 처리하는 메서드라고 지정됨!!!
+//  @ExceptionHandler(NullPointerException.class) -> NullPointerException을 잡아서 처리하는 메서드 -> 이런 식으로 여러 개 만들 수 있고
+	//				예외 종류
+// @ExceptionHandler(Exception.class) // -> MemberController 내부 모든 예외 처리 메서드 
+//	/**MemberController 내부 모든 예외 처리 메서드
+//	 * @param e : 던져진 예외 객체
+//	 * @param model : Spring에서 데이터를 전달하는 용도의 객체(기본은 request scope이다)
+//	 * @return
+//	 */
+//	public String memberExceptionHandler(Exception e, Model model) {
+//		 //회원에 관한 모든 예외를 처리하는 메서드
+//		e.printStackTrace(); //콘솔에 예외 출력
+//		model.addAttribute("e", e);
+//		return "error/500"; //forward
+//	}
 }
 /*Cookie란?
  * - 클라이언트 측(브라우저)에서 관리하는 데이터(옛날에는 파일 형식으로 저장, )
@@ -293,5 +321,16 @@ public class MemberController {
  * 		but Cookie 저장은 Client가 함!
  * - Cookie는 서버가 HttpServletResponse를 이용해서 생성해야 하고, 
  * 	클라이언트에게 전달==응답(서버가 클라이언트에게 전달하는 것은 응답!!)할 수 있다
+ * */
+/*Spring 예외 처리 방법
+ * 1. 메서드에서 직접 처리 (try-catch(예외가 던져져서 컨트롤러까지 오면 컨트롤러에 처리), throws(호출한 곳으로 예외 던지기))
+ * 2. 메서드 별로 try-catch 다 쓰기 힘들다 -> 컨트롤러 클래스에서 발생하는 예외를 모아서 처리 (클래스 단위!)
+ * 		1) 컨트롤러 클래스에 예외 처리를 위한 메서드를 따로 작성
+ * 		2) 해당 메서드 위에 @ExceptionHandler 어노테이션을 추가하면 해당 클래스 내부에서 발생하는 모든 예외를 try-catch처럼 잡아서 처리하는 메서드가 된다 
+ * 3. 프로젝트에서 발생하는 예외를 모아서 처리 (프로젝트 단위)
+ * 		1) 별도 클래스 생성(예외 처리를 할 클래스)
+ * 		2) 해당 클래스 위에 @ControllerAdvice 어노테이션 추가 (자매품으로 @RestControllerAdvice도 있다!!)
+ * 		3) 클래스 내부에 @ExceptionHandler가 추가된 메서드를 작성
+ * 		=>이렇게 하면 한 프로젝트 내부에서 발생하는 에러 종류 지정해서 처리 가능
  * */
 

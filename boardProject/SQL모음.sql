@@ -811,6 +811,24 @@ INSERT INTO "COMMENT"	VALUES(
 			2003
 );
 COMMIT;
+
+----------------------------------------
+-- DB에서 프로필 이미지, 게시글 이미지 목록 모두 조회
+-- select 두 개로 UNION 하기
+SELECT SUBSTR(PROFILE_IMG, INSTR(PROFILE_IMG, '/',-1)+1)
+--글자 자르기 == SUBSTR
+-- -를 붙이면 오->왼으로 보면서 첫 번째로 나오는 /자리부터 끝까지
+-- +1 하면 마지막 슬래시 부터 한 칸 더
+	"FILE_NAME"
+FROM "MEMBER"
+WHERE PROFILE_IMG IS NOT NULL
+UNION
+SELECT IMG_RENAME "FILE_NAME"
+FROM "BOARD_IMG";
+--String 타입 데이터가 여러 개 -> 자바에서 List<String>으로 받으면 된다
+--이건 실제로 있는 애들만 저장됐으니까 WHERE절 쓸 필요 없다
+--서버에 저장할 때에는 변경된 이름으로 저장된다
+
 -------------------------------------------------------------------------------------------------
 --240419시험
 DROP TABLE TB_USER;

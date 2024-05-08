@@ -13,11 +13,13 @@ package edu.kh.project;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 //SPRING SECURITY 사용하면 실행 후 LOCALHOST들어가면 로그인 화면 나옴->안되도록하기
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class}) //그거 제외하기
+@EnableScheduling // 스프링 스케쥴러를 활성화하는 어노테이션
 public class BoardProjectApplication {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) { //자바 프로젝트를 실행시키는 역할 하는 메인 메서드
 		SpringApplication.run(BoardProjectApplication.class, args);
 	}
 

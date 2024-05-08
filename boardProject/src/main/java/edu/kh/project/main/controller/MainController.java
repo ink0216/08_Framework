@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -17,7 +18,11 @@ import lombok.RequiredArgsConstructor;
 public class MainController {
 	private final MainService service;
 	@RequestMapping("/") // "/" 요청 매핑(method 가리지 않음(get이든 post든 뭐든 다 받음))
-	public String mainPage() {
+	public String mainPage(
+//			@RequestParam("test") String test 
+			// @RequestParam은 기본값이 true여서 필수이다
+			//상황에 맞게 에러페이지 만들어 둘 수 있다
+			) {
 		return "common/main"; //common에 있는 main.html로 포워드하겠다
 	}
 	/**비밀번호 초기화
