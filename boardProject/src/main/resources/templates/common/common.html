@@ -6,6 +6,21 @@
 <script src="https://kit.fontawesome.com/a373078820.js" crossorigin="anonymous">
     /* 선생님꺼 */
 </script>
+
+<!-- SockJS 라이브러리 추가 -->
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+
+<!-- 알림 관련 전역 변수 -->
+<script th:inline="javascript">
+    const notificationLoginCheck = /*[[${session.loginMember} ? true : false]]*/ '로그인 체크';
+    /* 알림기능 로그인 했을 떄만 이용하게 하려고 notificationLoginCheck 이용 */
+
+    const notificationDefaultImage = /*[[#{user.default.image}]]*/ '유저 기본 이미지';
+    /* 알림에 프로필 이미지 들어가서 프로필 이미지 없는 사람은 기본이미지 들어가도록 */
+
+    /* 이 두개를 header.js에서 사용 */
+</script>
+
 <script src="/js/header.js">
     /* 헤더에서 사용할 js */
 </script>

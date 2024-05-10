@@ -9,7 +9,10 @@
             <li class="comment-row" 
             th:classappend="${comment.parentCommentNo} != 0 ? child-comment" 
             th:each="comment : ${board.commentList}" 
-            th:object="${comment}">
+            th:object="${comment}"
+            th:id="|c*{commentNo}|"
+            >
+            <!-- c14 c1402 이런 식으로 아이디를 준다 -->
             <!-- 댓글의 parentCommentNo를 조회했는데 
             null
         자바에서 null인 것을 parent_comment_no는 null이면 int타입이라 0으로 들어감

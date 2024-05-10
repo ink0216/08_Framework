@@ -29,9 +29,17 @@ WHERE COMMENT_DEL_FL = 'N'
 		
 		
 	 -->
-	<insert id="insert">
+	 
+	 <!-- useGeneratedKeys="true" : sql 실행 시 생성된 시퀀스 값을 다시 자바에 돌려줄 때 사용 ->selectKey 태그 작성 가능 
+	 BEFORE하면 아래의 INSERT보다 먼저 수행
+	 먼저 수행돼서 다음 시퀀스 번호 받은 것을 int로 받아서 전달받은 Comment의 commentNo 필드에 시퀀스 번호를 집어넣어줄게
+	 -->
+	<insert id="insert" parameterType="Comment" useGeneratedKeys="true">
+	<selectKey order="BEFORE" resultType="_int" keyProperty="commentNo">
+		SELECT SEQ_COMMENT_NO.NEXTVAL FROM DUAL
+	</selectKey>
 	INSERT INTO "COMMENT"	VALUES(
-			SEQ_COMMENT_NO.NEXTVAL,
+			#{commentNo},
 			#{commentContent},
 			DEFAULT, DEFAULT,
 			#{boardNo},

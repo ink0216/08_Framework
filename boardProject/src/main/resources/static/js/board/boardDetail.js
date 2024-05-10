@@ -80,6 +80,14 @@ boardLike.addEventListener("click", e=>{
         //7. 게시글 전체 좋아요 수 업데이트하기
         e.target.nextElementSibling.innerText=count;
 
+        //1이 좋아요 누른 경우고 0 이 좋아요 취소한 경우
+
+        if(likeCheck==0) return; //취소한 경우에는 알림을 안보내려고 끝내버리기
+        // 웹소켓을 이용해서 알림 추가
+        sendNotificationFn("boardLike", 
+                            location.pathname // /board/1/2014 이런 식으로 현재 요청 주소가 나옴
+                                                //돌아올 수 있게 현재 요청 주소를 같이 보낸다
+                            , boardNo);
 
     });
 });

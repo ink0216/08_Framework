@@ -228,13 +228,26 @@ addContent.addEventListener("click", e=>{
     .then(resp=>resp.text()) //숫자 result가 들어오니까 문자 그대로 해석
     .then(result=>{
         if(result>0){
+            //result == 작성 성공한 댓글 번호
             //댓글 등록 성공
             alert("댓글이 등록 되었습니다.");
             commentContent.value=""; //작성한 댓글 내용 지우기
             //새 댓글 내용이 DB에는 등록됐는데 아직 화면에는 추가 안됐다
 
             selectCommentList(); //댓글 목록을 다시 조회해서 화면에 출력하기 -> 새로 등록된 댓글도 화면에 보이게 된다
-        }else{
+
+            //댓글 등록 성공 시 그 게시글 작성자에게 알림 메시지 보내기
+            /* 알림을 DB에 추가 + 게시글 작성자 접속 시 알림 전달하기 */
+            sendNotificationFn(
+                //매개변수 세개
+                "insertComment", //type
+                `${location.pathname}?cn=${result}`, //주소 //?는 쿼리스트링
+                //cn은 commentNo
+                //result는 등록 성공한 댓글 번호가 반환되어 담겨있다
+                //댓글번호를 이용해서 이동하는 코드 작성하기
+                boardNo
+            );
+        }else{ //시퀀스는 다 양수여서 0이면 실패한거다
             alert("댓글 등록 실패..");
         }
     })
@@ -356,6 +369,17 @@ const insertChildComment = (parentCommentNo, btn)=>{
             //새 댓글 내용이 DB에는 등록됐는데 아직 화면에는 추가 안됐다
 
             selectCommentList(); //댓글 목록을 다시 조회해서 화면에 출력하기 -> 새로 등록된 댓글도 화면에 보이게 된다
+
+            /* 알림을 DB에 추가 + 게시글 작성자 접속 시 알림 전달하기 */
+            sendNotificationFn(
+                //매개변수 세개
+                "insertComment", //type
+                `${location.pathname}?cn=${result}`, //주소 //?는 쿼리스트링
+                //cn은 commentNo
+                //result는 등록 성공한 댓글 번호가 반환되어 담겨있다
+                //댓글번호를 이용해서 이동하는 코드 작성하기
+                boardNo
+            );
         }else{
             alert("답글 등록 실패..");
         }

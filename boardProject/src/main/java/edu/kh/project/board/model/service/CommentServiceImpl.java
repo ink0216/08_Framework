@@ -24,7 +24,10 @@ public class CommentServiceImpl implements CommentService{
 	//댓글 등록
 	@Override
 	public int insert(Comment comment) {
-		return mapper.insert(comment);
+		int result = mapper.insert(comment);
+		if(result>0) return comment.getCommentNo(); //등록 성공 시 댓글 번호를 반환 (얕은 복사여서 여기서 리턴하는게 새로 등록된 댓글의 번호가 된다)
+		return 0; //등록 실패 시 0을 반환
+		
 	}
 	
 	//댓글 삭제
