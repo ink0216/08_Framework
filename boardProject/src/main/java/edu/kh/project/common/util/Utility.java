@@ -42,4 +42,29 @@ public class Utility {
 		//.jpg로 반환된다
 		return date+"_"+number+ext;
 	}
+	
+	// Cross Site Scripting(XSS) 방지 처리
+	// - 웹 애플리케이션에서 발생하는 취약점
+	// - 권한이 없는 사용자가 사이트에 스크립트를 작성하는 것
+	// 채팅으로 메시지 전달할 때 <h1>asdf</h1>으로 보내면 상대 화면에서 크게 보임
+	// 자바스크립트 인식되는 것 막는 용도 == XSS
+	public static String XSSHandling(String content) {
+		
+		// 스크립트나 마크업 언어에서 기호나 기능을 나타내는 문자를 변경 처리
+		// html에서 인식되는 특수문자들을 특수 기호 형태로 변형시키기(인식 안되도록)
+		
+		// &times; == x 모양으로 
+		// 채팅에서 메시지 전달할 때 전달받은 매시지에 태그 모양 있었을 경우 그 역할로 인식되는 것 방지 처리
+		//   &  - &amp;
+		//   <  - &lt;
+		//   >  - &gt;
+		//   "  - &quot;
+		
+		content = content.replaceAll("&", "&amp;");
+		content = content.replaceAll("<", "&lt;");
+		content = content.replaceAll(">", "&gt;");
+		content = content.replaceAll("\"", "&quot;");
+		
+		return content;
+	}
 }

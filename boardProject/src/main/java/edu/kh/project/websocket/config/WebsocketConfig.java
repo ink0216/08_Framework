@@ -6,6 +6,7 @@ import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
+import edu.kh.project.websocket.handler.ChattingWebsocketHandler;
 import edu.kh.project.websocket.handler.NotificationWebsocketHandler;
 import edu.kh.project.websocket.handler.TestWebsocketHandler;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,11 @@ public class WebsocketConfig implements WebSocketConfigurer{ //WebSocketConfigur
 	//Bean으로 등록된 SessionHandshakeInterceptor가 의존성 주입될거다(상속관계이면 자동으로 주입된다)
 	private final HandshakeInterceptor handshakeInterceptor;
 	
-	//알림 웹소켓 처리 객체 의존성 주입
+	//알림 웹소켓 처리 객체 의존성 주입(DI)
 	private final NotificationWebsocketHandler notificationWebsocketHandler;
+	
+	//채팅 웹소켓 처리 객체 의존성 주입(DI) -> @Component로 bean등록한 것 여기에 의존성 주입받기
+	private final ChattingWebsocketHandler chattingWebsocketHandler;
 	
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
@@ -53,6 +57,15 @@ public class WebsocketConfig implements WebSocketConfigurer{ //WebSocketConfigur
 											"http://127.0.0.1/", //이건 localhost랑 똑같은거다 (루프백)
 											"http://192.168.10.242/") 
 				.withSockJS();
+		
+		//------------------------------------------------------------------
+		//채팅 처리 핸들러와 주소 연결
+		registry.addHandler(chattingWebsocketHandler, "/chattingSock") //이 주소로 요청이 오면 chattingWebsocketHandler로 연결하겠다
+		.addInterceptors(handshakeInterceptor) //이 요청 오면 악수하면서 가로챔
+		.setAllowedOriginPatterns("http://localhost/",
+				"http://127.0.0.1/", //이건 localhost랑 똑같은거다 (루프백)
+				"http://192.168.10.242/") //앞의 것은 이거만 허용하겠다
+		.withSockJS();
 	}
 	
 	
