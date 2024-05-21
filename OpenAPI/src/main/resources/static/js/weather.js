@@ -12,7 +12,7 @@ const regionName = document.querySelector("#regionName");
 const currentWeather = document.querySelector(".current-weather");
 
 /* ******************** 초단기 예보 비동기 요청할 함수 정의하기 ******************** */
-const getUltraSrtNcst = (regionValue //지역명 (서울,부산,제주 이런것)
+const getUltraSrtFcst = (regionValue //지역명 (서울,부산,제주 이런것)
 
 )=>{
     //초단기 예보를 기상청에서 이 용어로 부른다
@@ -58,7 +58,11 @@ const getUltraSrtNcst = (regionValue //지역명 (서울,부산,제주 이런것
         //파싱된 데이터가 result로 들어온다
         console.log(result);
         //가공
-        
+    
+        // [위] : 공공 데이터 Open API를 이용한 데이터 요청 및 응답
+    //------------------------------------------------------------------------------------------------
+    // [아래] : 개발자가 응답 받은 데이터를 활용
+
     // 요청 데이처 중 item (객체 배열)
     const list = result.response.body.items.item;
 
@@ -200,13 +204,13 @@ const getUltraSrtPtyState = (code) => {
 /* select 변경 시 해당 지역 날씨를 조회하기 */
 region.addEventListener("change", e=>{ //값이 바뀌는 것을 감지
     regionName.innerText = e.target.value; //화면에 보이는 지역명 변경
-    getUltraSrtNcst(e.target.value); //해당 지역 날씨 조회하는 open API 호출
+    getUltraSrtFcst(e.target.value); //해당 지역 날씨 조회하는 open API 호출
 
 });
 
 /* 화면 로딩이 종료된 후 "서울" 지역 날씨 조회하는 코드 */
 document.addEventListener("DOMContentLoaded" , ()=>{
-    getUltraSrtNcst("서울");
+    getUltraSrtFcst("서울");
 } //화면에 이벤트 줌 DOM 내용 로드가 끝낫을 떄
 
 )
