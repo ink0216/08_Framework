@@ -21,7 +21,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Controller
+@Slf4j // ********이거 추가해야 밑의 log.debug에서 오류 안난다
 public class ApiController {
 	/**Ajax로 Open API 요청하는 페이지로 포워드
 	 * @return
@@ -45,6 +48,7 @@ public class ApiController {
 			) throws IOException, JSONException {
 		String serviceKey = "2Kd4kpeZc9Ej66agEoP%2F4%2Bs4nKOzfqtZA94rcXJ1IYkKAEIrWi6favIhgwJvZMFMh8YAXSLrGA3u3v%2FARI7s3g%3D%3D";
 		//					"2Kd4kpeZc9Ej66agEoP/4+s4nKOzfqtZA94rcXJ1IYkKAEIrWi6favIhgwJvZMFMh8YAXSLrGA3u3v/ARI7s3g=="
+		//인코딩 된 것으로 해도 된다
 		int numOfRows = 1000; //조회할 데이터 개수 
 		int pageNo = 1; //조회할 페이지 (기상청은 대부분 한 페이지에 들어간다)
 		String dataType = "JSON"; //응답 데이터 타입 (JSON / XML)
@@ -251,7 +255,115 @@ public class ApiController {
 	        
 		return "ex2"; //ex2.html로 포워드
 	}
+	//에어코리아 시도별 실시간 측정 정보 조회
+	/*[공공 데이터 정보]
+
+공공 API Base URL : http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty
+
+OpenAPI에서 url에 코딩해야 하는 parameter들은 다음과 같다.
+
+- serviceKey : 공공데이터포털에서 훈련생 개인이 승인받은 OpenAPI 인증키
+
+- returnType (json으로 출력결과 받음)
+
+- sidoName : 파라미터로 전달받은 String location (데이터 내용은 서울 or 부산 or 대전)
+	 * 
+	 * */
+	// API 개인 인증키
+
+	private final String serviceKey = "2Kd4kpeZc9Ej66agEoP%2F4%2Bs4nKOzfqtZA94rcXJ1IYkKAEIrWi6favIhgwJvZMFMh8YAXSLrGA3u3v%2FARI7s3g%3D%3D";
+
+	/** 에어코리아 대기오염정보 - 시도별 실시간 측정정보 조회
+
+	* @param location : 지역명(시, 도 이름)
+
+	* @throws IOException
+
+	*/
+
+	@GetMapping("air")
+
+	public String airPollution(@RequestParam("location") String location) throws IOException{
+		//serviceKey, returnType, numOfRows, pageNo, sidoName, ver
+	//String requestUrl = ""; //*****
+	//우리가 요청보내는 기본 주소에, 뒤에 쿼리스트링으로 값을 같이 보내는 것이어서
+	//여기에는 우리가 요청 보내는 쿼리스트링 이전까지의 기본 주소를 적어야 한다
+	String requestUrl = "http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty";
 	
+	//쿼리스트링에 넣어서 같이 보내는 요청 데이터를 넣어야 한다
+	String returnType = "JSON";
+	int numOfRows=1000;
+	int pageNo=1;
+	String sidoName=location;
+	double ver=1.0;
+	//**********************
+	StringBuilder urlBuilder = new StringBuilder(requestUrl);
+
+	//******sidoName이랑 returnType만 쿼리스트링에 추가돼있으므로 나머지인 
+	//serviceKey, numOfRows, pageNo, ver를 추가해서 append해야 한다
+	//******여기서부터 쿼리스트링 
+	urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=" 
+	+ serviceKey); //***쿼리스트링 시작 부분은 ?로 시작해야 한다
+	
+	urlBuilder.append("&" + URLEncoder.encode("returnType","UTF-8") + "=" 
+			+ URLEncoder.encode("JSON", "UTF-8")); //원래 있던거
+	
+	urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" 
+			+ URLEncoder.encode(String.valueOf(numOfRows), "UTF-8")); //******numOfRows 추가
+	
+	urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" 
+			+ URLEncoder.encode(String.valueOf(pageNo), "UTF-8")); //******pageNo 추가
+	
+	urlBuilder.append("&" + URLEncoder.encode("sidoName","UTF-8") + "=" 
+			+ URLEncoder.encode(location, "UTF-8")); //원래 있던거
+	
+	urlBuilder.append("&" + URLEncoder.encode("ver","UTF-8") + "=" 
+			+ URLEncoder.encode(String.valueOf(ver), "UTF-8")); //*******ver 추가
+	
+	
+
+	// 공공데이터 요청 및 응답
+
+	URL url = new URL(urlBuilder.toString());
+
+	HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+	conn.setRequestMethod("GET");
+
+	conn.setRequestProperty("Content-type", "application/json");
+
+	BufferedReader rd;
+
+	if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+
+	rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+	} else {
+
+	rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+
+	}
+
+	StringBuilder sb = new StringBuilder();
+
+	String line;
+
+	while ((line = rd.readLine()) != null) {
+
+	sb.append(line);
+
+	}
+
+	rd.close();
+
+	conn.disconnect();
+
+	log.debug(sb.toString());
+
+	return "air";
+
+	}
+
 	
 	
 }
